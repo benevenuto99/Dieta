@@ -7,37 +7,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #27ae60; --dark: #2c3e50; --light: #f4f7f6; --danger: #e74c3c; }
+        :root { --primary: #27ae60; --dark: #2c3e50; --light: #f4f7f6; --accent: #3498db; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 80px; }
         .header { background: var(--primary); color: white; padding: 15px; text-align: center; border-radius: 0 0 15px 15px; }
         .container { max-width: 500px; margin: auto; padding: 10px; }
         .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
         
-        /* Diet */
-        .meal-block { border-left: 4px solid var(--primary); margin-bottom: 20px; padding-left: 10px; background: white; padding: 10px; border-radius: 8px; }
-        .meal-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .meal-item.done { opacity: 0.5; text-decoration: line-through; }
+        /* Diet Accordion */
+        .meal-card { background: white; border-radius: 12px; margin-bottom: 10px; border: 1px solid #ddd; overflow: hidden; }
+        .meal-header { padding: 15px; background: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid transparent; }
+        .meal-header.open { border-bottom: 1px solid #eee; background: #f9f9f9; }
+        .meal-title { font-weight: bold; color: var(--dark); text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        .meal-content { display: none; padding: 15px; background: white; }
+        .meal-content.active { display: block; }
+        
+        .meal-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px dotted #eee; }
+        .meal-item:last-child { border-bottom: none; }
+        .meal-item input { margin-right: 12px; transform: scale(1.2); }
+        .done { color: #bdc3c7; text-decoration: line-through; }
 
-        /* Peso & Histórico */
-        .weight-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .last-weight-display { font-size: 2.2rem; font-weight: bold; color: var(--primary); text-align: center; margin: 10px 0; }
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
-        .history-info { display: flex; flex-direction: column; }
-        .history-date { font-size: 12px; color: #7f8c8d; }
-        .btn-delete { color: var(--danger); cursor: pointer; padding: 5px; font-size: 18px; }
-
-        /* Nav */
+        .btn-edit { color: var(--accent); cursor: pointer; font-size: 14px; margin-left: 10px; }
         .nav-tabs { display: flex; justify-content: space-around; background: white; padding: 12px 0; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ddd; z-index: 100; }
         .nav-item { color: #95a5a6; text-align: center; font-size: 12px; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; }
-
-        .view { display: none; }
-        .view.active { display: block; }
         
-        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        label { font-size: 12px; font-weight: bold; color: var(--dark); display: block; margin-bottom: 4px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        textarea, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -46,206 +42,203 @@
 
 <div class="container">
     <div id="view-diet" class="view active">
-        <div id="setup-view">
-            <div class="card">
-                <h4>Importar Dieta</h4>
-                <input type="file" id="pdfInput" accept="application/pdf" style="margin-bottom: 10px;">
-                <textarea id="rawText" placeholder="Cole o texto aqui..." style="width:100%; height:100px; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
-                <button class="btn" onclick="processDiet()">Analisar</button>
-            </div>
+        <div id="setup-view" class="card">
+            <h4>Importar Dieta</h4>
+            <input type="file" id="pdfInput" accept="application/pdf" style="margin-bottom:10px;">
+            <textarea id="rawText" placeholder="Ou digite aqui: 
+Café: 2 ovos
+Almoço: Arroz e Frango..." style="height:100px;"></textarea>
+            <button class="btn" onclick="processDiet()">Dividir e Gerar</button>
         </div>
-        <div id="diet-display"></div>
+
+        <div id="diet-list"></div>
+        
+        <button id="btnNewMeal" class="btn" style="background: var(--dark); display:none;" onclick="addManualMeal()">+ Adicionar Refeição Manual</button>
+        <button id="btnReset" class="btn" style="background: #95a5a6; display:none; margin-top:5px;" onclick="if(confirm('Apagar tudo?')){localStorage.clear(); location.reload();}">Trocar Dieta Inteira</button>
     </div>
 
     <div id="view-weight" class="view">
         <div class="card">
-            <h4>Último Peso</h4>
-            <div class="last-weight-display"><span id="displayPeso">--</span> kg</div>
-            <p id="metaDestaque" style="text-align: center; font-size: 13px; color: #7f8c8d; margin: 0;"></p>
-        </div>
-
-        <div class="card">
-            <h4>Novo Registro</h4>
-            <div class="weight-row">
-                <div style="flex: 2;">
-                    <label>Peso (kg)</label>
-                    <input type="number" id="inputPeso" step="0.1" placeholder="85.0">
-                </div>
-                <div style="flex: 3;">
-                    <label>Data</label>
-                    <input type="date" id="inputData">
-                </div>
+            <h4>Peso Atual</h4>
+            <h2 style="text-align:center; color:var(--primary);" id="dispPeso">-- kg</h2>
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="inPeso" placeholder="Peso kg" step="0.1">
+                <input type="date" id="inData">
             </div>
-            
-            <details style="margin: 10px 0; color: #3498db; cursor: pointer;">
-                <summary style="font-size: 13px;">Definir Meta de Peso</summary>
-                <input type="number" id="inputMeta" step="0.1" placeholder="Ex: 75.0" style="margin-top:5px;">
-            </details>
-            
-            <button class="btn" onclick="salvarPeso()">Salvar no Histórico</button>
+            <button class="btn" onclick="salvarPeso()">Registrar</button>
         </div>
-
         <div class="card">
             <h4>Histórico</h4>
-            <div id="historicoPeso"></div>
+            <div id="histPeso"></div>
         </div>
     </div>
 </div>
 
 <nav class="nav-tabs">
-    <div class="nav-item active" onclick="trocarAba('view-diet', this)"><i class="fas fa-clipboard-check"></i>Dieta</div>
-    <div class="nav-item" onclick="trocarAba('view-weight', this)"><i class="fas fa-weight"></i>Peso</div>
+    <div class="nav-item active" onclick="switchTab('view-diet', this)"><i class="fas fa-utensils"></i>Dieta</div>
+    <div class="nav-item" onclick="switchTab('view-weight', this)"><i class="fas fa-weight"></i>Peso</div>
 </nav>
 
 <script>
-    let appData = JSON.parse(localStorage.getItem('felipeData')) || { dieta: [], historicoPeso: [], meta: 0 };
+    let appData = JSON.parse(localStorage.getItem('felipeV9')) || { dieta: [], peso: [] };
 
     window.onload = () => {
-        // Define data de hoje no input por padrão
-        document.getElementById('inputData').valueAsDate = new Date();
-        carregarTudo();
+        document.getElementById('inData').valueAsDate = new Date();
+        renderDieta();
+        renderPeso();
     };
 
-    function carregarTudo() {
-        if(appData.dieta.length > 0) {
-            document.getElementById('setup-view').style.display = 'none';
-            renderDieta();
-        }
-        renderPeso();
-    }
-
-    // --- LÓGICA DE PESO ---
-    function salvarPeso() {
-        const peso = parseFloat(document.getElementById('inputPeso').value);
-        const dataInput = document.getElementById('inputData').value;
-        const meta = parseFloat(document.getElementById('inputMeta').value);
-
-        if (peso && dataInput) {
-            // Converte data para formato legível e timestamp para ordenação
-            const dataObj = new Date(dataInput + 'T12:00:00'); 
-            const formattedDate = dataObj.toLocaleDateString('pt-BR');
-            
-            appData.historicoPeso.push({ 
-                id: Date.now(), 
-                timestamp: dataObj.getTime(),
-                data: formattedDate, 
-                peso: peso 
-            });
-
-            // Ordena por data (mais novo primeiro)
-            appData.historicoPeso.sort((a, b) => b.timestamp - a.timestamp);
-        }
-
-        if (meta) appData.meta = meta;
-
-        salvarDB();
-        renderPeso();
-        document.getElementById('inputPeso').value = "";
-    }
-
-    function deletarPeso(id) {
-        if(confirm("Deseja apagar este registro?")) {
-            appData.historicoPeso = appData.historicoPeso.filter(p => p.id !== id);
-            salvarDB();
-            renderPeso();
-        }
-    }
-
-    function renderPeso() {
-        const lista = document.getElementById('historicoPeso');
-        const display = document.getElementById('displayPeso');
-        const metaDestaque = document.getElementById('metaDestaque');
-        
-        lista.innerHTML = "";
-        
-        if(appData.historicoPeso.length > 0) {
-            const maisRecente = appData.historicoPeso[0];
-            display.innerText = maisRecente.peso;
-            
-            appData.historicoPeso.forEach(reg => {
-                lista.innerHTML += `
-                    <div class="history-item">
-                        <div class="history-info">
-                            <strong>${reg.peso} kg</strong>
-                            <span class="history-date">${reg.data}</span>
-                        </div>
-                        <i class="fas fa-trash-alt btn-delete" onclick="deletarPeso(${reg.id})"></i>
-                    </div>`;
-            });
-
-            if(appData.meta > 0) {
-                const diff = (maisRecente.peso - appData.meta).toFixed(1);
-                metaDestaque.innerText = diff > 0 ? `Faltam ${diff}kg para a meta (${appData.meta}kg)` : "Meta atingida! 🔥";
-            }
-        } else {
-            display.innerText = "--";
-            metaDestaque.innerText = "";
-        }
-    }
-
-    // --- LÓGICA DE DIETA (IGUAL ANTERIOR) ---
+    // --- INTELIGÊNCIA DE DIVISÃO ---
     function processDiet() {
         let text = document.getElementById('rawText').value;
-        let parts = text.split(/(Refeição \d+|Café|Almoço|Lanche|Jantar|Ceia|\d{2}:\d{2})/gi);
+        // Divide por palavras que indicam nova refeição
+        let parts = text.split(/(Refeição \d+|Café|Almoço|Lanche|Jantar|Ceia|Colação|Pós-treino|Pré-treino|\d{2}:\d{2})/gi);
         let structured = [];
+
         for(let i = 1; i < parts.length; i+=2) {
             let title = parts[i].trim();
             let content = parts[i+1] ? parts[i+1].trim() : "";
             if(content) {
-                let items = content.split('\n').filter(l => l.trim().length > 3);
-                structured.push({ title, items: items.map(t => ({ text: t.trim(), done: false, kcal: 0 })) });
+                let items = content.split('\n').filter(l => l.trim().length > 2);
+                structured.push({ title, items: items.map(t => ({ text: t.trim(), done: false })) });
             }
         }
-        appData.dieta = structured;
-        salvarDB();
-        location.reload();
+        
+        if(structured.length > 0) {
+            appData.dieta = structured;
+            save();
+            renderDieta();
+        } else {
+            alert("Tente escrever 'Almoço: ...' ou 'Refeição 1: ...' para eu entender a divisão.");
+        }
     }
 
     function renderDieta() {
-        const area = document.getElementById('diet-display');
-        area.innerHTML = "<h4>Sua Dieta</h4>";
-        appData.dieta.forEach((m, mIdx) => {
-            let html = `<div class="meal-block"><strong>${m.title}</strong>`;
-            m.items.forEach((it, iIdx) => {
-                html += `
-                    <div class="meal-item ${it.done ? 'done' : ''}" onclick="toggleMeal(${mIdx}, ${iIdx})">
-                        <span><input type="checkbox" ${it.done ? 'checked' : ''}> ${it.text}</span>
-                    </div>`;
+        const list = document.getElementById('diet-list');
+        list.innerHTML = "";
+        
+        if(appData.dieta.length > 0) {
+            document.getElementById('setup-view').style.display = 'none';
+            document.getElementById('btnReset').style.display = 'block';
+            document.getElementById('btnNewMeal').style.display = 'block';
+
+            appData.dieta.forEach((meal, mIdx) => {
+                let allDone = meal.items.every(i => i.done);
+                let html = `
+                <div class="meal-card">
+                    <div class="meal-header" onclick="toggleAccordion(${mIdx})">
+                        <div class="meal-title">
+                            <i class="fas ${allDone ? 'fa-check-circle' : 'fa-circle'}" style="color: ${allDone ? '#27ae60' : '#ddd'}"></i>
+                            ${meal.title}
+                        </div>
+                        <div>
+                            <i class="fas fa-edit btn-edit" onclick="editMeal(${mIdx}, event)"></i>
+                            <i class="fas fa-chevron-down" style="margin-left:10px; font-size:12px;"></i>
+                        </div>
+                    </div>
+                    <div id="content-${mIdx}" class="meal-content">
+                        ${meal.items.map((it, iIdx) => `
+                            <div class="meal-item ${it.done ? 'done' : ''}">
+                                <input type="checkbox" ${it.done ? 'checked' : ''} onchange="toggleCheck(${mIdx}, ${iIdx})">
+                                <span>${it.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+                list.innerHTML += html;
             });
-            area.innerHTML += html + `</div>`;
-        });
-        area.innerHTML += `<button class="btn" style="background:#2c3e50; margin-top:20px;" onclick="if(confirm('Limpar dieta?')){localStorage.clear(); location.reload();}">Trocar Dieta</button>`;
+        }
     }
 
-    function toggleMeal(mIdx, iIdx) {
-        appData.dieta[mIdx].items[iIdx].done = !appData.dieta[mIdx].items[iIdx].done;
-        salvarDB();
+    // --- FUNÇÕES DE EDIÇÃO ---
+    function toggleAccordion(idx) {
+        let content = document.getElementById(`content-${idx}`);
+        content.classList.toggle('active');
+    }
+
+    function editMeal(idx, event) {
+        event.stopPropagation(); // Não abre o accordion ao clicar no edit
+        let meal = appData.dieta[idx];
+        let newTitle = prompt("Nome da Refeição:", meal.title);
+        let currentItems = meal.items.map(i => i.text).join('\n');
+        let newContent = prompt("Alimentos (um por linha):", currentItems);
+
+        if(newTitle !== null && newContent !== null) {
+            meal.title = newTitle;
+            meal.items = newContent.split('\n').filter(l => l.trim()).map(t => ({ text: t.trim(), done: false }));
+            save();
+            renderDieta();
+        }
+    }
+
+    function addManualMeal() {
+        appData.dieta.push({ title: "Nova Refeição", items: [{ text: "Clique no lápis para editar", done: false }] });
+        save();
         renderDieta();
     }
 
-    function trocarAba(id, el) {
+    function toggleCheck(mIdx, iIdx) {
+        appData.dieta[mIdx].items[iIdx].done = !appData.dieta[mIdx].items[iIdx].done;
+        save();
+        renderDieta();
+    }
+
+    // --- PESO ---
+    function salvarPeso() {
+        const p = parseFloat(document.getElementById('inPeso').value);
+        const d = document.getElementById('inData').value;
+        if(p && d) {
+            appData.peso.push({ id: Date.now(), peso: p, data: new Date(d+'T12:00:00').toLocaleDateString('pt-BR'), ts: new Date(d).getTime() });
+            appData.peso.sort((a,b) => b.ts - a.ts);
+            save();
+            renderPeso();
+            document.getElementById('inPeso').value = "";
+        }
+    }
+
+    function renderPeso() {
+        const hist = document.getElementById('histPeso');
+        hist.innerHTML = "";
+        if(appData.peso.length > 0) {
+            document.getElementById('dispPeso').innerText = appData.peso[0].peso + " kg";
+            appData.peso.forEach(r => {
+                hist.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eee;">
+                    <span>${r.data}</span> <strong>${r.peso} kg</strong>
+                    <i class="fas fa-trash" style="color:#e74c3c; cursor:pointer;" onclick="delPeso(${r.id})"></i>
+                </div>`;
+            });
+        }
+    }
+
+    function delPeso(id) {
+        appData.peso = appData.peso.filter(p => p.id !== id);
+        save();
+        renderPeso();
+    }
+
+    function switchTab(id, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         el.classList.add('active');
     }
 
-    function salvarDB() { localStorage.setItem('felipeData', JSON.stringify(appData)); }
+    function save() { localStorage.setItem('felipeV9', JSON.stringify(appData)); }
 
-    // PDF Import
+    // PDF IMPORT
     document.getElementById('pdfInput').onchange = async (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = async function() {
             const typedarray = new Uint8Array(this.result);
             const pdf = await pdfjsLib.getDocument(typedarray).promise;
-            let fullText = "";
+            let text = "";
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const content = await page.getTextContent();
-                fullText += content.items.map(s => s.str).join(" ") + "\n";
+                text += content.items.map(s => s.str).join(" ") + "\n";
             }
-            document.getElementById('rawText').value = fullText;
+            document.getElementById('rawText').value = text;
         };
         reader.readAsArrayBuffer(file);
     };
