@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioDiet Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #27ae60; --dark: #2c3e50; --light: #f4f7f6; --danger: #e74c3c; --accent: #f39c12; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 10px; padding-bottom: 70px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary); margin: 10px 0; }
+        
+        /* Stats Card */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 12px; text-align: center; }
+        .stat-card i { color: var(--accent); }
+
+        /* Tabs Navigation */
+        .nav-tabs { display: flex; justify-content: space-around; background: var(--dark); padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100; }
+        .nav-item { color: white; text-decoration: none; font-size: 12px; text-align: center; opacity: 0.6; cursor: pointer; }
+        .nav-item.active { opacity: 1; color: var(--primary); }
+
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* UI Elements */
+        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+        .meal-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
+        .meal-item.done { background: #e8f5e9; text-decoration: line-through; opacity: 0.6; }
+        .upload-box { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 15px; }
+        input[type="number"] { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; }
+        
+        .message-box { padding: 15px; border-radius: 10px; margin: 10px 0; font-weight: bold; text-align: center; display: none; }
+        .msg-success { background: #d4edda; color: #155724; display: block; }
+        .msg-warning { background: #fff3cd; color: #856404; display: block; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fas fa-heartbeat"></i> BioDiet</h1>
+
+    <div id="view-diet" class="view active">
+        <div class="stats-grid">
+            <div class="stat-card"><i class="fas fa-fire"></i><br><strong><span id="streakVal">0</span> Dias</strong></div>
+            <div class="stat-card"><i class="fas fa-weight"></i><br><strong><span id="currentWeightVal">--</span> kg</strong></div>
+        </div>
+
+        <div id="setup-area" style="display:none;">
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-file-upload fa-2x"></i><p>Subir PDF ou Digitar</p>
+                <input type="file" id="fileInput" hidden accept="application/pdf">
+            </div>
+            <textarea id="dietText" placeholder="Ou cole sua dieta aqui..." style="width:100%; height:100px; margin-top:10px;"></textarea>
+            <button class="btn" onclick="saveNewDiet()">Começar Dieta</button>
+        </div>
+
+        <div id="checklist-area"></div>
+        <button class="btn" style="background:var(--dark); margin-top:30px;" onclick="resetWholeApp()">Trocar Dieta Inteira</button>
+    </div>
+
+    <div id="view-weight" class="view">
+        <h3>Controle de Peso</h3>
+        <div id="weightFeedback" class="message-box"></div>
+        
+        <label>Seu Peso Atual (kg):</label>
+        <input type="number" id="inputWeight" step="0.1" placeholder="Ex: 85.5">
+        
+        <label>Sua Meta (kg):</label>
+        <input type="number" id="inputGoal" step="0.1" placeholder="Ex: 80.0">
+        
+        <button class="btn" onclick="updateWeight()">Salvar Registro</button>
+
+        <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">
+            <h4>Resumo:</h4>
+            <p id="weightSummary">Faltam -- kg para sua meta.</p>
+        </div>
+    </div>
+</div>
+
+<nav class="nav-tabs">
+    <div class="nav-item active" onclick="changeTab('view-diet', this)"><i class="fas fa-clipboard-list fa-2x"></i><br>Dieta</div>
+    <div class="nav-item" onclick="changeTab('view-weight', this)"><i class="fas fa-chart-line fa-2x"></i><br>Peso</div>
+</nav>
+
+<script>
+    // --- DATABASE MOCK ---
+    let appData = JSON.parse(localStorage.getItem('bioDietPro')) || {
+        diet: [],
+        weightHistory: [],
+        goal: 0,
+        streak: 0,
+        lastAccess: null
+    };
+
+    window.onload = () => {
+        checkDailyReset();
+        refreshUI();
+    };
+
+    function refreshUI() {
+        document.getElementById('streakVal').innerText = appData.streak;
+        const lastW = appData.weightHistory.length > 0 ? appData.weightHistory[appData.weightHistory.length - 1].value : "--";
+        document.getElementById('currentWeightVal').innerText = lastW;
+        
+        if (appData.diet.length === 0) {
+            document.getElementById('setup-area').style.display = 'block';
+            document.getElementById('checklist-area').style.display = 'none';
+        } else {
+            document.getElementById('setup-area').style.display = 'none';
+            document.getElementById('checklist-area').style.display = 'block';
+            renderChecklist();
+        }
+        updateSummary();
+    }
+
+    // --- LÓGICA DE RESET DIÁRIO ---
+    function checkDailyReset() {
+        const today = new Date().toLocaleDateString();
+        if (appData.lastAccess && appData.lastAccess !== today) {
+            // É um novo dia! Resetamos os checks
+            appData.diet.forEach(item => item.done = false);
+            appData.lastAccess = today;
+            saveData();
+        }
+        if (!appData.lastAccess) appData.lastAccess = today;
+    }
+
+    function renderChecklist() {
+        const area = document.getElementById('checklist-area');
+        area.innerHTML = "<h3>Checklist de Hoje:</h3>";
+        appData.diet.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = `meal-item ${item.done ? 'done' : ''}`;
+            div.innerHTML = `<input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMeal(${index})"> <span>${item.text}</span>`;
+            area.appendChild(div);
+        });
+    }
+
+    function toggleMeal(idx) {
+        appData.diet[idx].done = !appData.diet[idx].done;
+        saveData();
+        renderChecklist();
+        
+        if (appData.diet.every(m => m.done)) {
+            appData.streak++;
+            saveData();
+            alert("🎯 INCRÍVEL! Você bateu 100% da meta de hoje!");
+            location.reload();
+        }
+    }
+
+    // --- PESO E MOTIVAÇÃO ---
+    function updateWeight() {
+        const val = parseFloat(document.getElementById('inputWeight').value);
+        const goal = parseFloat(document.getElementById('inputGoal').value);
+        if (!val) return;
+
+        const prevWeight = appData.weightHistory.length > 0 ? appData.weightHistory[appData.weightHistory.length-1].value : val;
+        
+        appData.weightHistory.push({ date: new Date().toLocaleDateString(), value: val });
+        if (goal) appData.goal = goal;
+        
+        const diff = val - prevWeight;
+        const feedback = document.getElementById('weightFeedback');
+        feedback.style.display = 'block';
+
+        if (diff < 0) {
+            feedback.className = "message-box msg-success";
+            feedback.innerHTML = `🔥 Parabéns! Você emagreceu ${Math.abs(diff).toFixed(2)}kg! Continue firme!`;
+        } else if (diff > 0) {
+            feedback.className = "message-box msg-warning";
+            feedback.innerHTML = `⚠️ Opa, subiu ${diff.toFixed(2)}kg. Sem desanimar, foco na próxima refeição!`;
+        } else {
+            feedback.innerHTML = `⚖️ Peso mantido. Constância é a chave!`;
+        }
+
+        saveData();
+        refreshUI();
+    }
+
+    function updateSummary() {
+        if (appData.goal > 0 && appData.weightHistory.length > 0) {
+            const last = appData.weightHistory[appData.weightHistory.length-1].value;
+            const toGoal = Math.abs(last - appData.goal).toFixed(2);
+            document.getElementById('weightSummary').innerText = `Faltam ${toGoal}kg para sua meta de ${appData.goal}kg.`;
+        }
+    }
+
+    // --- AUXILIARES ---
+    function changeTab(viewId, el) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        el.classList.add('active');
+    }
+
+    function saveNewDiet() {
+        const text = document.getElementById('dietText').value;
+        if (!text) return;
+        appData.diet = text.split('\n').filter(l => l.trim()).map(t => ({ text: t, done: false }));
+        saveData();
+        refreshUI();
+    }
+
+    function saveData() { localStorage.setItem('bioDietPro', JSON.stringify(appData)); }
+    function resetWholeApp() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
+</script>
+</body>
+</html>
