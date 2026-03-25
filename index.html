@@ -3,95 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Dieta</title>
+    <title>WOD DIET - Pro Tracker</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #27ae60; --dark: #2c3e50; --light: #f4f7f6; --accent: #3498db; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 80px; }
-        .header { background: var(--primary); color: white; padding: 15px; text-align: center; border-radius: 0 0 15px 15px; }
-        .container { max-width: 500px; margin: auto; padding: 10px; }
-        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        :root { --primary: #adff2f; --dark: #121212; --card-bg: #1e1e1e; --text: #ffffff; --danger: #ff4757; --whatsapp: #25D366; }
+        body { font-family: 'Oswald', sans-serif; background: var(--dark); color: var(--text); margin: 0; padding-bottom: 100px; }
+        .header { background: #000; padding: 25px; text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .container { max-width: 500px; margin: auto; padding: 15px; }
         
-        /* Diet Accordion */
-        .meal-card { background: white; border-radius: 12px; margin-bottom: 10px; border: 1px solid #ddd; overflow: hidden; }
-        .meal-header { padding: 15px; background: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid transparent; }
-        .meal-header.open { border-bottom: 1px solid #eee; background: #f9f9f9; }
-        .meal-title { font-weight: bold; color: var(--dark); text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
-        .meal-content { display: none; padding: 15px; background: white; }
+        /* Diet Cards */
+        .meal-card { background: var(--card-bg); border-radius: 8px; margin-bottom: 15px; border-left: 6px solid var(--primary); overflow: hidden; }
+        .meal-header { padding: 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .meal-title { font-size: 19px; text-transform: uppercase; font-weight: bold; }
+        .meal-content { display: none; padding: 0 18px 18px 18px; border-top: 1px solid #333; }
         .meal-content.active { display: block; }
         
-        .meal-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px dotted #eee; }
-        .meal-item:last-child { border-bottom: none; }
-        .meal-item input { margin-right: 12px; transform: scale(1.2); }
-        .done { color: #bdc3c7; text-decoration: line-through; }
+        .meal-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #333; }
+        .item-text { flex: 1; margin: 0 12px; font-size: 16px; cursor: pointer; }
+        .item-text.done { text-decoration: line-through; color: #555; }
 
-        .btn-edit { color: var(--accent); cursor: pointer; font-size: 14px; margin-left: 10px; }
-        .nav-tabs { display: flex; justify-content: space-around; background: white; padding: 12px 0; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ddd; z-index: 100; }
-        .nav-item { color: #95a5a6; text-align: center; font-size: 12px; cursor: pointer; flex: 1; }
+        /* Peso Trends */
+        .trend-up { color: var(--danger); font-size: 12px; }
+        .trend-down { color: var(--primary); font-size: 12px; }
+        .trend-equal { color: #888; font-size: 12px; }
+
+        /* Botões */
+        .btn { background: var(--primary); color: #000; border: none; padding: 16px; border-radius: 5px; width: 100%; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; margin-bottom: 10px; transition: 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        .btn-del { color: var(--danger); cursor: pointer; font-size: 18px; padding: 5px; }
+        textarea, input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 5px; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        /* Rodapé Assinatura */
+        .footer-brand { text-align: center; font-size: 11px; color: #444; margin-top: 40px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Navegação */
+        .nav-tabs { display: flex; justify-content: space-around; background: #000; padding: 15px 0; position: fixed; bottom: 0; width: 100%; border-top: 2px solid var(--primary); z-index: 1000; }
+        .nav-item { color: #555; text-align: center; font-size: 11px; cursor: pointer; flex: 1; text-transform: uppercase; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; }
         
-        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        textarea, input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .view { display: none; }
+        .view.active { display: block; }
     </style>
 </head>
 <body>
 
-<div class="header"><h3>MINHA DIETA</h3></div>
+<div class="header">
+    <h1 style="margin:0; font-style: italic; letter-spacing: 2px;">WOD <span style="color:var(--primary)">DIET</span></h1>
+    <div style="font-size: 14px; color: var(--primary); font-weight: bold; margin-top: 5px;">STREAK: <span id="streakCount">0</span> DIAS 🔥</div>
+</div>
 
 <div class="container">
     <div id="view-diet" class="view active">
-        <div id="setup-view" class="card">
-            <h4>Importar Dieta</h4>
-            <input type="file" id="pdfInput" accept="application/pdf" style="margin-bottom:10px;">
-            <textarea id="rawText" placeholder="Ou digite aqui: 
-Café: 2 ovos
-Almoço: Arroz e Frango..." style="height:100px;"></textarea>
-            <button class="btn" onclick="processDiet()">Dividir e Gerar</button>
+        <div id="setup-view" class="card" style="background:var(--card-bg); padding:20px; border-radius:10px; margin-bottom:20px;">
+            <h3 style="margin:0 0 15px 0; border-bottom: 1px solid var(--primary); padding-bottom: 5px;">NOVO PLANO</h3>
+            <label style="font-size:11px; color:#888;">IMPORTAR PDF DA DIETA:</label>
+            <input type="file" id="pdfInput" accept="application/pdf" style="margin-bottom:15px;">
+            <textarea id="rawText" placeholder="Ou digite aqui as refeições manualmente..." style="height:80px;"></textarea>
+            <button class="btn" style="margin-top:15px;" onclick="processDiet()">GERAR DIETA</button>
         </div>
 
         <div id="diet-list"></div>
         
-        <button id="btnNewMeal" class="btn" style="background: var(--dark); display:none;" onclick="addManualMeal()">+ Adicionar Refeição Manual</button>
-        <button id="btnReset" class="btn" style="background: #95a5a6; display:none; margin-top:5px;" onclick="if(confirm('Apagar tudo?')){localStorage.clear(); location.reload();}">Trocar Dieta Inteira</button>
+        <div id="action-btns" style="display:none; margin-top:20px;">
+            <button class="btn" onclick="addMeal()">+ ADICIONAR REFEIÇÃO</button>
+            
+            <button class="btn" style="background: var(--whatsapp); color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="shareWhatsApp()">
+                <i class="fab fa-whatsapp fa-lg"></i> COMPARTILHAR PDF
+            </button>
+            
+            <button class="btn" style="background:#333; color:#888; margin-top:30px; font-size: 9px; padding: 8px;" onclick="resetAll()">RESETAR TODOS OS DADOS</button>
+        </div>
+
+        <div class="footer-brand">
+            Desenvolvido para Felipe • Todos os direitos reservados © 2026
+        </div>
     </div>
 
     <div id="view-weight" class="view">
-        <div class="card">
-            <h4>Peso Atual</h4>
-            <h2 style="text-align:center; color:var(--primary);" id="dispPeso">-- kg</h2>
-            <div style="display:flex; gap:5px;">
-                <input type="number" id="inPeso" placeholder="Peso kg" step="0.1">
-                <input type="date" id="inData">
+        <div class="card" style="background:var(--card-bg); padding:25px; border-radius:12px; text-align:center;">
+            <span style="font-size:12px; color:#888; text-transform:uppercase;">Peso Atual</span>
+            <h2 style="margin:5px 0; color:var(--primary); font-size:3rem;" id="dispPeso">-- kg</h2>
+            
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <div style="flex:1">
+                    <label style="font-size:10px; display:block; text-align:left;">PESO (KG)</label>
+                    <input type="number" id="inPeso" step="0.1" placeholder="00.0">
+                </div>
+                <div style="flex:1">
+                    <label style="font-size:10px; display:block; text-align:left;">DATA</label>
+                    <input type="date" id="inData">
+                </div>
             </div>
-            <button class="btn" onclick="salvarPeso()">Registrar</button>
+            <button class="btn" style="margin-top:15px;" onclick="salvarPeso()">REGISTRAR PESO</button>
         </div>
-        <div class="card">
-            <h4>Histórico</h4>
-            <div id="histPeso"></div>
-        </div>
+
+        <h3 style="margin:25px 0 10px 5px; font-size:14px; color:#888; text-transform:uppercase;">Histórico de Evolução</h3>
+        <div id="histPeso"></div>
     </div>
 </div>
 
 <nav class="nav-tabs">
-    <div class="nav-item active" onclick="switchTab('view-diet', this)"><i class="fas fa-utensils"></i>Dieta</div>
-    <div class="nav-item" onclick="switchTab('view-weight', this)"><i class="fas fa-weight"></i>Peso</div>
+    <div class="nav-item active" onclick="switchTab('view-diet', this)"><i class="fas fa-dumbbell fa-lg" style="margin-bottom:4px; display:block;"></i>DIETA</div>
+    <div class="nav-item" onclick="switchTab('view-weight', this)"><i class="fas fa-chart-line fa-lg" style="margin-bottom:4px; display:block;"></i>EVOLUÇÃO</div>
 </nav>
 
 <script>
-    let appData = JSON.parse(localStorage.getItem('felipeV9')) || { dieta: [], peso: [] };
+    // Configurações Iniciais
+    const { jsPDF } = window.jspdf;
+    let db = JSON.parse(localStorage.getItem('wodDietDB')) || { dieta: [], peso: [], streak: 0, lastCheck: "" };
 
     window.onload = () => {
         document.getElementById('inData').valueAsDate = new Date();
-        renderDieta();
-        renderPeso();
+        render();
     };
 
-    // --- INTELIGÊNCIA DE DIVISÃO ---
+    // --- LÓGICA DE DIETA ---
     function processDiet() {
         let text = document.getElementById('rawText').value;
-        // Divide por palavras que indicam nova refeição
+        const ignore = ["beba água", "hidratação", "parabéns", "recebendo sua dieta"];
+        
         let parts = text.split(/(Refeição \d+|Café|Almoço|Lanche|Jantar|Ceia|Colação|Pós-treino|Pré-treino|\d{2}:\d{2})/gi);
         let structured = [];
 
@@ -99,48 +132,41 @@ Almoço: Arroz e Frango..." style="height:100px;"></textarea>
             let title = parts[i].trim();
             let content = parts[i+1] ? parts[i+1].trim() : "";
             if(content) {
-                let items = content.split('\n').filter(l => l.trim().length > 2);
+                let items = content.split('\n').filter(l => {
+                    let low = l.toLowerCase();
+                    return l.trim().length > 1 && !ignore.some(ig => low.includes(ig));
+                });
                 structured.push({ title, items: items.map(t => ({ text: t.trim(), done: false })) });
             }
         }
-        
-        if(structured.length > 0) {
-            appData.dieta = structured;
-            save();
-            renderDieta();
-        } else {
-            alert("Tente escrever 'Almoço: ...' ou 'Refeição 1: ...' para eu entender a divisão.");
-        }
+        if(structured.length > 0) { db.dieta = structured; save(); render(); }
     }
 
-    function renderDieta() {
+    function render() {
+        document.getElementById('streakCount').innerText = db.streak;
         const list = document.getElementById('diet-list');
         list.innerHTML = "";
         
-        if(appData.dieta.length > 0) {
+        if(db.dieta.length > 0) {
             document.getElementById('setup-view').style.display = 'none';
-            document.getElementById('btnReset').style.display = 'block';
-            document.getElementById('btnNewMeal').style.display = 'block';
+            document.getElementById('action-btns').style.display = 'block';
 
-            appData.dieta.forEach((meal, mIdx) => {
-                let allDone = meal.items.every(i => i.done);
+            db.dieta.forEach((meal, mIdx) => {
                 let html = `
                 <div class="meal-card">
-                    <div class="meal-header" onclick="toggleAccordion(${mIdx})">
-                        <div class="meal-title">
-                            <i class="fas ${allDone ? 'fa-check-circle' : 'fa-circle'}" style="color: ${allDone ? '#27ae60' : '#ddd'}"></i>
-                            ${meal.title}
-                        </div>
-                        <div>
-                            <i class="fas fa-edit btn-edit" onclick="editMeal(${mIdx}, event)"></i>
-                            <i class="fas fa-chevron-down" style="margin-left:10px; font-size:12px;"></i>
+                    <div class="meal-header" onclick="toggleCard(${mIdx})">
+                        <span class="meal-title">${meal.title}</span>
+                        <div style="display:flex; align-items:center;">
+                            <i class="fas fa-trash-alt" style="color:#444; font-size:14px; margin-right:15px;" onclick="delMeal(${mIdx}, event)"></i>
+                            <i class="fas fa-chevron-down" style="font-size:12px; color:#666;"></i>
                         </div>
                     </div>
-                    <div id="content-${mIdx}" class="meal-content">
+                    <div id="m-${mIdx}" class="meal-content">
                         ${meal.items.map((it, iIdx) => `
-                            <div class="meal-item ${it.done ? 'done' : ''}">
-                                <input type="checkbox" ${it.done ? 'checked' : ''} onchange="toggleCheck(${mIdx}, ${iIdx})">
-                                <span>${it.text}</span>
+                            <div class="meal-item">
+                                <input type="checkbox" ${it.done ? 'checked' : ''} onchange="checkItem(${mIdx}, ${iIdx})">
+                                <span class="item-text ${it.done ? 'done' : ''}" onclick="editItem(${mIdx}, ${iIdx})">${it.text}</span>
+                                <i class="fas fa-times" style="color:var(--danger); cursor:pointer; opacity:0.5;" onclick="delItem(${mIdx}, ${iIdx})"></i>
                             </div>
                         `).join('')}
                     </div>
@@ -148,84 +174,126 @@ Almoço: Arroz e Frango..." style="height:100px;"></textarea>
                 list.innerHTML += html;
             });
         }
+        renderPeso();
     }
 
-    // --- FUNÇÕES DE EDIÇÃO ---
-    function toggleAccordion(idx) {
-        let content = document.getElementById(`content-${idx}`);
-        content.classList.toggle('active');
-    }
-
-    function editMeal(idx, event) {
-        event.stopPropagation(); // Não abre o accordion ao clicar no edit
-        let meal = appData.dieta[idx];
-        let newTitle = prompt("Nome da Refeição:", meal.title);
-        let currentItems = meal.items.map(i => i.text).join('\n');
-        let newContent = prompt("Alimentos (um por linha):", currentItems);
-
-        if(newTitle !== null && newContent !== null) {
-            meal.title = newTitle;
-            meal.items = newContent.split('\n').filter(l => l.trim()).map(t => ({ text: t.trim(), done: false }));
-            save();
-            renderDieta();
+    function checkItem(mIdx, iIdx) {
+        db.dieta[mIdx].items[iIdx].done = !db.dieta[mIdx].items[iIdx].done;
+        
+        let allDone = true;
+        db.dieta.forEach(m => m.items.forEach(i => { if(!i.done) allDone = false; }));
+        
+        const today = new Date().toLocaleDateString();
+        if (allDone && db.lastCheck !== today) {
+            db.streak++;
+            db.lastCheck = today;
+            alert("🔥 RX! Você bateu 100% da dieta hoje!");
         }
+        save(); render();
     }
 
-    function addManualMeal() {
-        appData.dieta.push({ title: "Nova Refeição", items: [{ text: "Clique no lápis para editar", done: false }] });
-        save();
-        renderDieta();
+    function editItem(mIdx, iIdx) {
+        let n = prompt("Editar alimento:", db.dieta[mIdx].items[iIdx].text);
+        if(n) { db.dieta[mIdx].items[iIdx].text = n; save(); render(); }
     }
 
-    function toggleCheck(mIdx, iIdx) {
-        appData.dieta[mIdx].items[iIdx].done = !appData.dieta[mIdx].items[iIdx].done;
-        save();
-        renderDieta();
+    function delItem(mIdx, iIdx) { db.dieta[mIdx].items.splice(iIdx, 1); save(); render(); }
+    function delMeal(mIdx, event) { 
+        event.stopPropagation(); 
+        if(confirm("Excluir esta refeição?")) { db.dieta.splice(mIdx, 1); save(); render(); } 
+    }
+    function addMeal() { 
+        let t = prompt("Nome da Refeição:"); 
+        if(t) { db.dieta.push({ title: t, items: [{text: "Clique aqui para editar", done: false}] }); save(); render(); } 
     }
 
-    // --- PESO ---
+    // --- LÓGICA DE PESO COM TENDÊNCIA ---
     function salvarPeso() {
         const p = parseFloat(document.getElementById('inPeso').value);
         const d = document.getElementById('inData').value;
         if(p && d) {
-            appData.peso.push({ id: Date.now(), peso: p, data: new Date(d+'T12:00:00').toLocaleDateString('pt-BR'), ts: new Date(d).getTime() });
-            appData.peso.sort((a,b) => b.ts - a.ts);
-            save();
-            renderPeso();
+            db.peso.push({ id: Date.now(), peso: p, data: new Date(d+'T12:00:00').toLocaleDateString('pt-BR'), ts: new Date(d).getTime() });
+            db.peso.sort((a,b) => b.ts - a.ts);
+            save(); renderPeso();
             document.getElementById('inPeso').value = "";
         }
     }
 
     function renderPeso() {
-        const hist = document.getElementById('histPeso');
-        hist.innerHTML = "";
-        if(appData.peso.length > 0) {
-            document.getElementById('dispPeso').innerText = appData.peso[0].peso + " kg";
-            appData.peso.forEach(r => {
-                hist.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eee;">
-                    <span>${r.data}</span> <strong>${r.peso} kg</strong>
-                    <i class="fas fa-trash" style="color:#e74c3c; cursor:pointer;" onclick="delPeso(${r.id})"></i>
+        const h = document.getElementById('histPeso'); h.innerHTML = "";
+        if(db.peso.length > 0) {
+            document.getElementById('dispPeso').innerText = db.peso[0].peso + " kg";
+            
+            const cronologico = [...db.peso].sort((a,b) => a.ts - b.ts);
+            const trends = {};
+            cronologico.forEach((reg, i) => {
+                if(i === 0) trends[reg.id] = { icon: '▬', class: 'trend-equal', diff: '' };
+                else {
+                    const diff = (reg.peso - cronologico[i-1].peso).toFixed(1);
+                    if(diff > 0) trends[reg.id] = { icon: '▲', class: 'trend-up', diff: `+${diff}` };
+                    else if(diff < 0) trends[reg.id] = { icon: '▼', class: 'trend-down', diff: `${diff}` };
+                    else trends[reg.id] = { icon: '▬', class: 'trend-equal', diff: '0' };
+                }
+            });
+
+            db.peso.forEach(r => {
+                const t = trends[r.id];
+                h.innerHTML += `
+                <div style="background:var(--card-bg); padding:15px; margin-bottom:8px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div><div style="font-size:11px; color:#666;">${r.data}</div><strong style="font-size:18px;">${r.peso} kg</strong></div>
+                    <div style="text-align:right;"><span class="${t.class}" style="font-size:14px;">${t.icon} ${t.diff}</span><br>
+                    <i class="fas fa-trash-alt" style="color:#333; font-size:12px; margin-top:5px; cursor:pointer;" onclick="delPeso(${r.id})"></i></div>
                 </div>`;
             });
         }
     }
 
-    function delPeso(id) {
-        appData.peso = appData.peso.filter(p => p.id !== id);
-        save();
-        renderPeso();
+    function delPeso(id) { if(confirm("Apagar registro?")) { db.peso = db.peso.filter(p => p.id !== id); save(); renderPeso(); } }
+
+    // --- EXPORTAÇÃO E COMPARTILHAMENTO ---
+    function shareWhatsApp() {
+        const doc = new jsPDF();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        
+        doc.setFillColor(0, 0, 0); doc.rect(0, 0, pageWidth, 40, 'F');
+        doc.setTextColor(173, 255, 47); doc.setFont("helvetica", "bold"); doc.setFontSize(22);
+        doc.text("WOD DIET PLAN", pageWidth / 2, 25, { align: "center" });
+        doc.setFontSize(10); doc.setTextColor(255, 255, 255);
+        doc.text("PLANO ENVIADO POR FELIPE", pageWidth / 2, 33, { align: "center" });
+
+        let cursorY = 55; doc.setTextColor(0, 0, 0);
+        db.dieta.forEach((meal) => {
+            if (cursorY > 270) { doc.addPage(); cursorY = 20; }
+            doc.setFontSize(14); doc.setFont("helvetica", "bold");
+            doc.text(meal.title.toUpperCase(), 20, cursorY);
+            cursorY += 8;
+            doc.setFont("helvetica", "normal"); doc.setFontSize(11);
+            meal.items.forEach(item => { doc.text("- " + item.text, 25, cursorY); cursorY += 7; });
+            cursorY += 10;
+        });
+
+        doc.setFontSize(9); doc.setTextColor(150, 150, 150);
+        doc.text("Gerado pelo app WOD DIET • Desenvolvido para Felipe", pageWidth / 2, 288, { align: "center" });
+        
+        doc.save("Dieta_WOD_Felipe.pdf");
+
+        setTimeout(() => {
+            const msg = encodeURIComponent("💪 Segue meu plano de dieta atualizado no WOD DIET! Vou enviar o PDF em anexo.");
+            window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+        }, 800);
     }
 
+    // --- UTILITÁRIOS ---
+    function toggleCard(idx) { document.getElementById(`m-${idx}`).classList.toggle('active'); }
     function switchTab(id, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
+        document.getElementById(id).classList.add('active'); el.classList.add('active');
     }
+    function save() { localStorage.setItem('wodDietDB', JSON.stringify(db)); }
+    function resetAll() { if(confirm("Isso apagará TODA sua dieta e histórico. Confirmar?")) { localStorage.clear(); location.reload(); } }
 
-    function save() { localStorage.setItem('felipeV9', JSON.stringify(appData)); }
-
-    // PDF IMPORT
+    // PDF ENGINE
     document.getElementById('pdfInput').onchange = async (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
