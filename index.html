@@ -9,226 +9,246 @@
     <style>
         :root { --primary: #27ae60; --dark: #2c3e50; --light: #f4f7f6; --danger: #e74c3c; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 80px; }
-        .header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .container { max-width: 500px; margin: 15px auto; padding: 0 15px; }
+        .header { background: var(--primary); color: white; padding: 15px; text-align: center; border-radius: 0 0 15px 15px; }
+        .container { max-width: 500px; margin: auto; padding: 10px; }
+        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
         
-        /* Cards */
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        .streak-tag { display: inline-block; background: #ffeaa7; color: #d35400; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-top: 10px; }
+        /* Diet */
+        .meal-block { border-left: 4px solid var(--primary); margin-bottom: 20px; padding-left: 10px; background: white; padding: 10px; border-radius: 8px; }
+        .meal-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .meal-item.done { opacity: 0.5; text-decoration: line-through; }
 
-        /* Tabs */
-        .nav-tabs { display: flex; justify-content: space-around; background: white; padding: 10px 0; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ddd; }
+        /* Peso & Histórico */
+        .weight-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .last-weight-display { font-size: 2.2rem; font-weight: bold; color: var(--primary); text-align: center; margin: 10px 0; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .history-info { display: flex; flex-direction: column; }
+        .history-date { font-size: 12px; color: #7f8c8d; }
+        .btn-delete { color: var(--danger); cursor: pointer; padding: 5px; font-size: 18px; }
+
+        /* Nav */
+        .nav-tabs { display: flex; justify-content: space-around; background: white; padding: 12px 0; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ddd; z-index: 100; }
         .nav-item { color: #95a5a6; text-align: center; font-size: 12px; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 3px; }
 
         .view { display: none; }
         .view.active { display: block; }
-
-        /* Inputs e Botões */
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--dark); }
-        input[type="number"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        .btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; }
-        .btn-ghost { background: transparent; color: var(--danger); border: 1px solid var(--danger); margin-top: 10px; padding: 8px; }
-
-        /* Lista */
-        .meal-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; }
-        .meal-item:last-child { border-bottom: none; }
-        .meal-item input { margin-right: 15px; transform: scale(1.3); }
-        .meal-item.done span { text-decoration: line-through; color: #bdc3c7; }
-
-        .msg-box { padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; font-weight: bold; }
-        .gain { background: #fab1a0; color: #c0392b; }
-        .loss { background: #55efc4; color: #00b894; }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        label { font-size: 12px; font-weight: bold; color: var(--dark); display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h2 id="appTitle">MINHA DIETA</h2>
-    <div class="streak-tag">🔥 <span id="streakDays">0</span> DIAS DE FOCO</div>
-</div>
+<div class="header"><h3>MINHA DIETA</h3></div>
 
 <div class="container">
     <div id="view-diet" class="view active">
-        <div id="setup-section" style="display: none;">
+        <div id="setup-view">
             <div class="card">
-                <h3>Configurar Dieta</h3>
+                <h4>Importar Dieta</h4>
                 <input type="file" id="pdfInput" accept="application/pdf" style="margin-bottom: 10px;">
-                <textarea id="dietManual" placeholder="Ou cole as refeições aqui (uma por linha)..." style="height: 120px;"></textarea>
-                <button class="btn" onclick="saveDiet()">Salvar Dieta</button>
+                <textarea id="rawText" placeholder="Cole o texto aqui..." style="width:100%; height:100px; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
+                <button class="btn" onclick="processDiet()">Analisar</button>
             </div>
         </div>
-
-        <div id="list-section">
-            <div class="card" id="checklistArea">
-                </div>
-            <button class="btn btn-ghost" onclick="clearDiet()">Trocar Dieta Atual</button>
-        </div>
+        <div id="diet-display"></div>
     </div>
 
-    <div id="view-progress" class="view">
+    <div id="view-weight" class="view">
         <div class="card">
-            <h3>Meu Peso</h3>
-            <div id="weightFeedback"></div>
-            
-            <div class="input-group">
-                <label>Peso Atual (kg):</label>
-                <input type="number" id="currentWeight" step="0.1" placeholder="Ex: 82.5">
-            </div>
-            <div class="input-group">
-                <label>Minha Meta (kg):</label>
-                <input type="number" id="goalWeight" step="0.1" placeholder="Ex: 75.0">
-            </div>
-            <button class="btn" onclick="recordWeight()">Salvar Peso</button>
+            <h4>Último Peso</h4>
+            <div class="last-weight-display"><span id="displayPeso">--</span> kg</div>
+            <p id="metaDestaque" style="text-align: center; font-size: 13px; color: #7f8c8d; margin: 0;"></p>
         </div>
 
         <div class="card">
-            <h4>Histórico & Meta</h4>
-            <p id="metaStatus">Defina uma meta para acompanhar.</p>
+            <h4>Novo Registro</h4>
+            <div class="weight-row">
+                <div style="flex: 2;">
+                    <label>Peso (kg)</label>
+                    <input type="number" id="inputPeso" step="0.1" placeholder="85.0">
+                </div>
+                <div style="flex: 3;">
+                    <label>Data</label>
+                    <input type="date" id="inputData">
+                </div>
+            </div>
+            
+            <details style="margin: 10px 0; color: #3498db; cursor: pointer;">
+                <summary style="font-size: 13px;">Definir Meta de Peso</summary>
+                <input type="number" id="inputMeta" step="0.1" placeholder="Ex: 75.0" style="margin-top:5px;">
+            </details>
+            
+            <button class="btn" onclick="salvarPeso()">Salvar no Histórico</button>
+        </div>
+
+        <div class="card">
+            <h4>Histórico</h4>
+            <div id="historicoPeso"></div>
         </div>
     </div>
 </div>
 
 <nav class="nav-tabs">
-    <div class="nav-item active" onclick="switchTab('view-diet', this)">
-        <i class="fas fa-utensils"></i>Dieta
-    </div>
-    <div class="nav-item" onclick="switchTab('view-progress', this)">
-        <i class="fas fa-weight"></i>Progresso
-    </div>
+    <div class="nav-item active" onclick="trocarAba('view-diet', this)"><i class="fas fa-clipboard-check"></i>Dieta</div>
+    <div class="nav-item" onclick="trocarAba('view-weight', this)"><i class="fas fa-weight"></i>Peso</div>
 </nav>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('minhaDietaDB')) || {
-        dietItems: [],
-        weightLogs: [],
-        goal: 0,
-        streak: 0,
-        lastDate: ""
-    };
+    let appData = JSON.parse(localStorage.getItem('felipeData')) || { dieta: [], historicoPeso: [], meta: 0 };
 
     window.onload = () => {
-        checkReset();
-        render();
+        // Define data de hoje no input por padrão
+        document.getElementById('inputData').valueAsDate = new Date();
+        carregarTudo();
     };
 
-    function checkReset() {
-        const today = new Date().toLocaleDateString();
-        if (db.lastDate && db.lastDate !== today) {
-            db.dietItems.forEach(i => i.done = false);
-            db.lastDate = today;
-            save();
+    function carregarTudo() {
+        if(appData.dieta.length > 0) {
+            document.getElementById('setup-view').style.display = 'none';
+            renderDieta();
         }
-        if (!db.lastDate) db.lastDate = today;
+        renderPeso();
     }
 
-    function render() {
-        document.getElementById('streakDays').innerText = db.streak;
+    // --- LÓGICA DE PESO ---
+    function salvarPeso() {
+        const peso = parseFloat(document.getElementById('inputPeso').value);
+        const dataInput = document.getElementById('inputData').value;
+        const meta = parseFloat(document.getElementById('inputMeta').value);
+
+        if (peso && dataInput) {
+            // Converte data para formato legível e timestamp para ordenação
+            const dataObj = new Date(dataInput + 'T12:00:00'); 
+            const formattedDate = dataObj.toLocaleDateString('pt-BR');
+            
+            appData.historicoPeso.push({ 
+                id: Date.now(), 
+                timestamp: dataObj.getTime(),
+                data: formattedDate, 
+                peso: peso 
+            });
+
+            // Ordena por data (mais novo primeiro)
+            appData.historicoPeso.sort((a, b) => b.timestamp - a.timestamp);
+        }
+
+        if (meta) appData.meta = meta;
+
+        salvarDB();
+        renderPeso();
+        document.getElementById('inputPeso').value = "";
+    }
+
+    function deletarPeso(id) {
+        if(confirm("Deseja apagar este registro?")) {
+            appData.historicoPeso = appData.historicoPeso.filter(p => p.id !== id);
+            salvarDB();
+            renderPeso();
+        }
+    }
+
+    function renderPeso() {
+        const lista = document.getElementById('historicoPeso');
+        const display = document.getElementById('displayPeso');
+        const metaDestaque = document.getElementById('metaDestaque');
         
-        // Controle de Exibição Dieta
-        if (db.dietItems.length === 0) {
-            document.getElementById('setup-section').style.display = 'block';
-            document.getElementById('list-section').style.display = 'none';
+        lista.innerHTML = "";
+        
+        if(appData.historicoPeso.length > 0) {
+            const maisRecente = appData.historicoPeso[0];
+            display.innerText = maisRecente.peso;
+            
+            appData.historicoPeso.forEach(reg => {
+                lista.innerHTML += `
+                    <div class="history-item">
+                        <div class="history-info">
+                            <strong>${reg.peso} kg</strong>
+                            <span class="history-date">${reg.data}</span>
+                        </div>
+                        <i class="fas fa-trash-alt btn-delete" onclick="deletarPeso(${reg.id})"></i>
+                    </div>`;
+            });
+
+            if(appData.meta > 0) {
+                const diff = (maisRecente.peso - appData.meta).toFixed(1);
+                metaDestaque.innerText = diff > 0 ? `Faltam ${diff}kg para a meta (${appData.meta}kg)` : "Meta atingida! 🔥";
+            }
         } else {
-            document.getElementById('setup-section').style.display = 'none';
-            document.getElementById('list-section').style.display = 'block';
-            renderList();
-        }
-
-        // Controle de Peso
-        if (db.weightLogs.length > 0) {
-            const last = db.weightLogs[db.weightLogs.length - 1].value;
-            document.getElementById('currentWeight').value = last;
-            if (db.goal) {
-                document.getElementById('goalWeight').value = db.goal;
-                const diff = (last - db.goal).toFixed(1);
-                document.getElementById('metaStatus').innerText = diff > 0 
-                    ? `Faltam ${diff}kg para sua meta!` 
-                    : `Meta atingida! Parabéns!`;
-            }
+            display.innerText = "--";
+            metaDestaque.innerText = "";
         }
     }
 
-    function renderList() {
-        const area = document.getElementById('checklistArea');
-        area.innerHTML = "<h3>Refeições de Hoje:</h3>";
-        db.dietItems.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = `meal-item ${item.done ? 'done' : ''}`;
-            div.innerHTML = `<input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMeal(${index})"> <span>${item.text}</span>`;
-            area.appendChild(div);
+    // --- LÓGICA DE DIETA (IGUAL ANTERIOR) ---
+    function processDiet() {
+        let text = document.getElementById('rawText').value;
+        let parts = text.split(/(Refeição \d+|Café|Almoço|Lanche|Jantar|Ceia|\d{2}:\d{2})/gi);
+        let structured = [];
+        for(let i = 1; i < parts.length; i+=2) {
+            let title = parts[i].trim();
+            let content = parts[i+1] ? parts[i+1].trim() : "";
+            if(content) {
+                let items = content.split('\n').filter(l => l.trim().length > 3);
+                structured.push({ title, items: items.map(t => ({ text: t.trim(), done: false, kcal: 0 })) });
+            }
+        }
+        appData.dieta = structured;
+        salvarDB();
+        location.reload();
+    }
+
+    function renderDieta() {
+        const area = document.getElementById('diet-display');
+        area.innerHTML = "<h4>Sua Dieta</h4>";
+        appData.dieta.forEach((m, mIdx) => {
+            let html = `<div class="meal-block"><strong>${m.title}</strong>`;
+            m.items.forEach((it, iIdx) => {
+                html += `
+                    <div class="meal-item ${it.done ? 'done' : ''}" onclick="toggleMeal(${mIdx}, ${iIdx})">
+                        <span><input type="checkbox" ${it.done ? 'checked' : ''}> ${it.text}</span>
+                    </div>`;
+            });
+            area.innerHTML += html + `</div>`;
         });
+        area.innerHTML += `<button class="btn" style="background:#2c3e50; margin-top:20px;" onclick="if(confirm('Limpar dieta?')){localStorage.clear(); location.reload();}">Trocar Dieta</button>`;
     }
 
-    function toggleMeal(idx) {
-        db.dietItems[idx].done = !db.dietItems[idx].done;
-        save();
-        renderList();
-        if (db.dietItems.every(i => i.done)) {
-            db.streak++;
-            save();
-            alert("🔥 BOA, FELIPE! Dieta 100% concluída!");
-            location.reload();
-        }
+    function toggleMeal(mIdx, iIdx) {
+        appData.dieta[mIdx].items[iIdx].done = !appData.dieta[mIdx].items[iIdx].done;
+        salvarDB();
+        renderDieta();
     }
 
-    function recordWeight() {
-        const weight = parseFloat(document.getElementById('currentWeight').value);
-        const goal = parseFloat(document.getElementById('goalWeight').value);
-        if (!weight) return;
-
-        const prev = db.weightLogs.length > 0 ? db.weightLogs[db.weightLogs.length-1].value : weight;
-        db.weightLogs.push({ date: new Date().toLocaleDateString(), value: weight });
-        db.goal = goal || 0;
-
-        const feedback = document.getElementById('weightFeedback');
-        feedback.className = "msg-box " + (weight < prev ? "loss" : weight > prev ? "gain" : "");
-        
-        if (weight < prev) feedback.innerText = `📉 Emagreceu ${(prev - weight).toFixed(2)}kg! Foco total!`;
-        else if (weight > prev) feedback.innerText = `📈 Subiu ${(weight - prev).toFixed(2)}kg. Vamos ajustar o foco!`;
-        else feedback.innerText = "⚖️ Peso mantido. Disciplina!";
-
-        save();
-        render();
-    }
-
-    // --- PDF ENGINE ---
-    document.getElementById('pdfInput').onchange = async (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = async function() {
-            const typedarray = new Uint8Array(this.result);
-            const pdf = await pdfjsLib.getDocument(typedarray).promise;
-            let text = "";
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                text += content.items.map(s => s.str).join(" ") + "\n";
-            }
-            document.getElementById('dietManual').value = text;
-        };
-        reader.readAsArrayBuffer(file);
-    };
-
-    function saveDiet() {
-        const val = document.getElementById('dietManual').value;
-        if (!val) return;
-        db.dietItems = val.split('\n').filter(l => l.trim()).map(t => ({ text: t, done: false }));
-        save();
-        render();
-    }
-
-    function switchTab(id, el) {
+    function trocarAba(id, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         el.classList.add('active');
     }
 
-    function save() { localStorage.setItem('minhaDietaDB', JSON.stringify(db)); }
-    function clearDiet() { if(confirm("Trocar dieta?")) { db.dietItems = []; save(); render(); } }
+    function salvarDB() { localStorage.setItem('felipeData', JSON.stringify(appData)); }
+
+    // PDF Import
+    document.getElementById('pdfInput').onchange = async (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = async function() {
+            const typedarray = new Uint8Array(this.result);
+            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+            let fullText = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                fullText += content.items.map(s => s.str).join(" ") + "\n";
+            }
+            document.getElementById('rawText').value = fullText;
+        };
+        reader.readAsArrayBuffer(file);
+    };
 </script>
 </body>
 </html>
