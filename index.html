@@ -3,135 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioDiet Pro</title>
+    <title>Minha Dieta</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #27ae60; --dark: #2c3e50; --light: #f4f7f6; --danger: #e74c3c; --accent: #f39c12; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 10px; padding-bottom: 70px; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: var(--primary); margin: 10px 0; }
+        :root { --primary: #27ae60; --dark: #2c3e50; --light: #f4f7f6; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 80px; }
+        .header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 500px; margin: 15px auto; padding: 0 15px; }
         
-        /* Stats Card */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 12px; text-align: center; }
-        .stat-card i { color: var(--accent); }
+        /* Cards */
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .streak-tag { display: inline-block; background: #ffeaa7; color: #d35400; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-top: 10px; }
 
-        /* Tabs Navigation */
-        .nav-tabs { display: flex; justify-content: space-around; background: var(--dark); padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100; }
-        .nav-item { color: white; text-decoration: none; font-size: 12px; text-align: center; opacity: 0.6; cursor: pointer; }
-        .nav-item.active { opacity: 1; color: var(--primary); }
+        /* Tabs */
+        .nav-tabs { display: flex; justify-content: space-around; background: white; padding: 10px 0; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ddd; }
+        .nav-item { color: #95a5a6; text-align: center; font-size: 12px; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
 
         .view { display: none; }
         .view.active { display: block; }
 
-        /* UI Elements */
-        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
-        .meal-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
-        .meal-item.done { background: #e8f5e9; text-decoration: line-through; opacity: 0.6; }
-        .upload-box { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 15px; }
-        input[type="number"] { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; }
-        
-        .message-box { padding: 15px; border-radius: 10px; margin: 10px 0; font-weight: bold; text-align: center; display: none; }
-        .msg-success { background: #d4edda; color: #155724; display: block; }
-        .msg-warning { background: #fff3cd; color: #856404; display: block; }
+        /* Inputs e Botões */
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--dark); }
+        input[type="number"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; }
+        .btn-ghost { background: transparent; color: var(--danger); border: 1px solid var(--danger); margin-top: 10px; padding: 8px; }
+
+        /* Lista */
+        .meal-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; }
+        .meal-item:last-child { border-bottom: none; }
+        .meal-item input { margin-right: 15px; transform: scale(1.3); }
+        .meal-item.done span { text-decoration: line-through; color: #bdc3c7; }
+
+        .msg-box { padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; font-weight: bold; }
+        .gain { background: #fab1a0; color: #c0392b; }
+        .loss { background: #55efc4; color: #00b894; }
     </style>
 </head>
 <body>
 
+<div class="header">
+    <h2 id="appTitle">MINHA DIETA</h2>
+    <div class="streak-tag">🔥 <span id="streakDays">0</span> DIAS DE FOCO</div>
+</div>
+
 <div class="container">
-    <h1><i class="fas fa-heartbeat"></i> BioDiet</h1>
-
     <div id="view-diet" class="view active">
-        <div class="stats-grid">
-            <div class="stat-card"><i class="fas fa-fire"></i><br><strong><span id="streakVal">0</span> Dias</strong></div>
-            <div class="stat-card"><i class="fas fa-weight"></i><br><strong><span id="currentWeightVal">--</span> kg</strong></div>
-        </div>
-
-        <div id="setup-area" style="display:none;">
-            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-file-upload fa-2x"></i><p>Subir PDF ou Digitar</p>
-                <input type="file" id="fileInput" hidden accept="application/pdf">
+        <div id="setup-section" style="display: none;">
+            <div class="card">
+                <h3>Configurar Dieta</h3>
+                <input type="file" id="pdfInput" accept="application/pdf" style="margin-bottom: 10px;">
+                <textarea id="dietManual" placeholder="Ou cole as refeições aqui (uma por linha)..." style="height: 120px;"></textarea>
+                <button class="btn" onclick="saveDiet()">Salvar Dieta</button>
             </div>
-            <textarea id="dietText" placeholder="Ou cole sua dieta aqui..." style="width:100%; height:100px; margin-top:10px;"></textarea>
-            <button class="btn" onclick="saveNewDiet()">Começar Dieta</button>
         </div>
 
-        <div id="checklist-area"></div>
-        <button class="btn" style="background:var(--dark); margin-top:30px;" onclick="resetWholeApp()">Trocar Dieta Inteira</button>
+        <div id="list-section">
+            <div class="card" id="checklistArea">
+                </div>
+            <button class="btn btn-ghost" onclick="clearDiet()">Trocar Dieta Atual</button>
+        </div>
     </div>
 
-    <div id="view-weight" class="view">
-        <h3>Controle de Peso</h3>
-        <div id="weightFeedback" class="message-box"></div>
-        
-        <label>Seu Peso Atual (kg):</label>
-        <input type="number" id="inputWeight" step="0.1" placeholder="Ex: 85.5">
-        
-        <label>Sua Meta (kg):</label>
-        <input type="number" id="inputGoal" step="0.1" placeholder="Ex: 80.0">
-        
-        <button class="btn" onclick="updateWeight()">Salvar Registro</button>
+    <div id="view-progress" class="view">
+        <div class="card">
+            <h3>Meu Peso</h3>
+            <div id="weightFeedback"></div>
+            
+            <div class="input-group">
+                <label>Peso Atual (kg):</label>
+                <input type="number" id="currentWeight" step="0.1" placeholder="Ex: 82.5">
+            </div>
+            <div class="input-group">
+                <label>Minha Meta (kg):</label>
+                <input type="number" id="goalWeight" step="0.1" placeholder="Ex: 75.0">
+            </div>
+            <button class="btn" onclick="recordWeight()">Salvar Peso</button>
+        </div>
 
-        <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">
-            <h4>Resumo:</h4>
-            <p id="weightSummary">Faltam -- kg para sua meta.</p>
+        <div class="card">
+            <h4>Histórico & Meta</h4>
+            <p id="metaStatus">Defina uma meta para acompanhar.</p>
         </div>
     </div>
 </div>
 
 <nav class="nav-tabs">
-    <div class="nav-item active" onclick="changeTab('view-diet', this)"><i class="fas fa-clipboard-list fa-2x"></i><br>Dieta</div>
-    <div class="nav-item" onclick="changeTab('view-weight', this)"><i class="fas fa-chart-line fa-2x"></i><br>Peso</div>
+    <div class="nav-item active" onclick="switchTab('view-diet', this)">
+        <i class="fas fa-utensils"></i>Dieta
+    </div>
+    <div class="nav-item" onclick="switchTab('view-progress', this)">
+        <i class="fas fa-weight"></i>Progresso
+    </div>
 </nav>
 
 <script>
-    // --- DATABASE MOCK ---
-    let appData = JSON.parse(localStorage.getItem('bioDietPro')) || {
-        diet: [],
-        weightHistory: [],
+    let db = JSON.parse(localStorage.getItem('minhaDietaDB')) || {
+        dietItems: [],
+        weightLogs: [],
         goal: 0,
         streak: 0,
-        lastAccess: null
+        lastDate: ""
     };
 
     window.onload = () => {
-        checkDailyReset();
-        refreshUI();
+        checkReset();
+        render();
     };
 
-    function refreshUI() {
-        document.getElementById('streakVal').innerText = appData.streak;
-        const lastW = appData.weightHistory.length > 0 ? appData.weightHistory[appData.weightHistory.length - 1].value : "--";
-        document.getElementById('currentWeightVal').innerText = lastW;
-        
-        if (appData.diet.length === 0) {
-            document.getElementById('setup-area').style.display = 'block';
-            document.getElementById('checklist-area').style.display = 'none';
-        } else {
-            document.getElementById('setup-area').style.display = 'none';
-            document.getElementById('checklist-area').style.display = 'block';
-            renderChecklist();
-        }
-        updateSummary();
-    }
-
-    // --- LÓGICA DE RESET DIÁRIO ---
-    function checkDailyReset() {
+    function checkReset() {
         const today = new Date().toLocaleDateString();
-        if (appData.lastAccess && appData.lastAccess !== today) {
-            // É um novo dia! Resetamos os checks
-            appData.diet.forEach(item => item.done = false);
-            appData.lastAccess = today;
-            saveData();
+        if (db.lastDate && db.lastDate !== today) {
+            db.dietItems.forEach(i => i.done = false);
+            db.lastDate = today;
+            save();
         }
-        if (!appData.lastAccess) appData.lastAccess = today;
+        if (!db.lastDate) db.lastDate = today;
     }
 
-    function renderChecklist() {
-        const area = document.getElementById('checklist-area');
-        area.innerHTML = "<h3>Checklist de Hoje:</h3>";
-        appData.diet.forEach((item, index) => {
+    function render() {
+        document.getElementById('streakDays').innerText = db.streak;
+        
+        // Controle de Exibição Dieta
+        if (db.dietItems.length === 0) {
+            document.getElementById('setup-section').style.display = 'block';
+            document.getElementById('list-section').style.display = 'none';
+        } else {
+            document.getElementById('setup-section').style.display = 'none';
+            document.getElementById('list-section').style.display = 'block';
+            renderList();
+        }
+
+        // Controle de Peso
+        if (db.weightLogs.length > 0) {
+            const last = db.weightLogs[db.weightLogs.length - 1].value;
+            document.getElementById('currentWeight').value = last;
+            if (db.goal) {
+                document.getElementById('goalWeight').value = db.goal;
+                const diff = (last - db.goal).toFixed(1);
+                document.getElementById('metaStatus').innerText = diff > 0 
+                    ? `Faltam ${diff}kg para sua meta!` 
+                    : `Meta atingida! Parabéns!`;
+            }
+        }
+    }
+
+    function renderList() {
+        const area = document.getElementById('checklistArea');
+        area.innerHTML = "<h3>Refeições de Hoje:</h3>";
+        db.dietItems.forEach((item, index) => {
             const div = document.createElement('div');
             div.className = `meal-item ${item.done ? 'done' : ''}`;
             div.innerHTML = `<input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMeal(${index})"> <span>${item.text}</span>`;
@@ -140,73 +163,72 @@
     }
 
     function toggleMeal(idx) {
-        appData.diet[idx].done = !appData.diet[idx].done;
-        saveData();
-        renderChecklist();
-        
-        if (appData.diet.every(m => m.done)) {
-            appData.streak++;
-            saveData();
-            alert("🎯 INCRÍVEL! Você bateu 100% da meta de hoje!");
+        db.dietItems[idx].done = !db.dietItems[idx].done;
+        save();
+        renderList();
+        if (db.dietItems.every(i => i.done)) {
+            db.streak++;
+            save();
+            alert("🔥 BOA, FELIPE! Dieta 100% concluída!");
             location.reload();
         }
     }
 
-    // --- PESO E MOTIVAÇÃO ---
-    function updateWeight() {
-        const val = parseFloat(document.getElementById('inputWeight').value);
-        const goal = parseFloat(document.getElementById('inputGoal').value);
-        if (!val) return;
+    function recordWeight() {
+        const weight = parseFloat(document.getElementById('currentWeight').value);
+        const goal = parseFloat(document.getElementById('goalWeight').value);
+        if (!weight) return;
 
-        const prevWeight = appData.weightHistory.length > 0 ? appData.weightHistory[appData.weightHistory.length-1].value : val;
-        
-        appData.weightHistory.push({ date: new Date().toLocaleDateString(), value: val });
-        if (goal) appData.goal = goal;
-        
-        const diff = val - prevWeight;
+        const prev = db.weightLogs.length > 0 ? db.weightLogs[db.weightLogs.length-1].value : weight;
+        db.weightLogs.push({ date: new Date().toLocaleDateString(), value: weight });
+        db.goal = goal || 0;
+
         const feedback = document.getElementById('weightFeedback');
-        feedback.style.display = 'block';
+        feedback.className = "msg-box " + (weight < prev ? "loss" : weight > prev ? "gain" : "");
+        
+        if (weight < prev) feedback.innerText = `📉 Emagreceu ${(prev - weight).toFixed(2)}kg! Foco total!`;
+        else if (weight > prev) feedback.innerText = `📈 Subiu ${(weight - prev).toFixed(2)}kg. Vamos ajustar o foco!`;
+        else feedback.innerText = "⚖️ Peso mantido. Disciplina!";
 
-        if (diff < 0) {
-            feedback.className = "message-box msg-success";
-            feedback.innerHTML = `🔥 Parabéns! Você emagreceu ${Math.abs(diff).toFixed(2)}kg! Continue firme!`;
-        } else if (diff > 0) {
-            feedback.className = "message-box msg-warning";
-            feedback.innerHTML = `⚠️ Opa, subiu ${diff.toFixed(2)}kg. Sem desanimar, foco na próxima refeição!`;
-        } else {
-            feedback.innerHTML = `⚖️ Peso mantido. Constância é a chave!`;
-        }
-
-        saveData();
-        refreshUI();
+        save();
+        render();
     }
 
-    function updateSummary() {
-        if (appData.goal > 0 && appData.weightHistory.length > 0) {
-            const last = appData.weightHistory[appData.weightHistory.length-1].value;
-            const toGoal = Math.abs(last - appData.goal).toFixed(2);
-            document.getElementById('weightSummary').innerText = `Faltam ${toGoal}kg para sua meta de ${appData.goal}kg.`;
-        }
+    // --- PDF ENGINE ---
+    document.getElementById('pdfInput').onchange = async (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = async function() {
+            const typedarray = new Uint8Array(this.result);
+            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+            let text = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                text += content.items.map(s => s.str).join(" ") + "\n";
+            }
+            document.getElementById('dietManual').value = text;
+        };
+        reader.readAsArrayBuffer(file);
+    };
+
+    function saveDiet() {
+        const val = document.getElementById('dietManual').value;
+        if (!val) return;
+        db.dietItems = val.split('\n').filter(l => l.trim()).map(t => ({ text: t, done: false }));
+        save();
+        render();
     }
 
-    // --- AUXILIARES ---
-    function changeTab(viewId, el) {
+    function switchTab(id, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(viewId).classList.add('active');
+        document.getElementById(id).classList.add('active');
         el.classList.add('active');
     }
 
-    function saveNewDiet() {
-        const text = document.getElementById('dietText').value;
-        if (!text) return;
-        appData.diet = text.split('\n').filter(l => l.trim()).map(t => ({ text: t, done: false }));
-        saveData();
-        refreshUI();
-    }
-
-    function saveData() { localStorage.setItem('bioDietPro', JSON.stringify(appData)); }
-    function resetWholeApp() { if(confirm("Apagar tudo?")) { localStorage.clear(); location.reload(); } }
+    function save() { localStorage.setItem('minhaDietaDB', JSON.stringify(db)); }
+    function clearDiet() { if(confirm("Trocar dieta?")) { db.dietItems = []; save(); render(); } }
 </script>
 </body>
 </html>
