@@ -1417,6 +1417,9 @@ function processDiet(slot){
   closeSheet('sheetChangeDiet');renderDiet();toast(`✅ ${m.length} refeições carregadas!`);
 }
 
+// Rastreia quais cards de refeição estão expandidos
+let openCards = new Set();
+
 // ══ RENDER DIET ══
 let editMealIdx=-1;
 function renderDiet(){
@@ -1457,7 +1460,7 @@ function renderDiet(){
           ${allDone?'<span class="icon icon-check" style="font-size:13px"></span>':''}
         </div>
         <!-- Title: click = expand -->
-        <div class="meal-title-block" onclick="toggleMeal(${mi})">
+        <div class="meal-title-block">
           <div class="meal-name">${escHtml(meal.title)}</div>
           <div class="meal-sub">${doneCount}/${meal.items.length} itens${reqItems.length<meal.items.length?' (alguns opcionais)':''}</div>
         </div>
@@ -1489,18 +1492,35 @@ function renderDiet(){
   });
 }
 
-function reopenCard(mi){requestAnimationFrame(()=>{const b=document.getElementById('mb'+mi),c=document.getElementById('chev'+mi);if(b){b.classList.add('open');if(c)c.classList.add('open');}});}
-function toggleMeal(mi){const b=document.getElementById('mb'+mi),c=document.getElementById('chev'+mi);b.classList.toggle('open');if(c)c.classList.toggle('open');}
-function toggleItem(mi,ii){db.meals[mi].items[ii].done=!db.meals[mi].items[ii].done;checkStreak();save();renderDiet();reopenCard(mi);}
+function keepCardState(mi){
+  // Preserva o estado aberto/fechado do card após re-render
+  requestAnimationFrame(()=>{
+    if(openCards.has(mi)){
+      const b=document.getElementById('mb'+mi),c=document.getElementById('chev'+mi);
+      if(b){b.classList.add('open');if(c)c.classList.add('open');}
+    }
+  });
+}
+function toggleMeal(mi){
+  const b=document.getElementById('mb'+mi),c=document.getElementById('chev'+mi);
+  b.classList.toggle('open');if(c)c.classList.toggle('open');
+  // rastreia quais estão abertos
+  if(b.classList.contains('open')) openCards.add(mi); else openCards.delete(mi);
+}
+function toggleItem(mi,ii){
+  db.meals[mi].items[ii].done=!db.meals[mi].items[ii].done;
+  checkStreak();save();renderDiet();
+  keepCardState(mi); // mantém estado, não force-abre
+}
 function markAllMeal(mi){
-  // Toggle: if all required done → unmark all; else mark all
   const req=db.meals[mi].items.filter(i=>!i.optional);
   const allDone=req.length>0&&req.every(i=>i.done);
   db.meals[mi].items.forEach(i=>{if(!i.optional)i.done=!allDone;});
-  checkStreak();save();renderDiet();reopenCard(mi);
+  checkStreak();save();renderDiet();
+  keepCardState(mi); // só marca, não abre
 }
-function removeItem(mi,ii,e){e.stopPropagation();if(!confirm('Remover este item?'))return;db.meals[mi].items.splice(ii,1);save();renderDiet();reopenCard(mi);}
-function quickAddItem(mi){const t=prompt('Novo item:');if(t&&t.trim()){db.meals[mi].items.push({text:t.trim(),done:false,optional:false});save();renderDiet();reopenCard(mi);}}
+function removeItem(mi,ii,e){e.stopPropagation();if(!confirm('Remover este item?'))return;db.meals[mi].items.splice(ii,1);save();renderDiet();keepCardState(mi);}
+function quickAddItem(mi){const t=prompt('Novo item:');if(t&&t.trim()){db.meals[mi].items.push({text:t.trim(),done:false,optional:false});save();renderDiet();keepCardState(mi);}}
 function openEditMeal(mi,e){
   e.stopPropagation();editMealIdx=mi;
   const m=db.meals[mi];
