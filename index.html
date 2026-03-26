@@ -6,9 +6,44 @@
 <title>Controle Total</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ══ SVG ICON SYSTEM (no CDN dependency) ══ */
+.icon{display:inline-block;width:1em;height:1em;vertical-align:-0.125em;background-repeat:no-repeat;background-position:center;background-size:contain;}
+.nav-btn .icon{width:1.2em;height:1.2em;vertical-align:middle}
+.btn .icon,.sheet-back-btn .icon{width:0.9em;height:0.9em;vertical-align:middle}
+
+/* Each icon = SVG as data URI, white fill for dark theme */
+.icon-utensils{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23ffffff' d='M416 0C400 0 288 32 288 176V288c0 35.3 28.7 64 64 64h32V480c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32zM64 16C64 7.8 57.9 1 49.7 .1S34.2 4.6 32.4 12.5L2.1 148.8C.7 155.1 0 161.5 0 167.9c0 45.9 35.1 84.1 80 89.1V480c0 17.7 14.3 32 32 32s32-14.3 32-32V256.9c44.9-5 80-43.2 80-89.1c0-6.4-.7-12.8-2.1-19.1L191.6 12.5c-1.8-7.8-8-13.3-16-13.4S160 4.6 160 12.5V128c0 8.8-7.2 16-16 16s-16-7.2-16-16V12.5c0-8.2-6.1-15-14.3-15.9S98 1 96 8.5V128c0 8.8-7.2 16-16 16s-16-7.2-16-16V16z'/%3E%3C/svg%3E")}
+.icon-dumbbell{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'%3E%3Cpath fill='%23ffffff' d='M96 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32V224v64V448c0 17.7-14.3 32-32 32H128c-17.7 0-32-14.3-32-32V384H64c-17.7 0-32-14.3-32-32V288H16c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16H32V160c0-17.7 14.3-32 32-32H96V64zm448 0v64h32c17.7 0 32 14.3 32 32v64h16c8.8 0 16 7.2 16 16v32c0 8.8-7.2 16-16 16H608v64c0 17.7-14.3 32-32 32H544v64c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32V288 224 64c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32zM192 224H448v64H192V224z'/%3E%3C/svg%3E")}
+.icon-chart-bar{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ffffff' d='M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zm96 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64H352c17.7 0 32 14.3 32 32s-14.3 32-32 32H160c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 96H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H160c-17.7 0-32-14.3-32-32s14.3-32 32-32z'/%3E%3C/svg%3E")}
+.icon-chart-line{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ffffff' d='M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z'/%3E%3C/svg%3E")}
+.icon-bolt{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23000000' d='M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z'/%3E%3C/svg%3E")}
+.icon-bolt.white-icon,.btn-ghost .icon-bolt,.btn-danger .icon-bolt{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23ffffff' d='M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z'/%3E%3C/svg%3E")}
+.icon-check{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23000000' d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E")}
+.meal-circle .icon-check,.food-check .icon-check,.ob-check .icon-check,.wg-check-btn .icon-check{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23000000' d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E")}
+.btn-ghost .icon-check,.sheet-back-btn .icon-check,.ico-btn .icon-check{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23ffffff' d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E")}
+.icon-trash{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23ff3d3d' d='M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z'/%3E%3C/svg%3E")}
+.icon-pen{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23848484' d='M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z'/%3E%3C/svg%3E")}
+.icon-plus{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23000000' d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z'/%3E%3C/svg%3E")}
+.btn-ghost .icon-plus,.sheet-title .icon-plus{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23848484' d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z'/%3E%3C/svg%3E")}
+.icon-arrow-left{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23848484' d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32L109.2 224l105.4-105.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z'/%3E%3C/svg%3E")}
+.icon-chevron-down{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23505050' d='M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E")}
+.icon-chevron-down.open{transform:rotate(180deg)}
+.icon-times{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath fill='%23505050' d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z'/%3E%3C/svg%3E")}
+.icon-sync-alt{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23848484' d='M89.1 202.6c7.7-21.8 20.2-42.3 37.8-59.8c62.5-62.5 163.8-62.5 226.3 0L370.3 160H320c-17.7 0-32 14.3-32 32s14.3 32 32 32H447.5c0 0 0 0 0 0h.4c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v51.2L398.4 97.6c-87.5-87.5-229.3-87.5-316.8 0C57.2 122 39.6 150.7 32.8 181.4c-4 18.2 7.4 36.2 25.7 40.2s36.2-7.4 40.2-25.7c2.7-11.9 6.8-23.4 13.1-33.5c-.7.4-1.5.7-2.3 1zm-3.7 157.2c7.9 17.4 27.3 24.1 44.7 16.2l.3-.1 .6-.3 2.2-1.1c1.9-.9 4.7-2.2 8.3-3.8c7.2-3.2 17.5-7.7 29.5-12.8c24.1-10.3 54.4-22.6 80.6-32.4c52.8-19.7 108.4-38.1 160.9-49.9c17.6-3.9 28.7-21.4 24.8-39s-21.4-28.7-39-24.8c-56.5 12.6-115.4 32.3-169.8 52.5c-27.2 10.1-57.5 22.5-81.4 32.8c-12 5.1-22.4 9.7-29.9 13.1l-8.4 3.8-2.4 1.1-.7.3-.2 .1c-17.3 8.1-24.1 28.4-16.1 45.8z'/%3E%3C/svg%3E")}
+.icon-file-pdf{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ff3d3d' d='M64 464l48 0 0 48-48 0c-35.3 0-64-28.7-64-64L0 64C0 28.7 28.7 0 64 0L289.4 0c17 0 33.3 6.7 45.3 18.7L429.3 113.4c12 12 18.7 28.3 18.7 45.3L448 224l-48 0 0-48-128 0c-17.7 0-32-14.3-32-32L240 16 64 16c-8.8 0-16 7.2-16 16l0 336c0 8.8 7.2 16 16 16zM176 352l32 0c30.9 0 56 25.1 56 56s-25.1 56-56 56l-16 0 0 32c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-128c0-8.8 7.2-16 16-16zm32 80c13.3 0 24-10.7 24-24s-10.7-24-24-24l-16 0 0 48 16 0zm96-80l32 0c26.5 0 48 21.5 48 48l0 64c0 26.5-21.5 48-48 48l-32 0c-8.8 0-16-7.2-16-16l0-128c0-8.8 7.2-16 16-16zm32 128c8.8 0 16-7.2 16-16l0-64c0-8.8-7.2-16-16-16l-16 0 0 96 16 0zm80-112c0-8.8 7.2-16 16-16l48 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-32 0 0 32 32 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-32 0 0 48c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-128z'/%3E%3C/svg%3E")}
+.icon-file-csv{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath fill='%2300e676' d='M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM80 224H176c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16z'/%3E%3C/svg%3E")}
+.icon-file-import{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23848484' d='M128 64c0-35.3 28.7-64 64-64H352V128c0 17.7 14.3 32 32 32H512V448c0 35.3-28.7 64-64 64H192c-35.3 0-64-28.7-64-64V336H302.1l-39 39c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l39 39H128V64zm0 224v48H24c-13.3 0-24-10.7-24-24s10.7-24 24-24H128zM512 128H384V0L512 128z'/%3E%3C/svg%3E")}
+.icon-download{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23848484' d='M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64z'/%3E%3C/svg%3E")}
+.icon-weight{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23848484' d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zm-48 360c0 13.3-10.7 24-24 24s-24-10.7-24-24V200l-23.5 23.5c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l64-64c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L184 183.5V360zm90.7-34.5l-23.4-5.8c-12.9-3.2-20.7-16.3-17.5-29.2l8.7-35c3.2-12.9 16.3-20.7 29.2-17.5l23.4 5.8c12.9 3.2 20.7 16.3 17.5 29.2l-8.7 35c-3.2 12.9-16.3 20.7-29.2 17.5z'/%3E%3C/svg%3E")}
+.icon-history{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23505050' d='M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z'/%3E%3C/svg%3E")}
+.icon-running{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%2300e676' d='M320 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM125.7 175.5c9.9-9.9 23.4-15.5 37.5-15.5H235.5l72.3 72.3 2.7-2.7c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-88 88c-9.4 9.4-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l31 31 39.2-39.2-59.4-59.4c-.4-.4-.8-.8-1.1-1.2l-16.5 16.5C193.3 262.6 185.1 266 176.7 266H144c-13.3 0-24-10.7-24-24c0-6.4 2.5-12.5 7-17l-1.3 1.3zm-3.1 275.1l-41.4-41.4c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l41.4 41.4c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9zm96-96l-41.4-41.4c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l41.4 41.4c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9z'/%3E%3C/svg%3E")}
+.icon-exclamation-triangle{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ff8c00' d='M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z'/%3E%3C/svg%3E")}
+.icon-whatsapp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%2325d366' d='M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z'/%3E%3C/svg%3E")}
+.icon-google{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 488 512'%3E%3Cpath fill='%234285f4' d='M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z'/%3E%3C/svg%3E")}
+
 :root{
   --acid:#d4ff00;--acid2:#aacc00;--dark:#080808;--card:#141414;--card2:#1a1a1a;
   --border:#242424;--border2:#2c2c2c;--text:#f0f0f0;--muted:#505050;--muted2:#848484;
@@ -47,7 +82,22 @@ body{padding-bottom:90px}
 .ob-btn:hover{box-shadow:0 6px 28px rgba(212,255,0,.35)}
 .ob-btn:active{transform:scale(.97)}
 
-/* ══ HEADER ══ */
+/* Context-aware icon colors */
+.nav-btn .icon{filter:brightness(0) saturate(100%) invert(35%) sepia(0%) hue-rotate(0deg);}
+.nav-btn.on .icon{filter:brightness(0) saturate(100%) invert(87%) sepia(60%) saturate(500%) hue-rotate(20deg);}
+/* White icons on colored btn backgrounds */
+.btn:not(.btn-ghost):not(.btn-danger) .icon-bolt{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23000000' d='M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z'/%3E%3C/svg%3E")}
+.btn-ghost .icon,.sheet-back-btn .icon{filter:brightness(0) saturate(100%) invert(60%);}
+.btn-ghost:hover .icon{filter:brightness(0) saturate(100%) invert(90%);}
+.log-btn .icon{filter:none}
+.ico-btn .icon{filter:brightness(0) saturate(100%) invert(35%);}
+.ico-btn:hover .icon-pen{filter:brightness(0) saturate(100%) invert(80%);}
+.ico-btn.del .icon-trash,.ico-btn.del:hover .icon-trash{filter:none}
+.food-del .icon-times{filter:brightness(0) saturate(100%) invert(35%);}
+.food-del:hover .icon-times{filter:brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(500%) hue-rotate(300deg);}
+.icon-chevron-down.open{transform:rotate(180deg)}
+/* Dev footer whatsapp icon */
+.dev-footer a .icon-whatsapp{filter:none}
 .hdr{position:sticky;top:0;z-index:200;background:var(--dark);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:54px}
 .hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--acid),transparent);opacity:.45}
 .brand{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--text);display:flex;align-items:center;gap:8px}
@@ -378,27 +428,27 @@ select option{background:var(--card2)}
   <div class="ob-question">Quais atividades você pratica?</div>
   <div class="ob-grid" id="obGrid">
     <div class="ob-card" data-act="gym" onclick="toggleOb(this)" style="--act-color:var(--gym)">
-      <div class="ob-check"><i class="fas fa-check"></i></div>
+      <div class="ob-check"><span class="icon icon-check"></span></div>
       <span class="ob-icon">🏋️</span><div class="ob-name">Academia</div><div class="ob-name-sub">Musculação</div>
     </div>
     <div class="ob-card" data-act="cross" onclick="toggleOb(this)" style="--act-color:var(--cross)">
-      <div class="ob-check"><i class="fas fa-check"></i></div>
+      <div class="ob-check"><span class="icon icon-check"></span></div>
       <span class="ob-icon">🔥</span><div class="ob-name">CrossFit</div><div class="ob-name-sub">WOD / Functional</div>
     </div>
     <div class="ob-card" data-act="run" onclick="toggleOb(this)" style="--act-color:var(--run)">
-      <div class="ob-check"><i class="fas fa-check"></i></div>
+      <div class="ob-check"><span class="icon icon-check"></span></div>
       <span class="ob-icon">🏃</span><div class="ob-name">Corrida</div><div class="ob-name-sub">Running / Trail</div>
     </div>
     <div class="ob-card" data-act="beach" onclick="toggleOb(this)" style="--act-color:var(--beach)">
-      <div class="ob-check"><i class="fas fa-check"></i></div>
+      <div class="ob-check"><span class="icon icon-check"></span></div>
       <span class="ob-icon">🏸</span><div class="ob-name">Beach Tennis</div><div class="ob-name-sub">por horas jogadas</div>
     </div>
     <div class="ob-card" data-act="volei" onclick="toggleOb(this)" style="--act-color:var(--volei)">
-      <div class="ob-check"><i class="fas fa-check"></i></div>
+      <div class="ob-check"><span class="icon icon-check"></span></div>
       <span class="ob-icon">🏐</span><div class="ob-name">Vôlei</div><div class="ob-name-sub">Praia / Quadra</div>
     </div>
     <div class="ob-card selected" data-act="_diet" style="--act-color:var(--acid);cursor:default;opacity:.6">
-      <div class="ob-check" style="opacity:1;transform:scale(1)"><i class="fas fa-check"></i></div>
+      <div class="ob-check" style="opacity:1;transform:scale(1)"><span class="icon icon-check"></span></div>
       <span class="ob-icon">🥗</span><div class="ob-name">Dieta</div><div class="ob-name-sub">Sempre ativo</div>
     </div>
   </div>
@@ -409,7 +459,7 @@ select option{background:var(--card2)}
       <div class="field-grp" style="flex:1"><label class="field-label">Peso atual (kg)</label><input type="number" id="obWeight" step="0.1" placeholder="75.0"></div>
     </div>
   </div>
-  <button class="ob-btn" onclick="finishOnboarding()"><i class="fas fa-bolt"></i> Começar</button>
+  <button class="ob-btn" onclick="finishOnboarding()"><span class="icon icon-bolt"></span> Começar</button>
 </div>
 
 <!-- ══════════════ HEADER ══════════════ -->
@@ -461,23 +511,23 @@ select option{background:var(--card2)}
       <div class="sec-label">Importar Dieta</div>
       <div class="upload-zone" id="upZone1">
         <input type="file" id="pdfIn1" accept="application/pdf">
-        <span class="uz-icon"><i class="fas fa-file-pdf"></i></span>
+        <span class="uz-icon"><span class="icon icon-file-pdf"></span></span>
         <strong>Importar PDF</strong><p>Clique ou arraste</p>
       </div>
       <div id="fn1" style="font-size:11px;color:var(--acid);text-align:center;margin-bottom:7px;display:none"></div>
       <div style="text-align:center;font-size:10px;color:var(--muted);margin:8px 0;letter-spacing:2px">— ou —</div>
       <label class="field-label">Cole o texto da dieta</label>
       <textarea id="rawTxt1" placeholder="Primeira Refeição - Desjejum:&#10;1) 4 ovos inteiros&#10;..."></textarea>
-      <button class="btn" style="margin-top:10px" onclick="processDiet(1)"><i class="fas fa-bolt"></i> Gerar Plano</button>
+      <button class="btn" style="margin-top:10px" onclick="processDiet(1)"><span class="icon icon-bolt"></span> Gerar Plano</button>
     </div>
 
     <div id="mealList"></div>
     <div id="dietActions" class="btns-stack" style="display:none">
-      <button class="btn btn-ghost" onclick="openSheet('sheetAddMeal')"><i class="fas fa-plus"></i> Adicionar Refeição</button>
-      <button class="btn btn-ghost" onclick="openSheet('sheetChangeDiet')"><i class="fas fa-sync-alt"></i> Trocar Dieta</button>
-      <button class="btn" style="background:#128c7e;color:#fff;font-size:14px" onclick="exportPDF()"><i class="fab fa-whatsapp"></i> Exportar PDF</button>
+      <button class="btn btn-ghost" onclick="openSheet('sheetAddMeal')"><span class="icon icon-plus"></span> Adicionar Refeição</button>
+      <button class="btn btn-ghost" onclick="openSheet('sheetChangeDiet')"><span class="icon icon-sync-alt"></span> Trocar Dieta</button>
+      <button class="btn" style="background:#128c7e;color:#fff;font-size:14px" onclick="exportPDF()"><span class="icon icon-whatsapp"></span> Exportar PDF</button>
       <div class="divider"></div>
-      <button class="btn btn-danger" onclick="confirmReset()"><i class="fas fa-trash"></i> Resetar tudo</button>
+      <button class="btn btn-danger" onclick="confirmReset()"><span class="icon icon-trash"></span> Resetar tudo</button>
     </div>
     <div id="dietFooter"></div>
     <div style="height:12px"></div>
@@ -532,17 +582,17 @@ select option{background:var(--card2)}
           <div class="field-grp"><label class="field-label">Data</label><input type="date" id="inDate"></div>
         </div>
         <div class="field-grp"><label class="field-label">Hora</label><input type="time" id="inTime"></div>
-        <button class="btn" onclick="saveWeight()"><i class="fas fa-check"></i> Registrar Peso</button>
+        <button class="btn" onclick="saveWeight()"><span class="icon icon-check"></span> Registrar Peso</button>
       </div>
     </div>
     <div class="app-tab-panel" id="atab-gfit">
       <div class="import-card">
-        <h3><i class="fab fa-google"></i> Importar Google Fit</h3>
+        <h3><span class="icon icon-google"></span> Importar Google Fit</h3>
         <p>Exporte pelo Google Takeout ou app da balança (Zepp Life, Samsung Health) e importe o CSV de peso aqui.</p>
         <div class="info-box"><strong>📲 Como exportar</strong>Google Takeout → Fit → Body Weight (kg).csv<br>Zepp Life → Perfil → Exportar dados<br>Samsung Health → Dados → Baixar</div>
         <div class="upload-zone" id="upZoneWeight">
           <input type="file" id="csvWeightIn" accept=".csv,.tsv,.txt">
-          <span class="uz-icon"><i class="fas fa-file-csv"></i></span>
+          <span class="uz-icon"><span class="icon icon-file-csv"></span></span>
           <strong>Body Weight (kg).csv</strong><p>Google Fit · Zepp · Samsung</p>
         </div>
         <div class="csv-preview" id="csvWeightPreview">Aguardando arquivo...</div>
@@ -552,18 +602,18 @@ select option{background:var(--card2)}
         <textarea id="csvWeightPaste" placeholder="01/03/2025;82.5&#10;05/03/2025;82.1" style="font-family:'Space Mono',monospace;font-size:11px;min-height:65px"></textarea>
       </div>
       <div style="display:flex;gap:7px">
-        <button class="btn btn-ghost btn-sm" onclick="importWeightPaste()"><i class="fas fa-file-import"></i> Importar</button>
-        <button class="btn btn-ghost btn-sm" onclick="exportWeightCSV()"><i class="fas fa-download"></i> Exportar CSV</button>
+        <button class="btn btn-ghost btn-sm" onclick="importWeightPaste()"><span class="icon icon-file-import"></span> Importar</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportWeightCSV()"><span class="icon icon-download"></span> Exportar CSV</button>
       </div>
     </div>
     <div class="app-tab-panel" id="atab-hc">
       <div class="import-card">
-        <h3><i class="fas fa-running"></i> Strava / Polar / Garmin</h3>
+        <h3><span class="icon icon-running"></span> Strava / Polar / Garmin</h3>
         <p>Importe suas atividades. O parser detecta automaticamente o formato do CSV.</p>
         <div class="info-box"><strong>📲 Como exportar</strong><b>Strava:</b> Configurações → Baixar dados → activities.csv<br><b>Polar:</b> flow.polar.com → Diário → Exportar CSV<br><b>Garmin:</b> connect.garmin.com → Atividades → Exportar CSV</div>
         <div class="upload-zone" id="upZoneAct">
           <input type="file" id="csvActIn" accept=".csv,.tsv,.txt">
-          <span class="uz-icon"><i class="fas fa-file-csv"></i></span>
+          <span class="uz-icon"><span class="icon icon-file-csv"></span></span>
           <strong>activities.csv</strong><p>Strava · Polar · Garmin</p>
         </div>
         <div class="csv-preview" id="csvActPreview">Aguardando arquivo...</div>
@@ -571,7 +621,7 @@ select option{background:var(--card2)}
       </div>
     </div>
     <div class="sec-label">Histórico de Peso</div>
-    <div id="weightList"><div class="empty"><i class="fas fa-weight"></i><p>Nenhum registro ainda.</p></div></div>
+    <div id="weightList"><div class="empty"><span class="icon icon-weight"></span><p>Nenhum registro ainda.</p></div></div>
     <div id="evoFooter"></div>
     <div style="height:12px"></div>
   </div>
@@ -580,10 +630,10 @@ select option{background:var(--card2)}
 
 <!-- ══════ NAV ══════ -->
 <nav class="nav" id="mainNav" style="display:none">
-  <button class="nav-btn on" id="nb-diet" onclick="switchView('diet')"><i class="fas fa-utensils"></i>Dieta<div class="nav-dot"></div></button>
-  <button class="nav-btn" id="nb-act" onclick="switchView('act')"><i class="fas fa-dumbbell"></i>Treinos<div class="nav-dot"></div></button>
-  <button class="nav-btn" id="nb-stats" onclick="switchView('stats')"><i class="fas fa-chart-bar"></i>Stats<div class="nav-dot"></div></button>
-  <button class="nav-btn" id="nb-evo" onclick="switchView('evo')"><i class="fas fa-chart-line"></i>Evolução<div class="nav-dot"></div></button>
+  <button class="nav-btn on" id="nb-diet" onclick="switchView('diet')"><span class="icon icon-utensils"></span>Dieta<div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-act" onclick="switchView('act')"><span class="icon icon-dumbbell"></span>Treinos<div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-stats" onclick="switchView('stats')"><span class="icon icon-chart-bar"></span>Stats<div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-evo" onclick="switchView('evo')"><span class="icon icon-chart-line"></span>Evolução<div class="nav-dot"></div></button>
 </nav>
 
 <div class="toast" id="toast"></div>
@@ -591,44 +641,44 @@ select option{background:var(--card2)}
 <!-- ══════ SHEETS ══════ -->
 <div class="sheet-overlay" id="sheetAddMeal" onclick="bgClose(event,'sheetAddMeal')"><div class="sheet">
   <div class="sheet-handle"></div>
-  <button class="sheet-back-btn" onclick="closeSheet('sheetAddMeal')"><i class="fas fa-arrow-left"></i> Voltar sem salvar</button>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetAddMeal')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
   <div class="sheet-title">Nova Refeição</div>
   <div class="field-grp"><label class="field-label">Nome</label><input type="text" id="newMealName" placeholder="Pré-Treino"></div>
   <div class="field-grp"><label class="field-label">Itens (um por linha)</label><textarea id="newMealItems" placeholder="30g de whey protein&#10;1 banana"></textarea></div>
-  <button class="btn" onclick="addMeal()"><i class="fas fa-check"></i> Salvar</button>
+  <button class="btn" onclick="addMeal()"><span class="icon icon-check"></span> Salvar</button>
 </div></div>
 
 <div class="sheet-overlay" id="sheetChangeDiet" onclick="bgClose(event,'sheetChangeDiet')"><div class="sheet">
   <div class="sheet-handle"></div>
-  <button class="sheet-back-btn" onclick="closeSheet('sheetChangeDiet')"><i class="fas fa-arrow-left"></i> Voltar sem salvar</button>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetChangeDiet')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
   <div class="sheet-title">Trocar Dieta</div>
   <p style="font-size:11px;color:var(--muted2);margin-bottom:12px">O plano atual será substituído. Histórico preservado.</p>
   <div class="upload-zone" id="upZone2" style="margin-bottom:9px">
     <input type="file" id="pdfIn2" accept="application/pdf">
-    <span class="uz-icon" style="font-size:20px"><i class="fas fa-file-pdf"></i></span>
+    <span class="uz-icon" style="font-size:20px"><span class="icon icon-file-pdf"></span></span>
     <strong>Novo PDF</strong><p>Clique ou arraste</p>
   </div>
   <div id="fn2" style="font-size:11px;color:var(--acid);text-align:center;margin-bottom:7px;display:none"></div>
   <div style="text-align:center;font-size:10px;color:var(--muted);margin:7px 0;letter-spacing:2px">— ou —</div>
   <textarea id="rawTxt2" placeholder="Cole o texto da nova dieta..."></textarea>
-  <button class="btn" style="margin-top:10px" onclick="processDiet(2)"><i class="fas fa-bolt"></i> Aplicar</button>
+  <button class="btn" style="margin-top:10px" onclick="processDiet(2)"><span class="icon icon-bolt"></span> Aplicar</button>
 </div></div>
 
 <div class="sheet-overlay" id="sheetEditMeal" onclick="bgClose(event,'sheetEditMeal')"><div class="sheet">
   <div class="sheet-handle"></div>
-  <button class="sheet-back-btn" onclick="closeSheet('sheetEditMeal')"><i class="fas fa-arrow-left"></i> Voltar sem salvar</button>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetEditMeal')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
   <div class="sheet-title">Editar Refeição</div>
   <div class="field-grp"><label class="field-label">Nome</label><input type="text" id="editMealName"></div>
   <div class="field-grp"><label class="field-label">Itens (um por linha — prefixe com * para opcional)</label><textarea id="editMealItems" style="min-height:110px"></textarea></div>
-  <button class="btn" onclick="saveEditMeal()"><i class="fas fa-check"></i> Salvar</button>
+  <button class="btn" onclick="saveEditMeal()"><span class="icon icon-check"></span> Salvar</button>
 </div></div>
 
 <!-- Log Gym -->
 <div class="sheet-overlay" id="sheetLogGym" onclick="bgClose(event,'sheetLogGym')"><div class="sheet">
   <div class="sheet-handle"></div>
-  <button class="sheet-back-btn" onclick="closeSheet('sheetLogGym')"><i class="fas fa-arrow-left"></i> Voltar sem salvar</button>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetLogGym')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
   <div class="sheet-title">🏋️ Academia</div>
-  <div id="gymNoWeightWarn" class="no-weight-warn" style="display:none"><i class="fas fa-exclamation-triangle"></i> Registre seu peso na aba Evolução para continuar.</div>
+  <div id="gymNoWeightWarn" class="no-weight-warn" style="display:none"><span class="icon icon-exclamation-triangle"></span> Registre seu peso na aba Evolução para continuar.</div>
   <div id="gymForm">
     <div class="field-grp"><label class="field-label">Treino do Dia</label><input type="text" id="gymTitle" placeholder="Ex: Peito + Tríceps"></div>
     <div class="row2">
@@ -643,14 +693,14 @@ select option{background:var(--card2)}
     </div>
     <div class="field-grp"><label class="field-label">Data</label><input type="date" id="gymDate"></div>
     <div class="kcal-preview-box" id="gymKcalPreview" style="color:var(--gym)"></div>
-    <button class="btn" style="background:var(--gym);color:#000" onclick="logActivity('gym')"><i class="fas fa-check"></i> Salvar Treino</button>
+    <button class="btn" style="background:var(--gym);color:#000" onclick="logActivity('gym')"><span class="icon icon-check"></span> Salvar Treino</button>
   </div>
 </div></div>
 
 <!-- Log CrossFit -->
 <div class="sheet-overlay" id="sheetLogCross" onclick="bgClose(event,'sheetLogCross')"><div class="sheet">
   <div class="sheet-handle"></div>
-  <button class="sheet-back-btn" onclick="closeSheet('sheetLogCross')"><i class="fas fa-arrow-left"></i> Voltar sem salvar</button>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetLogCross')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
   <div class="sheet-title">🔥 CrossFit</div>
   <div class="field-grp"><label class="field-label">WOD / Nome do Treino</label><input type="text" id="crossTitle" placeholder='Ex: "Fran" ou WOD 15/06'></div>
   <div class="row2">
@@ -667,13 +717,13 @@ select option{background:var(--card2)}
   </div>
   <div class="field-grp"><label class="field-label">Data</label><input type="date" id="crossDate"></div>
   <div class="kcal-preview-box" id="crossKcalPreview" style="color:var(--cross)"></div>
-  <button class="btn" onclick="logActivity('cross')"><i class="fas fa-check"></i> Salvar WOD</button>
+  <button class="btn" onclick="logActivity('cross')"><span class="icon icon-check"></span> Salvar WOD</button>
 </div></div>
 
 <!-- Log Run -->
 <div class="sheet-overlay" id="sheetLogRun" onclick="bgClose(event,'sheetLogRun')"><div class="sheet">
   <div class="sheet-handle"></div>
-  <button class="sheet-back-btn" onclick="closeSheet('sheetLogRun')"><i class="fas fa-arrow-left"></i> Voltar sem salvar</button>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetLogRun')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
   <div class="sheet-title">🏃 Corrida</div>
   <div class="row2">
     <div class="field-grp"><label class="field-label">Distância (km)</label><input type="number" id="runDist" step="0.01" placeholder="10.0"></div>
@@ -689,13 +739,13 @@ select option{background:var(--card2)}
   <div class="field-grp"><label class="field-label">Notas</label><textarea id="runNotes" placeholder="Rota, sensação..."></textarea></div>
   <div class="field-grp"><label class="field-label">Data</label><input type="date" id="runDate"></div>
   <div class="kcal-preview-box" id="runKcalPreview" style="color:var(--run)"></div>
-  <button class="btn" style="background:var(--run);color:#000" onclick="logActivity('run')"><i class="fas fa-check"></i> Salvar Corrida</button>
+  <button class="btn" style="background:var(--run);color:#000" onclick="logActivity('run')"><span class="icon icon-check"></span> Salvar Corrida</button>
 </div></div>
 
 <!-- Log Beach -->
 <div class="sheet-overlay" id="sheetLogBeach" onclick="bgClose(event,'sheetLogBeach')"><div class="sheet">
   <div class="sheet-handle"></div>
-  <button class="sheet-back-btn" onclick="closeSheet('sheetLogBeach')"><i class="fas fa-arrow-left"></i> Voltar sem salvar</button>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetLogBeach')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
   <div class="sheet-title">🏸 Beach Tennis</div>
   <div class="row2">
     <div class="field-grp"><label class="field-label">Duração (horas)</label><input type="number" id="beachHours" step="0.5" value="1.5"></div>
@@ -706,13 +756,13 @@ select option{background:var(--card2)}
   <div class="field-grp"><label class="field-label">Notas</label><textarea id="beachNotes" placeholder="Local, placar..."></textarea></div>
   <div class="field-grp"><label class="field-label">Data</label><input type="date" id="beachDate"></div>
   <div class="kcal-preview-box" id="beachKcalPreview" style="color:var(--beach)"></div>
-  <button class="btn" style="background:var(--beach);color:#000" onclick="logActivity('beach')"><i class="fas fa-check"></i> Salvar</button>
+  <button class="btn" style="background:var(--beach);color:#000" onclick="logActivity('beach')"><span class="icon icon-check"></span> Salvar</button>
 </div></div>
 
 <!-- Log Vôlei -->
 <div class="sheet-overlay" id="sheetLogVolei" onclick="bgClose(event,'sheetLogVolei')"><div class="sheet">
   <div class="sheet-handle"></div>
-  <button class="sheet-back-btn" onclick="closeSheet('sheetLogVolei')"><i class="fas fa-arrow-left"></i> Voltar sem salvar</button>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetLogVolei')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
   <div class="sheet-title">🏐 Vôlei</div>
   <div class="row2">
     <div class="field-grp"><label class="field-label">Duração (horas)</label><input type="number" id="voleiHours" step="0.5" value="2"></div>
@@ -726,7 +776,7 @@ select option{background:var(--card2)}
   <div class="field-grp"><label class="field-label">Notas</label><textarea id="voleiNotes" placeholder="Local, resultado..."></textarea></div>
   <div class="field-grp"><label class="field-label">Data</label><input type="date" id="voleiDate"></div>
   <div class="kcal-preview-box" id="voleiKcalPreview" style="color:var(--volei)"></div>
-  <button class="btn" style="background:var(--volei);color:#fff" onclick="logActivity('volei')"><i class="fas fa-check"></i> Salvar</button>
+  <button class="btn" style="background:var(--volei);color:#fff" onclick="logActivity('volei')"><span class="icon icon-check"></span> Salvar</button>
 </div></div>
 
 <script>
@@ -840,7 +890,7 @@ function initWaterGoal(){
 // ══ FOOTER ══
 function devFooterHTML(){
   const wa=encodeURIComponent('Olá Felipe! Estou entrando em contato sobre o aplicativo Controle Total.');
-  return`<div class="dev-footer">Desenvolvido por Felipe Benevenuto<br><a href="https://wa.me/5532984351435?text=${wa}" target="_blank"><i class="fab fa-whatsapp" style="color:#25d366"></i> Falar com o Desenvolvedor</a></div>`;
+  return`<div class="dev-footer">Desenvolvido por Felipe Benevenuto<br><a href="https://wa.me/5532984351435?text=${wa}" target="_blank"><span class="icon icon-whatsapp" style="color:#25d366"></span> Falar com o Desenvolvedor</a></div>`;
 }
 function insertFooters(){
   ['dietFooter','actFooter','statsFooter','evoFooter'].forEach(id=>{
@@ -971,11 +1021,49 @@ const ACT_META={
   volei:{label:'Vôlei',icon:'🏐',color:'volei',chip:'chip-volei'},
 };
 
+// ══ BUILD SESSION CARD (avoids nested backticks in onclick) ══
+function buildSessionCard(s, m, idPrefix) {
+  const hasDetail = !!(s.exercises || s.detail || s.notes);
+  const gymDetail = s.type==='gym' && s.exercises ? ' — ' + s.exercises.split('\n')[0] : '';
+  const detailId = idPrefix + s.id;
+
+  let metaTags = '';
+  if (s.dur) metaTags += '<span class="si-tag">⏱ ' + s.dur + 'min</span>';
+  if (s.dist) metaTags += '<span class="si-tag">📍 ' + s.dist + 'km</span>';
+  if (s.hours) metaTags += '<span class="si-tag">⏱ ' + s.hours + 'h</span>';
+  if (s.pace) metaTags += '<span class="si-tag">🏃 ' + s.pace + '/km</span>';
+  if (s.intensity) metaTags += '<span class="si-tag">' + (s.intensity==='high'?'🔥 Intensa':s.intensity==='med'?'⚡ Mod.':'😌 Leve') + '</span>';
+  metaTags += '<span class="act-chip ' + m.chip + '">' + m.label + '</span>';
+  if (hasDetail) metaTags += '<span class="si-tag" style="color:var(--muted2)">toque p/ detalhes</span>';
+
+  const title = m.icon + ' ' + escHtml(s.title) + escHtml(gymDetail);
+
+  let html = '<div class="session-item' + (hasDetail ? ' expandable' : '') + '" style="cursor:' + (hasDetail ? 'pointer' : 'default') + '"';
+  if (hasDetail) html += ' onclick="toggleSiDetail(\'' + detailId + '\')"';
+  html += '>';
+  html += '<div class="si-head">';
+  html += '<div class="si-left">';
+  html += '<div class="si-date">' + (s.dateStr || s.date) + '</div>';
+  html += '<div class="si-title">' + title + '</div>';
+  html += '<div class="si-meta">' + metaTags + '</div>';
+  html += '</div>';
+  html += '<div class="si-right">';
+  html += '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:var(--' + m.color + ')">' + (s.kcal||0) + '</span>';
+  html += '<div style="font-size:8px;color:var(--muted2);font-family:\'Space Mono\',monospace">KCAL</div>';
+  html += '<button class="ico-btn del" onclick="deleteSession(' + s.id + ',event)"><span class="icon icon-trash"></span></button>';
+  html += '</div></div>';
+  if (hasDetail) {
+    html += '<div class="si-detail" id="' + detailId + '">' + escHtml(s.exercises || s.detail || s.notes || '') + '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 // ══ RENDER ACT CARDS ══
 function renderActCards(){
   const el=document.getElementById('actCards');
   const acts=db.activities||[];
-  if(!acts.length){el.innerHTML='<div class="empty"><i class="fas fa-dumbbell"></i><p>Nenhuma atividade configurada.</p></div>';return;}
+  if(!acts.length){el.innerHTML='<div class="empty"><span class="icon icon-dumbbell"></span><p>Nenhuma atividade configurada.</p></div>';return;}
   el.innerHTML=acts.map(type=>{
     const m=ACT_META[type];
     const sessions=db.sessions.filter(s=>s.type===type);
@@ -996,30 +1084,7 @@ function renderActCards(){
       statsHtml=`<div class="act-stat"><div class="act-stat-val">${hrs.toFixed(1)}h</div><div class="act-stat-lbl">horas/sem</div></div><div class="act-stat"><div class="act-stat-val">${totalKcal}</div><div class="act-stat-lbl">kcal/sem</div></div><div class="act-stat"><div class="act-stat-val">${week.length}</div><div class="act-stat-lbl">sessões/sem</div></div>`;
     }
     const recent=sessions.slice(0,3);
-    const recentHtml=recent.map(s=>{
-      const hasDetail=s.exercises||s.detail||s.notes;
-      return`<div class="session-item${hasDetail?' expandable':''}" onclick="${hasDetail?`toggleSiDetail(${s.id})`:''}" style="cursor:${hasDetail?'pointer':'default'}">
-        <div class="si-head">
-          <div class="si-left">
-            <div class="si-date">${s.dateStr||s.date}</div>
-            <div class="si-title">${escHtml(s.title)}</div>
-            <div class="si-meta">
-              ${s.dur?`<span class="si-tag">⏱ ${s.dur}min</span>`:''}
-              ${s.dist?`<span class="si-tag">📍 ${s.dist}km</span>`:''}
-              ${s.hours?`<span class="si-tag">⏱ ${s.hours}h</span>`:''}
-              ${s.pace?`<span class="si-tag">🏃 ${s.pace}/km</span>`:''}
-              ${s.intensity?`<span class="si-tag">${s.intensity==='high'?'🔥 Intensa':s.intensity==='med'?'⚡ Mod.':'😌 Leve'}</span>`:''}
-              ${hasDetail?`<span class="si-tag" style="color:var(--muted2)">toque p/ detalhes</span>`:''}
-            </div>
-          </div>
-          <div class="si-right">
-            <span class="act-chip ${m.chip}">${s.kcal} kcal</span>
-            <button class="ico-btn del" onclick="deleteSession(${s.id},event)" style="margin-top:2px"><i class="fas fa-trash"></i></button>
-          </div>
-        </div>
-        ${hasDetail?`<div class="si-detail" id="sid${s.id}">${escHtml(s.exercises||s.detail||s.notes||'')}</div>`:''}
-      </div>`;
-    }).join('');
+    const recentHtml=recent.map(s=>buildSessionCard(s,m,'sid')).join('');
     const todayDot=today.length>0?`<span class="pill">✓ Hoje</span>`:'';
     return`<div class="act-hero ${m.color}">
       <div class="act-hero-head">
@@ -1027,7 +1092,7 @@ function renderActCards(){
         <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2)">${streak>0?`🔥 ${streak}d`:''}</div>
       </div>
       <div class="act-stats-row">${statsHtml}</div>
-      <button class="log-btn" onclick="openLogSheet('${type}')"><i class="fas fa-plus"></i> Registrar ${m.label}</button>
+      <button class="log-btn" onclick="openLogSheet('${type}')"><span class="icon icon-plus"></span> Registrar ${m.label}</button>
     </div>
     ${recent.length>0?`<div class="sec-label">${m.label} — Recentes</div>${recentHtml}`:''}`;
   }).join('');
@@ -1100,7 +1165,7 @@ function renderStats(period){
     const ds=d.toLocaleDateString('pt-BR');
     const dk=db.sessions.filter(s=>s.dateStr===ds).reduce((a,s)=>a+(s.kcal||0),0);
     const types=[...new Set(db.sessions.filter(s=>s.dateStr===ds).map(s=>s.type))];
-    const col=types.length>0?`var(--${types[0]})':'var(--border2)`;
+    const col=types.length>0?'var(--'+types[0]+')':'var(--border2)';
     const pct=Math.round(dk/maxK*100);
     const dl=['D','S','T','Q','Q','S','S'][d.getDay()];
     barsHtml+=`<div class="bar-row"><div class="bar-day" style="${i===0?'color:var(--acid)':''}">${dl}</div><div class="bar-outer"><div class="bar-inner" style="width:${pct}%;background:${col}"></div></div><div class="bar-val">${dk>0?dk+'kcal':'—'}</div></div>`;
@@ -1113,25 +1178,10 @@ function renderStats(period){
   }).join('');
   // History with gym workout detail in title
   document.getElementById('statsHistory').innerHTML=filtered.length===0?
-    '<div class="empty"><i class="fas fa-history"></i><p>Nenhuma sessão neste período.</p></div>':
+    '<div class="empty"><span class="icon icon-history"></span><p>Nenhuma sessão neste período.</p></div>':
     filtered.slice(0,30).map(s=>{
       const m=ACT_META[s.type]||ACT_META.gym;
-      const gymDetail=s.type==='gym'&&s.exercises?` — ${s.exercises.split('\n')[0]}`:'';
-      const hasDetail=s.exercises||s.detail||s.notes;
-      return`<div class="session-item${hasDetail?' expandable':''}" onclick="${hasDetail?`toggleSiDetail('stat_${s.id}')`:''}" style="cursor:${hasDetail?'pointer':'default'}">
-        <div class="si-head">
-          <div class="si-left">
-            <div class="si-date">${s.dateStr||s.date}</div>
-            <div class="si-title">${m.icon} ${escHtml(s.title)}${escHtml(gymDetail)}</div>
-            <div class="si-meta">
-              ${s.dur?`<span class="si-tag">${s.dur}min</span>`:''}${s.dist?`<span class="si-tag">${s.dist}km</span>`:''}${s.hours?`<span class="si-tag">${s.hours}h</span>`:''}
-              <span class="act-chip ${m.chip}">${m.label}</span>
-            </div>
-          </div>
-          <div class="si-right" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--${m.color})">${s.kcal}<div style="font-size:8px;color:var(--muted2);font-family:'Space Mono',monospace">KCAL</div></div>
-        </div>
-        ${hasDetail?`<div class="si-detail" id="sid_stat_${s.id}">${escHtml(s.exercises||s.detail||s.notes||'')}</div>`:''}
-      </div>`;
+      return buildSessionCard(s,m,'sid_stat');
     }).join('');
 }
 function calcStreak(sessions){
@@ -1153,7 +1203,8 @@ function paceToSec(p){if(!p)return 9999;const a=p.split(':');return(+a[0]||0)*60
 function setupCSVActivity(){
   const inp=document.getElementById('csvActIn');
   const zone=document.getElementById('upZoneAct');
-  inp.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;new FileReader().onload=ev=>processActCSV(ev.target.result);new FileReader().readAsText(f,'UTF-8');
+  inp.addEventListener('change',e=>{
+    const f=e.target.files[0];if(!f)return;
     const r=new FileReader();r.onload=ev=>processActCSV(ev.target.result);r.readAsText(f,'UTF-8');
   });
   bindDrag(zone,inp);
@@ -1197,7 +1248,7 @@ function processActCSV(text){
   prev.textContent=sessions.slice(0,5).map(s=>`${s.dateStr} ${ACT_META[s.type]?.icon||'🏃'} ${s.title} ${s.kcal}kcal`).join('\n')+(sessions.length>5?`\n...+${sessions.length-5}`:'');
   prev.className='csv-preview ok';res.textContent=`${sessions.length} atividades encontradas`;res.className='import-result ok';
   const btn=document.createElement('button');btn.className='btn btn-ghost btn-sm';btn.style.marginTop='8px';
-  btn.innerHTML=`<i class="fas fa-file-import"></i> Importar ${sessions.length}`;
+  btn.innerHTML=`<span class="icon icon-file-import"></span> Importar ${sessions.length}`;
   btn.onclick=()=>{
     let added=0;sessions.forEach(s=>{const dup=db.sessions.some(x=>Math.abs(x.ts-s.ts)<60000&&x.type===s.type);if(!dup){db.sessions.push(s);added++;}});
     sessions.forEach(s=>{if(!db.activities.includes(s.type))db.activities.push(s.type);});
@@ -1403,7 +1454,7 @@ function renderDiet(){
       <div class="meal-hdr">
         <!-- Circle: click = mark all done -->
         <div class="meal-circle" onclick="markAllMeal(${mi})" title="Marcar tudo como concluído">
-          ${allDone?'<i class="fas fa-check" style="font-size:13px"></i>':''}
+          ${allDone?'<span class="icon icon-check" style="font-size:13px"></span>':''}
         </div>
         <!-- Title: click = expand -->
         <div class="meal-title-block" onclick="toggleMeal(${mi})">
@@ -1413,25 +1464,25 @@ function renderDiet(){
         <!-- Controls: chevron first, then pencil, then trash -->
         <div class="meal-hdr-r">
           <div class="ico-btn" onclick="toggleMeal(${mi})" title="Expandir/recolher">
-            <i class="fas fa-chevron-down chevron" id="chev${mi}"></i>
+            <span class="icon icon-chevron-down chevron" id="chev${mi}"></span>
           </div>
-          <button class="ico-btn" onclick="openEditMeal(${mi},event)" title="Editar"><i class="fas fa-pen"></i></button>
-          <button class="ico-btn del" onclick="deleteMeal(${mi},event)" title="Excluir"><i class="fas fa-trash"></i></button>
+          <button class="ico-btn" onclick="openEditMeal(${mi},event)" title="Editar"><span class="icon icon-pen"></span></button>
+          <button class="ico-btn del" onclick="deleteMeal(${mi},event)" title="Excluir"><span class="icon icon-trash"></span></button>
         </div>
       </div>
       <div class="meal-body" id="mb${mi}">
         <div class="item-list">
           ${meal.items.map((item,ii)=>`
             <div class="food-item${item.done?' ticked':''}${item.optional?' optional':''}" onclick="toggleItem(${mi},${ii})">
-              <div class="food-check">${item.done?'<i class="fas fa-check"></i>':''}</div>
+              <div class="food-check">${item.done?'<span class="icon icon-check"></span>':''}</div>
               <span class="food-text">${escHtml(item.text)}${item.optional?'<span class="optional-tag">opcional</span>':''}</span>
-              <button class="food-del" onclick="removeItem(${mi},${ii},event)"><i class="fas fa-times"></i></button>
+              <button class="food-del" onclick="removeItem(${mi},${ii},event)"><span class="icon icon-times"></span></button>
             </div>
           `).join('')}
           ${meal.items.length===0?'<div style="padding:10px 14px;color:var(--muted);font-size:12px">Sem itens</div>':''}
         </div>
         <div class="meal-foot">
-          <button class="btn btn-ghost btn-sm" onclick="quickAddItem(${mi})"><i class="fas fa-plus"></i> Item</button>
+          <button class="btn btn-ghost btn-sm" onclick="quickAddItem(${mi})"><span class="icon icon-plus"></span> Item</button>
         </div>
       </div>`;
     list.appendChild(card);
@@ -1515,7 +1566,7 @@ function showWeightImport(rows){
   p.textContent=rows.slice(0,5).map(x=>`${x.date} ${x.time} ${x.kg}kg`).join('\n')+(rows.length>5?`\n...+${rows.length-5}`:'');
   p.className='csv-preview ok';r.textContent=`${rows.length} registros encontrados`;r.className='import-result ok';
   const btn=document.createElement('button');btn.className='btn btn-ghost btn-sm';btn.style.marginTop='7px';
-  btn.innerHTML=`<i class="fas fa-file-import"></i> Importar ${rows.length}`;
+  btn.innerHTML=`<span class="icon icon-file-import"></span> Importar ${rows.length}`;
   btn.onclick=()=>{let added=0;rows.forEach(x=>{const dup=db.weight.some(w=>Math.abs(w.ts-x.ts)<60000&&Math.abs(w.kg-x.kg)<0.2);if(!dup){db.weight.push({id:x.ts+Math.random(),...x});added++;}});db.weight.sort((a,b)=>b.ts-a.ts);save();renderWeight();r.textContent=`✅ ${added} importados!`;btn.remove();toast(`✅ ${added} pesos importados!`);};
   r.after(btn);
 }
@@ -1548,14 +1599,24 @@ function saveWeight(){
 function deleteWeight(id){if(!confirm('Apagar este registro?'))return;db.weight=db.weight.filter(w=>w.id!==id);save();renderWeight();}
 function renderWeight(){
   const list=document.getElementById('weightList');
-  if(!db.weight.length){document.getElementById('wHeroVal').innerHTML='--<span class="wh-unit">kg</span>';document.getElementById('wHeroDelta').style.display='none';list.innerHTML='<div class="empty"><i class="fas fa-weight"></i><p>Nenhum registro ainda.</p></div>';return;}
+  if(!db.weight.length){document.getElementById('wHeroVal').innerHTML='--<span class="wh-unit">kg</span>';document.getElementById('wHeroDelta').style.display='none';list.innerHTML='<div class="empty"><span class="icon icon-weight"></span><p>Nenhum registro ainda.</p></div>';return;}
   const latest=db.weight[0];
   document.getElementById('wHeroVal').innerHTML=latest.kg+'<span class="wh-unit">kg</span>';
   const sorted=[...db.weight].sort((a,b)=>a.ts-b.ts);
   const dEl=document.getElementById('wHeroDelta');
   if(sorted.length>=2){const diff=(latest.kg-sorted[sorted.length-2].kg).toFixed(1);dEl.className='wh-delta';if(diff>0){dEl.textContent='▲ +'+diff+'kg';dEl.classList.add('up');}else if(diff<0){dEl.textContent='▼ '+diff+'kg';dEl.classList.add('dn');}else{dEl.textContent='▬ Manteve';dEl.classList.add('eq');}dEl.style.display='inline-block';}else{dEl.style.display='none';}
   const dMap={};sorted.forEach((r,i)=>{if(i===0){dMap[r.id]={cls:'chip-eq',txt:'—'};return;}const d=(r.kg-sorted[i-1].kg).toFixed(1);dMap[r.id]=d>0?{cls:'chip-up',txt:'+'+d}:d<0?{cls:'chip-dn',txt:''+d}:{cls:'chip-eq',txt:'0'};});
-  list.innerHTML=db.weight.map(r=>{const d=dMap[r.id]||{cls:'chip-eq',txt:'—'};const src=r.source==='import'?['IMPORT','src-import']:['Manual','src-manual'];return`<div class="w-item"><div><div class="wi-d">${r.date}${r.time?' · '+r.time:''}</div><div class="wi-kg">${r.kg} kg</div></div><div class="wi-r"><span class="src-tag ${src[1]}">${src[0]}</span><span class="delta-chip ${d.cls}">${d.txt}</span><button class="ico-btn del" onclick="deleteWeight(${r.id})"><i class="fas fa-trash"></i></button></div></div>`;}).join('');
+  list.innerHTML=db.weight.map(r=>{
+    const d=dMap[r.id]||{cls:'chip-eq',txt:'—'};
+    const src=r.source==='import'?['IMPORT','src-import']:['Manual','src-manual'];
+    return '<div class="w-item">'
+      +'<div><div class="wi-d">'+r.date+(r.time?' · '+r.time:'')+'</div><div class="wi-kg">'+r.kg+' kg</div></div>'
+      +'<div class="wi-r">'
+      +'<span class="src-tag '+src[1]+'">'+src[0]+'</span>'
+      +'<span class="delta-chip '+d.cls+'">'+d.txt+'</span>'
+      +'<button class="ico-btn del" onclick="deleteWeight('+r.id+')"><span class="icon icon-trash"></span></button>'
+      +'</div></div>';
+  }).join('');
 }
 
 // ══ DATE HELPERS ══
