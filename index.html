@@ -527,7 +527,8 @@ select option{background:var(--card2)}
       <button class="btn btn-ghost" onclick="openSheet('sheetChangeDiet')"><span class="icon icon-sync-alt"></span> Trocar Dieta</button>
       <button class="btn" style="background:#128c7e;color:#fff;font-size:14px" onclick="exportPDF()"><span class="icon icon-whatsapp"></span> Exportar PDF</button>
       <div class="divider"></div>
-      <button class="btn btn-danger" onclick="confirmReset()"><span class="icon icon-trash"></span> Resetar tudo</button>
+      <button class="btn btn-ghost" style="font-size:13px" onclick="openSheet('sheetBackup')">💾 Backup / Restaurar dados</button>
+      <button class="btn btn-danger" onclick="confirmReset()"><span class="icon icon-trash"></span> Limpar dieta</button>
     </div>
     <div id="dietFooter"></div>
     <div style="height:12px"></div>
@@ -535,7 +536,14 @@ select option{background:var(--card2)}
 
   <!-- ═══ TREINOS ═══ -->
   <div id="v-act" class="view">
-    <div id="actCards"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="act-swipe-hint" id="actSwipeHint" style="display:none">← arraste para navegar →</div>
+      <button class="btn btn-ghost btn-sm" style="margin-left:auto;font-size:11px" onclick="openSheet('sheetManageActs')">⚙️ Gerenciar Esportes</button>
+    </div>
+    <div class="act-dots" id="actDots"></div>
+    <div class="act-slider-wrap" id="actSliderWrap">
+      <div class="act-slider" id="actSlider"></div>
+    </div>
     <div id="actFooter"></div>
     <div style="height:12px"></div>
   </div>
@@ -586,17 +594,16 @@ select option{background:var(--card2)}
       </div>
     </div>
     <div class="app-tab-panel" id="atab-gfit">
-      <div class="import-card">
-        <h3><span class="icon icon-google"></span> Importar Google Fit</h3>
-        <p>Exporte pelo Google Takeout ou app da balança (Zepp Life, Samsung Health) e importe o CSV de peso aqui.</p>
-        <div class="info-box"><strong>📲 Como exportar</strong>Google Takeout → Fit → Body Weight (kg).csv<br>Zepp Life → Perfil → Exportar dados<br>Samsung Health → Dados → Baixar</div>
-        <div class="upload-zone" id="upZoneWeight">
-          <input type="file" id="csvWeightIn" accept=".csv,.tsv,.txt">
-          <span class="uz-icon"><span class="icon icon-file-csv"></span></span>
-          <strong>Body Weight (kg).csv</strong><p>Google Fit · Zepp · Samsung</p>
-        </div>
-        <div class="csv-preview" id="csvWeightPreview">Aguardando arquivo...</div>
-        <div class="import-result" id="csvWeightResult"></div>
+      <div class="in-dev-banner" style="margin-bottom:12px">
+        <span class="idb-icon">🔧</span>
+        <h4>Em Desenvolvimento</h4>
+        <p>A integração com Google Fit estará disponível em breve.<br>Aguarde novas informações!</p>
+      </div>
+      <!-- hidden but needed for js references -->
+      <div style="display:none">
+        <input type="file" id="csvWeightIn" accept=".csv,.tsv,.txt">
+        <div id="csvWeightPreview"></div><div id="csvWeightResult"></div>
+        <div id="upZoneWeight"></div>
       </div>
       <div class="field-grp"><label class="field-label">Ou cole CSV (data;peso)</label>
         <textarea id="csvWeightPaste" placeholder="01/03/2025;82.5&#10;05/03/2025;82.1" style="font-family:'Space Mono',monospace;font-size:11px;min-height:65px"></textarea>
@@ -607,17 +614,15 @@ select option{background:var(--card2)}
       </div>
     </div>
     <div class="app-tab-panel" id="atab-hc">
-      <div class="import-card">
-        <h3><span class="icon icon-running"></span> Strava / Polar / Garmin</h3>
-        <p>Importe suas atividades. O parser detecta automaticamente o formato do CSV.</p>
-        <div class="info-box"><strong>📲 Como exportar</strong><b>Strava:</b> Configurações → Baixar dados → activities.csv<br><b>Polar:</b> flow.polar.com → Diário → Exportar CSV<br><b>Garmin:</b> connect.garmin.com → Atividades → Exportar CSV</div>
-        <div class="upload-zone" id="upZoneAct">
-          <input type="file" id="csvActIn" accept=".csv,.tsv,.txt">
-          <span class="uz-icon"><span class="icon icon-file-csv"></span></span>
-          <strong>activities.csv</strong><p>Strava · Polar · Garmin</p>
-        </div>
-        <div class="csv-preview" id="csvActPreview">Aguardando arquivo...</div>
-        <div class="import-result" id="csvActResult"></div>
+      <div class="in-dev-banner">
+        <span class="idb-icon">🏃</span>
+        <h4>Em Desenvolvimento</h4>
+        <p>Importação de atividades do Strava, Polar e Garmin em breve.<br>Aguarde novas informações!</p>
+      </div>
+      <div style="display:none">
+        <input type="file" id="csvActIn" accept=".csv,.tsv,.txt">
+        <div id="csvActPreview"></div><div id="csvActResult"></div>
+        <div id="upZoneAct"></div>
       </div>
     </div>
     <div class="sec-label">Histórico de Peso</div>
@@ -779,6 +784,55 @@ select option{background:var(--card2)}
   <button class="btn" style="background:var(--volei);color:#fff" onclick="logActivity('volei')"><span class="icon icon-check"></span> Salvar</button>
 </div></div>
 
+
+<!-- ══ SHEET: Manage Activities ══ -->
+<div class="sheet-overlay" id="sheetManageActs" onclick="bgClose(event,'sheetManageActs')"><div class="sheet">
+  <div class="sheet-handle"></div>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetManageActs')"><span class="icon icon-arrow-left"></span> Voltar</button>
+  <div class="sheet-title">⚙️ Meus Esportes</div>
+  <p style="font-size:11px;color:var(--muted2);margin-bottom:14px">Ative ou desative os esportes que você pratica. Os dados existentes são preservados.</p>
+  <div id="manageSportsList"></div>
+  <button class="btn" style="margin-top:14px" onclick="saveManageActs()"><span class="icon icon-check"></span> Salvar</button>
+</div></div>
+
+<!-- ══ SHEET: Edit Session ══ -->
+<div class="sheet-overlay" id="sheetEditSession" onclick="bgClose(event,'sheetEditSession')"><div class="sheet">
+  <div class="sheet-handle"></div>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetEditSession')"><span class="icon icon-arrow-left"></span> Voltar sem salvar</button>
+  <div class="sheet-title">✏️ Editar Sessão</div>
+  <div class="field-grp"><label class="field-label">Título</label><input type="text" id="editSessTitle"></div>
+  <div class="edit-kcal-row">
+    <label>Calorias gastas:</label>
+    <input type="number" id="editSessKcal" min="0" max="9999">
+    <span style="font-size:11px;color:var(--muted2);font-family:'Space Mono',monospace">kcal</span>
+  </div>
+  <div class="field-grp" style="margin-top:10px"><label class="field-label">Detalhes / Exercícios</label>
+    <textarea id="editSessDetail" style="min-height:90px"></textarea>
+  </div>
+  <button class="btn" style="margin-top:4px" onclick="saveEditSession()"><span class="icon icon-check"></span> Salvar</button>
+</div></div>
+
+<!-- ══ SHEET: Backup / Restore ══ -->
+<div class="sheet-overlay" id="sheetBackup" onclick="bgClose(event,'sheetBackup')"><div class="sheet">
+  <div class="sheet-handle"></div>
+  <button class="sheet-back-btn" onclick="closeSheet('sheetBackup')"><span class="icon icon-arrow-left"></span> Voltar</button>
+  <div class="sheet-title">💾 Backup & Restaurar</div>
+  <div class="backup-card">
+    <h3>📤 Exportar Backup</h3>
+    <p>Gera um código com todos os seus dados. Guarde em notas ou envie para si mesmo pelo WhatsApp para restaurar em outro celular.</p>
+    <button class="btn btn-ghost" style="font-size:13px;margin-bottom:10px" onclick="generateBackup()"><span class="icon icon-download"></span> Gerar Código de Backup</button>
+    <div class="backup-code" id="backupCode" style="display:none"></div>
+    <button class="btn btn-ghost btn-sm" id="copyBackupBtn" style="display:none" onclick="copyBackup()">📋 Copiar Código</button>
+  </div>
+  <div class="backup-card" style="margin-top:12px">
+    <h3>📥 Restaurar Backup</h3>
+    <p>Cole o código de backup abaixo para restaurar seus dados em um novo celular.</p>
+    <textarea id="restoreCode" placeholder="Cole o código de backup aqui..." style="min-height:80px;font-family:'Space Mono',monospace;font-size:10px;margin-bottom:8px"></textarea>
+    <button class="btn btn-ghost" style="font-size:13px" onclick="restoreBackup()"><span class="icon icon-file-import"></span> Restaurar Dados</button>
+    <div id="restoreResult" style="font-size:11px;font-family:'Space Mono',monospace;margin-top:6px"></div>
+  </div>
+</div></div>
+
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 const{jsPDF}=window.jspdf;
@@ -877,6 +931,7 @@ function initApp(){
   dailyReset(); initWaterGoal();
   renderDiet(); renderActCards(); renderStats('day'); renderWeight();
   insertFooters();
+  scheduleMidnightReset();
 }
 function dailyReset(){
   const t=todayStr();
@@ -1050,6 +1105,7 @@ function buildSessionCard(s, m, idPrefix) {
   html += '<div class="si-right">';
   html += '<span style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:var(--' + m.color + ')">' + (s.kcal||0) + '</span>';
   html += '<div style="font-size:8px;color:var(--muted2);font-family:\'Space Mono\',monospace">KCAL</div>';
+  html += '<button class="ico-btn" onclick="openEditSession(' + s.id + ',event)" title="Editar"><span class="icon icon-pen"></span></button>';
   html += '<button class="ico-btn del" onclick="deleteSession(' + s.id + ',event)"><span class="icon icon-trash"></span></button>';
   html += '</div></div>';
   if (hasDetail) {
@@ -1341,9 +1397,22 @@ const IGNORE_KEYWORDS=['(tabela)','tabela de alimentos','ingestão de água','no
 const MEAL_TRIGGERS=['primeira','segunda','terceira','quarta','quinta','sexta','sétima','setima','desjejum','café da manhã','cafe da manha','colação','colacao','lanche','almoço','almoco','jantar','ceia','pré-treino','pre-treino','pos-treino','pós-treino','refeição','refeicao'];
 
 function parseDiet(raw){
-  // Pre-process: insert spaces before known ordinals stuck to "refeição"
+  // ── Pre-process: fix stuck words from PDF encoding ──
+  // Insert space between ordinal + "refeição"
   raw=raw.replace(/(primeira|segunda|terceira|quarta|quinta|sexta|sétima|setima)(refeição)/gi,'$1 $2');
   raw=raw.replace(/(refeição)(\d)/gi,'$1 $2');
+  // Fix "MEXIDOSOU" → "MEXIDOS OU", "COZIDOSOU" → "COZIDOS OU"
+  raw=raw.replace(/([A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ]{3,})(OU|DE|E\s)/g,'$1 $2');
+  // Fix digits stuck to letters: "100GDE" → "100G DE", "30GDE" → "30G DE"
+  raw=raw.replace(/(\d+[gGkKmMlL])(DE|OU|E\s)/g,'$1 $2');
+  raw=raw.replace(/(\d+)(GDE|MDE|LODE|LDE|KGE)\b/gi,(m,n,s)=>n+s.slice(0,s.length-2)+' '+s.slice(-2));
+  // Fix "DEFEIJÃO" → "DE FEIJÃO", "DEARROZ" → "DE ARROZ"
+  raw=raw.replace(/\bDE([A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ]{2,})/g,'DE $1');
+  // Fix "OMACARRÃO" → "O MACARRÃO"
+  raw=raw.replace(/\b(OU|E|A|O|NA|NO|COM|SEM|POR)([A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ]{2,})/g,'$1 $2');
+  // Fix number+letter stuck: "150GDE" style already above, also "250ML" → fine
+  // Collapse multiple spaces
+  raw=raw.replace(/ {2,}/g,' ');
 
   const lines=raw.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
   const meals=[];let cur=null;
@@ -1357,15 +1426,16 @@ function parseDiet(raw){
   const isIgnore=l=>IGNORE_KEYWORDS.some(k=>l.toLowerCase().includes(k.toLowerCase()));
   const isOptional=l=>OPTIONAL_KEYWORDS.some(k=>l.toLowerCase().includes(k.toLowerCase()));
 
-  // Smart merge: if a line is very short and doesn't look like a header, 
-  // and prev line ends with "ou" or "de" or comma, merge with prev item
+  // Smart merge: continuation lines get joined to previous item
   const shouldMerge=(prev,cur)=>{
     if(!prev)return false;
     const pt=prev.text||'';
-    // merge if prev ends with connector word
+    // Previous ends with connector
     if(/\bou\s*$/i.test(pt)||/\bde\s*$/i.test(pt)||/,\s*$/.test(pt))return true;
-    // merge if current starts with lowercase continuation
-    if(/^[a-záàãâéêíóôõúüç]/i.test(cur)&&!/^\d/.test(cur)&&cur.length<40)return true;
+    // Current is very short standalone word (like "LIGHT" after "REQUEIJÃO")
+    // Don't merge single standalone words that start a new thought
+    // Only merge if current clearly continues (starts lowercase or is a continuation connector)
+    if(/^(ou|e |de |do |da |com |sem |para )/i.test(cur)) return true;
     return false;
   };
 
@@ -1380,10 +1450,8 @@ function parseDiet(raw){
       if(item.length<=2)return;
       const optional=isOptional(item);
       const lastItem=cur.items[cur.items.length-1];
-      // Try to merge with previous item
       if(lastItem&&shouldMerge(lastItem,item)){
         lastItem.text=lastItem.text+' '+item;
-        // keep optional status of last item
       }else{
         cur.items.push({text:item,done:false,optional});
       }
@@ -1452,6 +1520,7 @@ function renderDiet(){
     const allDone=reqItems.length>0&&reqItems.every(i=>i.done);
     const doneCount=meal.items.filter(i=>i.done).length;
     const card=document.createElement('div');
+    card.id='mc'+mi;
     card.className='meal-card'+(allDone?' done':'');
     card.innerHTML=`
       <div class="meal-hdr">
@@ -1476,7 +1545,7 @@ function renderDiet(){
       <div class="meal-body" id="mb${mi}">
         <div class="item-list">
           ${meal.items.map((item,ii)=>`
-            <div class="food-item${item.done?' ticked':''}${item.optional?' optional':''}" onclick="toggleItem(${mi},${ii})">
+            <div class="food-item${item.done?' ticked':''}${item.optional?' optional':''}" id="fi${mi}_${ii}" onclick="toggleItem(${mi},${ii})">
               <div class="food-check">${item.done?'<span class="icon icon-check"></span>':''}</div>
               <span class="food-text">${escHtml(item.text)}${item.optional?'<span class="optional-tag">opcional</span>':''}</span>
               <button class="food-del" onclick="removeItem(${mi},${ii},event)"><span class="icon icon-times"></span></button>
@@ -1509,15 +1578,65 @@ function toggleMeal(mi){
 }
 function toggleItem(mi,ii){
   db.meals[mi].items[ii].done=!db.meals[mi].items[ii].done;
-  checkStreak();save();renderDiet();
-  keepCardState(mi); // mantém estado, não force-abre
+  checkStreak();save();
+  updateMealCardVisuals(mi);
+  updateDietProgress();
 }
 function markAllMeal(mi){
   const req=db.meals[mi].items.filter(i=>!i.optional);
   const allDone=req.length>0&&req.every(i=>i.done);
   db.meals[mi].items.forEach(i=>{if(!i.optional)i.done=!allDone;});
-  checkStreak();save();renderDiet();
-  keepCardState(mi); // só marca, não abre
+  checkStreak();save();
+  // Update ONLY this card's visuals — never touch open/close state
+  updateMealCardVisuals(mi);
+  // Update the progress ring/bar
+  updateDietProgress();
+}
+
+function updateMealCardVisuals(mi){
+  const meal=db.meals[mi];
+  const req=meal.items.filter(i=>!i.optional);
+  const allDone=req.length>0&&req.every(i=>i.done);
+  const doneCount=meal.items.filter(i=>i.done).length;
+  const card=document.getElementById('mc'+mi);
+  if(!card)return;
+  // Toggle done class
+  card.classList.toggle('done',allDone);
+  // Update circle
+  const circle=card.querySelector('.meal-circle');
+  if(circle) circle.innerHTML=allDone?'<span class="icon icon-check" style="width:14px;height:14px"></span>':'';
+  // Update sub-count
+  const sub=card.querySelector('.meal-sub');
+  if(sub){
+    const reqLen=req.length;
+    const optLen=meal.items.length-reqLen;
+    sub.textContent=doneCount+'/'+meal.items.length+' itens'+(optLen>0?' ('+optLen+' opcionais)':'');
+  }
+  // Update individual food items
+  meal.items.forEach((item,ii)=>{
+    const fi=document.getElementById('fi'+mi+'_'+ii);
+    if(!fi)return;
+    fi.classList.toggle('ticked',item.done);
+    const chk=fi.querySelector('.food-check');
+    if(chk) chk.innerHTML=item.done?'<span class="icon icon-check" style="width:10px;height:10px"></span>':'';
+  });
+}
+
+function updateDietProgress(){
+  let total=0,done=0;
+  db.meals.forEach(m=>{
+    const req=m.items.filter(i=>!i.optional);
+    total+=req.length; done+=req.filter(i=>i.done).length;
+  });
+  const pct=total>0?Math.round(done/total*100):0;
+  const circ=163.4;
+  const fg=document.getElementById('ringFg');
+  if(fg) fg.style.strokeDashoffset=circ-(circ*pct/100);
+  const rp=document.getElementById('ringPct'); if(rp) rp.textContent=pct+'%';
+  const bf=document.getElementById('barFill'); if(bf) bf.style.width=pct+'%';
+  const ds=document.getElementById('daySub');
+  if(ds) ds.textContent=done+' de '+total+' itens obrigatórios';
+  document.getElementById('streakNum').textContent=db.streak;
 }
 function removeItem(mi,ii,e){e.stopPropagation();if(!confirm('Remover este item?'))return;db.meals[mi].items.splice(ii,1);save();renderDiet();keepCardState(mi);}
 function quickAddItem(mi){const t=prompt('Novo item:');if(t&&t.trim()){db.meals[mi].items.push({text:t.trim(),done:false,optional:false});save();renderDiet();keepCardState(mi);}}
@@ -1691,13 +1810,228 @@ function switchAppTab(name,btn){
   document.querySelectorAll('.app-tab').forEach(el=>el.classList.remove('on'));
   document.getElementById('atab-'+name).classList.add('on');btn.classList.add('on');
 }
-function openSheet(id){document.getElementById(id).classList.add('open');}
+function openSheet(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='sheetManageActs') openManageActs();
+}
 function closeSheet(id){document.getElementById(id).classList.remove('open');}
 function bgClose(e,id){if(e.target===e.currentTarget)closeSheet(id);}
 let toastTimer;
 function toast(msg,dur=3200){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),dur);}
-function confirmReset(){if(confirm('⚠️ Apagar TUDO?')&&confirm('Confirma? Ação irreversível.')){localStorage.removeItem(KEY);location.reload();}}
+function confirmReset(){
+  if(!confirm('⚠️ Isso vai LIMPAR TODA A DIETA (refeições e progresso).\nHistórico de treinos e peso é mantido.\n\nContinuar?')) return;
+  db.meals=[]; db.lastReset=''; db.streak=0; db.lastComplete='';
+  db.waterGoalDate=''; db.waterGoalDone=false;
+  save(); renderDiet(); toast('🗑️ Dieta limpa!');
+}
+
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ══ MANAGE ACTIVITIES ══
+function openManageActs(){
+  const ALL=[
+    {id:'gym',icon:'🏋️',name:'Academia',sub:'Musculação'},
+    {id:'cross',icon:'🔥',name:'CrossFit',sub:'WOD / Functional'},
+    {id:'run',icon:'🏃',name:'Corrida',sub:'Running / Trail'},
+    {id:'beach',icon:'🏸',name:'Beach Tennis',sub:'por horas jogadas'},
+    {id:'volei',icon:'🏐',name:'Vôlei',sub:'Praia / Quadra'},
+  ];
+  const list=document.getElementById('manageSportsList');
+  list.innerHTML=ALL.map(a=>{
+    const active=db.activities.includes(a.id);
+    return '<div class="manage-sport-item">'
+      +'<div class="manage-sport-icon">'+a.icon+'</div>'
+      +'<div style="flex:1"><div class="manage-sport-name">'+a.name+'</div>'
+      +'<div style="font-size:10px;color:var(--muted2)">'+a.sub+'</div></div>'
+      +'<button class="toggle-switch'+(active?' on':'')+'" data-act="'+a.id+'" onclick="toggleManageSwitch(this)"></button>'
+      +'</div>';
+  }).join('');
+}
+function toggleManageSwitch(btn){btn.classList.toggle('on');}
+function saveManageActs(){
+  const btns=document.querySelectorAll('#manageSportsList .toggle-switch');
+  const newActs=[];
+  btns.forEach(b=>{if(b.classList.contains('on'))newActs.push(b.dataset.act);});
+  if(newActs.length===0){toast('⚠️ Selecione pelo menos 1 esporte');return;}
+  db.activities=newActs; save();
+  closeSheet('sheetManageActs');
+  renderActCards(); toast('✅ Esportes atualizados!');
+}
+
+// ══ EDIT SESSION ══
+let editSessId=null;
+function openEditSession(id,e){
+  if(e)e.stopPropagation();
+  const s=db.sessions.find(x=>x.id===id); if(!s)return;
+  editSessId=id;
+  document.getElementById('editSessTitle').value=s.title||'';
+  document.getElementById('editSessKcal').value=s.kcal||0;
+  document.getElementById('editSessDetail').value=s.exercises||s.detail||s.notes||'';
+  openSheet('sheetEditSession');
+}
+function saveEditSession(){
+  const s=db.sessions.find(x=>x.id===editSessId); if(!s)return;
+  s.title=document.getElementById('editSessTitle').value.trim()||s.title;
+  s.kcal=parseInt(document.getElementById('editSessKcal').value)||s.kcal;
+  const detail=document.getElementById('editSessDetail').value.trim();
+  if(s.type==='gym') s.exercises=detail;
+  else if(s.type==='cross') s.detail=detail;
+  else s.notes=detail;
+  save(); closeSheet('sheetEditSession');
+  renderActCards(); renderStats(currentPeriod); toast('✅ Sessão atualizada!');
+}
+
+// ══ BACKUP & RESTORE ══
+function generateBackup(){
+  const payload=JSON.stringify(db);
+  const encoded=btoa(unescape(encodeURIComponent(payload)));
+  const code='CT1:'+encoded;
+  const el=document.getElementById('backupCode');
+  const btn=document.getElementById('copyBackupBtn');
+  el.textContent=code; el.style.display='block'; btn.style.display='inline-flex';
+  toast('✅ Código gerado! Copie e guarde.');
+}
+function copyBackup(){
+  const code=document.getElementById('backupCode').textContent;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(code).then(()=>toast('📋 Código copiado!'));
+  } else {
+    const ta=document.createElement('textarea');ta.value=code;
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);toast('📋 Código copiado!');
+  }
+}
+function restoreBackup(){
+  const code=document.getElementById('restoreCode').value.trim();
+  const res=document.getElementById('restoreResult');
+  if(!code){res.textContent='⚠️ Cole o código acima';res.style.color='var(--orange)';return;}
+  if(!code.startsWith('CT1:')){res.textContent='❌ Código inválido';res.style.color='var(--red)';return;}
+  try{
+    const decoded=decodeURIComponent(escape(atob(code.slice(4))));
+    const parsed=JSON.parse(decoded);
+    if(!parsed.meals&&!parsed.sessions&&!parsed.weight){throw new Error('empty');}
+    if(!confirm('Restaurar backup? Os dados atuais serão substituídos.'))return;
+    db=parsed; save(); location.reload();
+  }catch(e){
+    res.textContent='❌ Código inválido ou corrompido';res.style.color='var(--red)';
+  }
+}
+
+// ══ MIDNIGHT RESET ══
+function scheduleMidnightReset(){
+  const now=new Date();
+  const next=new Date(now);
+  next.setDate(now.getDate()+1);
+  next.setHours(0,0,1,0); // 00:00:01
+  const ms=next.getTime()-now.getTime();
+  setTimeout(()=>{
+    dailyReset(); initWaterGoal();
+    // Reset today's sessions display (stats 'day' view)
+    renderDiet(); renderStats(currentPeriod);
+    toast('🌅 Novo dia! Dieta e stats do dia resetados.');
+    scheduleMidnightReset(); // schedule next day
+  }, ms);
+}
+
+// ══ ACT SWIPE SLIDER ══
+let actCurrentIndex=0;
+let actTouchStartX=0;
+let actTouchStartY=0;
+
+function renderActCards(){
+  const acts=db.activities||[];
+  const slider=document.getElementById('actSlider');
+  const dotsEl=document.getElementById('actDots');
+  const hint=document.getElementById('actSwipeHint');
+  if(!slider)return;
+
+  if(acts.length===0){
+    slider.innerHTML='<div class="act-slide"><div class="empty"><span class="icon icon-dumbbell" style="width:40px;height:40px;margin-bottom:10px;opacity:.2"></span><p>Nenhuma atividade.<br>Clique em ⚙️ Gerenciar Esportes</p></div></div>';
+    dotsEl.innerHTML=''; hint.style.display='none'; return;
+  }
+
+  // Build one slide per activity
+  slider.innerHTML=acts.map(type=>buildActSlide(type)).join('');
+
+  // Dots
+  dotsEl.innerHTML=acts.map((_,i)=>'<div class="act-dot'+(i===actCurrentIndex?' on':'')+'" onclick="goToActSlide('+i+')"></div>').join('');
+
+  hint.style.display=acts.length>1?'flex':'none';
+
+  // Clamp index
+  if(actCurrentIndex>=acts.length)actCurrentIndex=acts.length-1;
+  slider.style.transform='translateX(-'+actCurrentIndex*100+'%)';
+
+  setupActSwipe();
+}
+
+function buildActSlide(type){
+  const m=ACT_META[type];
+  const sessions=db.sessions.filter(s=>s.type===type);
+  const todayS=sessions.filter(s=>s.dateStr===todayStr());
+  const week=sessInRange(sessions,7);
+  const totalKcal=week.reduce((a,s)=>a+(s.kcal||0),0);
+  const streak=calcStreak(sessions);
+  let statsHtml='';
+  if(type==='run'){
+    const km=week.filter(s=>s.dist).reduce((a,s)=>a+(s.dist||0),0);
+    const best=sessions.filter(s=>s.pace).sort((a,b)=>paceToSec(a.pace)-paceToSec(b.pace))[0];
+    statsHtml='<div class="act-stat"><div class="act-stat-val">'+km.toFixed(1)+'</div><div class="act-stat-lbl">km/sem</div></div>'
+      +'<div class="act-stat"><div class="act-stat-val">'+totalKcal+'</div><div class="act-stat-lbl">kcal/sem</div></div>'
+      +'<div class="act-stat"><div class="act-stat-val">'+(best?best.pace:'--')+'</div><div class="act-stat-lbl">best pace</div></div>';
+  }else if(type==='gym'||type==='cross'){
+    const avg=week.length>0?Math.round(totalKcal/week.length):0;
+    statsHtml='<div class="act-stat"><div class="act-stat-val">'+week.length+'</div><div class="act-stat-lbl">treinos/sem</div></div>'
+      +'<div class="act-stat"><div class="act-stat-val">'+totalKcal+'</div><div class="act-stat-lbl">kcal/sem</div></div>'
+      +'<div class="act-stat"><div class="act-stat-val">'+avg+'</div><div class="act-stat-lbl">kcal/treino</div></div>';
+  }else{
+    const hrs=week.filter(s=>s.hours).reduce((a,s)=>a+(s.hours||0),0);
+    statsHtml='<div class="act-stat"><div class="act-stat-val">'+hrs.toFixed(1)+'h</div><div class="act-stat-lbl">horas/sem</div></div>'
+      +'<div class="act-stat"><div class="act-stat-val">'+totalKcal+'</div><div class="act-stat-lbl">kcal/sem</div></div>'
+      +'<div class="act-stat"><div class="act-stat-val">'+week.length+'</div><div class="act-stat-lbl">sessões/sem</div></div>';
+  }
+  const todayDot=todayS.length>0?'<span class="pill">✓ Hoje</span>':'';
+  const streakBadge=streak>0?'<span style="font-family:\'Space Mono\',monospace;font-size:10px;color:var(--muted2)">🔥 '+streak+'d</span>':'';
+  const recent=sessions.slice(0,3);
+  const recentHtml=recent.map(s=>buildSessionCard(s,m,'sid')).join('');
+
+  return '<div class="act-slide">'
+    +'<div class="act-hero '+m.color+'">'
+    +'<div class="act-hero-head">'
+    +'<div class="act-hero-title"><span>'+m.icon+'</span>'+m.label+todayDot+'</div>'
+    +streakBadge+'</div>'
+    +'<div class="act-stats-row">'+statsHtml+'</div>'
+    +'<button class="log-btn" onclick="openLogSheet(\''+type+'\')"><span class="icon icon-plus" style="width:14px;height:14px;vertical-align:middle;margin-right:4px"></span> Registrar '+m.label+'</button>'
+    +'</div>'
+    +(recent.length>0?'<div class="sec-label" style="margin-top:10px">'+m.label+' — Recentes</div>'+recentHtml:'')
+    +'</div>';
+}
+
+function goToActSlide(i){
+  const acts=db.activities||[];
+  actCurrentIndex=Math.max(0,Math.min(i,acts.length-1));
+  const slider=document.getElementById('actSlider');
+  if(slider)slider.style.transform='translateX(-'+actCurrentIndex*100+'%)';
+  document.querySelectorAll('.act-dot').forEach((d,di)=>d.classList.toggle('on',di===actCurrentIndex));
+}
+
+function setupActSwipe(){
+  const wrap=document.getElementById('actSliderWrap');
+  if(!wrap||wrap._swipeSetup)return;
+  wrap._swipeSetup=true;
+  wrap.addEventListener('touchstart',e=>{
+    actTouchStartX=e.touches[0].clientX;
+    actTouchStartY=e.touches[0].clientY;
+  },{passive:true});
+  wrap.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-actTouchStartX;
+    const dy=e.changedTouches[0].clientY-actTouchStartY;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){
+      goToActSlide(actCurrentIndex+(dx<0?1:-1));
+    }
+  },{passive:true});
+}
+
 </script>
 </body>
 </html>
