@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Controle Total</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  MODULE: MACROS — Estimativa nutricional via Anthropic API      ║
 // ╚══════════════════════════════════════════════════════════════════╝
@@ -151,6 +152,7 @@ function updateDayMacros() {
 .icon-download{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23848484' d='M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64z'/%3E%3C/svg%3E")}
 .icon-weight{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23848484' d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zm-48 360c0 13.3-10.7 24-24 24s-24-10.7-24-24V200l-23.5 23.5c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l64-64c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L184 183.5V360zm90.7-34.5l-23.4-5.8c-12.9-3.2-20.7-16.3-17.5-29.2l8.7-35c3.2-12.9 16.3-20.7 29.2-17.5l23.4 5.8c12.9 3.2 20.7 16.3 17.5 29.2l-8.7 35c-3.2 12.9-16.3 20.7-29.2 17.5z'/%3E%3C/svg%3E")}
 .icon-history{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23505050' d='M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z'/%3E%3C/svg%3E")}
+.icon-star{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3Cpath fill='%23ffffff' d='M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z'/%3E%3C/svg%3E")}
 .icon-exclamation-triangle{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ff8c00' d='M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z'/%3E%3C/svg%3E")}
 .icon-whatsapp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%2325d366' d='M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z'/%3E%3C/svg%3E")}
 
@@ -530,6 +532,92 @@ select option{background:var(--card2)}
 .edit-kcal-row label{font-size:11px;color:var(--muted2);white-space:nowrap}
 .edit-kcal-row input{flex:1;width:auto}
 
+/* ══ PRESSÃO POSITIVA — Mensagem contextual no dashboard ══ */
+.dash-pressure{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-top:1px solid var(--border);background:transparent;transition:background .3s}
+.dash-pressure.urgente{background:rgba(255,61,61,.05);border-top-color:rgba(255,61,61,.18)}
+.dash-pressure.alerta{background:rgba(255,140,0,.05);border-top-color:rgba(255,140,0,.15)}
+.dash-pressure.ok{background:rgba(0,230,118,.04);border-top-color:rgba(0,230,118,.12)}
+.dash-pressure-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.dash-pressure-msg{font-size:11px;color:var(--muted2);line-height:1.5;flex:1}
+.dash-pressure-msg strong{display:block;font-size:12px;color:var(--text);margin-bottom:2px;font-weight:600}
+.dash-pressure.urgente .dash-pressure-msg strong{color:var(--red)}
+.dash-pressure.alerta .dash-pressure-msg strong{color:var(--orange)}
+.dash-pressure.ok .dash-pressure-msg strong{color:var(--green)}
+
+/* ══ NOTIFICAÇÕES — banner de ativação ══ */
+.notif-banner{background:rgba(180,127,255,.07);border:1px solid rgba(180,127,255,.18);border-radius:11px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;animation:slideUp .3s ease both}
+.notif-banner-icon{font-size:22px;flex-shrink:0}
+.notif-banner-body{flex:1;min-width:0}
+.notif-banner-title{font-size:12px;font-weight:600;margin-bottom:2px}
+.notif-banner-sub{font-size:10px;color:var(--muted2);line-height:1.4}
+.notif-banner-btn{background:rgba(180,127,255,.18);border:1px solid rgba(180,127,255,.3);color:var(--purple);border-radius:8px;padding:7px 12px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.notif-banner-btn:hover{background:rgba(180,127,255,.32)}
+.notif-banner-btn.granted{background:rgba(0,230,118,.12);border-color:rgba(0,230,118,.25);color:var(--green)}
+
+/* ══ MICRO-INTERAÇÕES — Confetti & Celebration ══ */
+#confettiCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;opacity:0;transition:opacity .3s}
+#confettiCanvas.active{opacity:1}
+/* Mission pulse ring on complete */
+@keyframes missionRing{0%{box-shadow:0 0 0 0 rgba(212,255,0,.6)}70%{box-shadow:0 0 0 12px rgba(212,255,0,0)}100%{box-shadow:0 0 0 0 rgba(212,255,0,0)}}
+.mission-card.just-done{animation:missionRing .6s ease-out}
+/* Day complete celebration overlay */
+.celebrate-overlay{position:fixed;inset:0;z-index:9990;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s}
+.celebrate-overlay.show{opacity:1;pointer-events:all}
+.celebrate-box{background:linear-gradient(160deg,#0d1800,#111f00);border:1px solid rgba(212,255,0,.4);border-radius:24px;padding:32px 28px;text-align:center;max-width:320px;width:90%;animation:slideUp .5s cubic-bezier(.34,1.56,.64,1) both;box-shadow:0 0 60px rgba(212,255,0,.15),0 20px 40px rgba(0,0,0,.6)}
+.celebrate-fire{font-size:56px;display:block;margin-bottom:12px;animation:missionPop .7s cubic-bezier(.34,1.56,.64,1)}
+.celebrate-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;color:var(--acid);filter:drop-shadow(0 0 14px rgba(212,255,0,.4));margin-bottom:6px}
+.celebrate-streak{font-family:'Space Mono',monospace;font-size:11px;color:var(--acid2);letter-spacing:1px;margin-bottom:12px}
+.celebrate-msg{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:20px}
+.celebrate-close{background:var(--acid);color:#000;border:none;border-radius:10px;padding:12px 28px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;transition:all .2s;width:100%}
+.celebrate-close:hover{box-shadow:0 4px 20px rgba(212,255,0,.35);transform:translateY(-1px)}
+/* Streak marco toast special */
+@keyframes marcoShake{0%,100%{transform:translateX(-50%) translateY(0)}20%{transform:translateX(-50%) translateY(-4px)}40%{transform:translateX(-50%) translateY(0)}60%{transform:translateX(-50%) translateY(-2px)}80%{transform:translateX(-50%) translateY(0)}}
+.toast.marco{border-color:var(--acid);color:var(--acid);font-size:12px;padding:11px 22px;animation:marcoShake .5s ease .1s}
+/* Water quick-add button pulse */
+@keyframes waterBurst{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(61,155,255,.5)}50%{transform:scale(1.08);box-shadow:0 0 0 8px rgba(61,155,255,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(61,155,255,0)}}
+.wc-quick-btn.burst{animation:waterBurst .4s ease}
+/* Creatina circle celebrate */
+@keyframes creatinaSpin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.15)}100%{transform:rotate(360deg) scale(1)}}
+.cr-circle.spin{animation:creatinaSpin .5s cubic-bezier(.34,1.56,.64,1)}
+
+/* ══ PARCERIAS — Partnerships Tab ══ */
+.partner-hero{background:linear-gradient(135deg,#0a0014,#08001a);border:1px solid rgba(180,127,255,.2);border-radius:16px;padding:20px 18px 18px;margin-bottom:12px;position:relative;overflow:hidden}
+.partner-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(180,127,255,.12),transparent 70%);pointer-events:none}
+.partner-hero-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.partner-hero-sub{font-size:11px;color:var(--muted2);line-height:1.5;margin-bottom:14px}
+.partner-shield-status{display:flex;align-items:center;gap:10px;background:rgba(180,127,255,.08);border:1px solid rgba(180,127,255,.18);border-radius:10px;padding:10px 14px}
+.partner-shield-icon{font-size:24px}
+.partner-shield-info{flex:1}
+.partner-shield-title{font-size:12px;font-weight:600;margin-bottom:1px}
+.partner-shield-sub{font-size:10px;color:var(--muted2);font-family:'Space Mono',monospace}
+/* Partner cards */
+.partner-card{background:var(--card);border:1px solid var(--border2);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .3s}
+.partner-card.earned{border-color:rgba(0,230,118,.3)}
+.partner-card-header{display:flex;align-items:center;gap:12px;padding:14px 16px 12px}
+.partner-emoji{font-size:32px;flex-shrink:0}
+.partner-info{flex:1;min-width:0}
+.partner-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;margin-bottom:2px}
+.partner-cat{font-size:9px;font-family:'Space Mono',monospace;color:var(--muted2);letter-spacing:1px;text-transform:uppercase}
+.partner-badge{font-family:'Space Mono',monospace;font-size:8px;padding:3px 8px;border-radius:12px;white-space:nowrap;flex-shrink:0}
+.partner-badge.available{background:rgba(180,127,255,.12);color:var(--purple);border:1px solid rgba(180,127,255,.25)}
+.partner-badge.earned{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.partner-badge.cooldown{background:var(--border);color:var(--muted2);border:1px solid var(--border2)}
+.partner-desc{font-size:11.5px;color:var(--muted2);line-height:1.6;padding:0 16px 12px}
+/* Engagement section */
+.partner-engage{border-top:1px solid var(--border);padding:14px 16px}
+.partner-engage-title{font-size:11px;font-weight:600;margin-bottom:8px;color:var(--text)}
+.partner-engage-content{font-size:11px;color:var(--muted2);line-height:1.65;background:rgba(0,0,0,.3);border-radius:8px;padding:12px;margin-bottom:12px;border:1px solid var(--border)}
+/* Progress bar for reading time */
+.partner-timer-wrap{margin-bottom:10px}
+.partner-timer-label{display:flex;justify-content:space-between;font-size:9px;color:var(--muted2);font-family:'Space Mono',monospace;margin-bottom:5px;letter-spacing:.3px}
+.partner-timer-track{height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
+.partner-timer-fill{height:100%;background:linear-gradient(90deg,var(--purple),#d4b8ff);border-radius:3px;transition:width .5s linear;width:0%}
+.partner-earn-btn{width:100%;padding:11px;background:rgba(180,127,255,.12);border:1px solid rgba(180,127,255,.3);color:var(--purple);border-radius:9px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.partner-earn-btn:hover:not(:disabled){background:rgba(180,127,255,.25);border-color:rgba(180,127,255,.6)}
+.partner-earn-btn:disabled{opacity:.4;cursor:default}
+.partner-earn-btn.reading{color:var(--muted2);border-color:var(--border2)}
+.partner-earn-btn.done{background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green)}
+
 /* ══ TOAST ══ */
 .toast{position:fixed;top:68px;left:50%;z-index:9999;transform:translateX(-50%) translateY(-10px);background:var(--card2);border:1px solid var(--acid);color:var(--acid);padding:9px 18px;border-radius:100px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.5px;pointer-events:none;opacity:0;transition:opacity .25s,transform .25s;white-space:nowrap;box-shadow:0 4px 22px rgba(0,0,0,.5)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -541,6 +629,125 @@ select option{background:var(--card2)}
 .dev-footer{text-align:center;padding:20px 16px 12px;color:var(--muted);font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:8px}
 .dev-footer a{color:var(--green);text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:11px}
 .dev-footer a:hover{color:var(--acid)}
+
+/* ══ DASHBOARD — MISSÕES & STREAK GERAL ══ */
+.dash-card{background:var(--card);border:1px solid var(--border2);border-radius:18px;margin-bottom:12px;overflow:hidden;animation:slideUp .3s ease both;box-shadow:0 4px 24px rgba(0,0,0,.35)}
+
+/* ── Streak Hero ── */
+.dash-streak{background:linear-gradient(160deg,#0f0f00 0%,#111500 60%,#0a0a00 100%);border-bottom:1px solid rgba(212,255,0,.1);padding:20px 18px 16px;position:relative;overflow:hidden}
+.dash-streak::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(212,255,0,.08) 0%,transparent 70%);pointer-events:none}
+.dash-streak-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.dash-streak-left{display:flex;align-items:center;gap:14px}
+.dash-streak-fire{font-size:42px;line-height:1;flex-shrink:0;filter:drop-shadow(0 0 14px rgba(212,255,0,.5));animation:streakPulse 3s ease-in-out infinite}
+.dash-streak-nums{display:flex;flex-direction:column}
+.dash-streak-num{font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:.9;color:var(--acid);filter:drop-shadow(0 0 18px rgba(212,255,0,.35));letter-spacing:-1px}
+.dash-streak-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--acid2);text-transform:uppercase;letter-spacing:3px;margin-top:4px}
+.dash-streak-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-top:4px}
+.dash-streak-label{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:2px}
+.dash-streak-msg{font-size:11.5px;color:var(--muted2);line-height:1.5;font-style:italic;border-top:1px solid rgba(212,255,0,.08);padding-top:10px;margin-top:2px}
+.dash-streak-marco{display:inline-flex;align-items:center;gap:5px;background:rgba(212,255,0,.1);border:1px solid rgba(212,255,0,.3);border-radius:20px;padding:4px 11px;font-family:'Space Mono',monospace;font-size:9px;color:var(--acid);letter-spacing:.5px;margin-top:6px;align-self:flex-start}
+
+/* ── Marco progress bar ── */
+.dash-marco-bar{padding:11px 18px 13px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+.dash-marco-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.dash-marco-txt{font-size:9px;color:var(--muted);font-family:'Space Mono',monospace;letter-spacing:.8px;text-transform:uppercase}
+.dash-marco-next{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--acid);letter-spacing:1px}
+.dash-marco-track{height:8px;background:var(--border2);border-radius:4px;overflow:hidden;position:relative}
+.dash-marco-fill{height:100%;background:linear-gradient(90deg,var(--acid2),var(--acid));border-radius:4px;transition:width 1s cubic-bezier(.4,0,.2,1);position:relative;min-width:4px}
+.dash-marco-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:4px;background:rgba(255,255,255,.6);border-radius:2px;box-shadow:0 0 6px rgba(212,255,0,.8)}
+
+/* ── Missões do Dia ── */
+.dash-missions-header{padding:13px 18px 9px;display:flex;align-items:center;justify-content:space-between}
+.dash-missions-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase}
+.dash-missions-pct{font-family:'Space Mono',monospace;font-size:10px;color:var(--acid);letter-spacing:.5px;background:rgba(212,255,0,.08);border:1px solid rgba(212,255,0,.18);border-radius:20px;padding:2px 9px}
+.dash-missions-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px 14px}
+/* Mission card base */
+.mission-card{border-radius:13px;padding:13px 13px 11px;border:1px solid var(--border2);background:rgba(255,255,255,.025);transition:border-color .3s,background .3s,box-shadow .3s;position:relative;overflow:hidden}
+.mission-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;pointer-events:none;border-radius:13px}
+/* Done state */
+.mission-card.done{border-color:rgba(212,255,0,.4);background:linear-gradient(145deg,rgba(212,255,0,.07),rgba(212,255,0,.02));box-shadow:0 2px 16px rgba(212,255,0,.08),inset 0 1px 0 rgba(212,255,0,.12)}
+/* Color accents per mission type when done */
+.mission-card.done.mission-water{border-color:rgba(61,155,255,.45);background:linear-gradient(145deg,rgba(61,155,255,.07),rgba(61,155,255,.02));box-shadow:0 2px 16px rgba(61,155,255,.1)}
+.mission-card.done.mission-treino{border-color:rgba(255,140,0,.45);background:linear-gradient(145deg,rgba(255,140,0,.07),rgba(255,140,0,.02));box-shadow:0 2px 16px rgba(255,140,0,.1)}
+.mission-card.done.mission-creatina{border-color:rgba(180,127,255,.45);background:linear-gradient(145deg,rgba(180,127,255,.07),rgba(180,127,255,.02));box-shadow:0 2px 16px rgba(180,127,255,.1)}
+.mission-card.done.mission-dieta{border-color:rgba(212,255,0,.45);background:linear-gradient(145deg,rgba(212,255,0,.07),rgba(212,255,0,.02));box-shadow:0 2px 16px rgba(212,255,0,.1)}
+/* Icon */
+.mission-icon{font-size:24px;margin-bottom:7px;display:block}
+.mission-card.done .mission-icon{animation:missionPop .5s cubic-bezier(.34,1.56,.64,1)}
+/* Texts */
+.mission-name{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.8px;line-height:1;margin-bottom:4px;color:var(--muted2)}
+.mission-status{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.2px;line-height:1.4}
+.mission-card.done .mission-name{color:var(--text)}
+.mission-card.done .mission-status{color:var(--muted2)}
+/* Check badge */
+.mission-check{position:absolute;top:9px;right:9px;width:20px;height:20px;border-radius:50%;background:var(--acid);display:flex;align-items:center;justify-content:center;font-size:11px;opacity:0;transform:scale(0) rotate(-30deg);transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.mission-card.done .mission-check{opacity:1;transform:scale(1) rotate(0deg)}
+.mission-card.done.mission-water .mission-check{background:var(--blue)}
+.mission-card.done.mission-treino .mission-check{background:var(--orange)}
+.mission-card.done.mission-creatina .mission-check{background:var(--purple)}
+/* Progress bar */
+.mission-bar{height:3px;background:var(--border);border-radius:2px;margin-top:9px;overflow:hidden}
+.mission-bar-fill{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.mission-water .mission-bar-fill{background:linear-gradient(90deg,#1a6bcc,var(--blue))}
+.mission-creatina .mission-bar-fill{background:linear-gradient(90deg,#7b4fff,var(--purple))}
+.mission-dieta .mission-bar-fill{background:linear-gradient(90deg,var(--acid2),var(--acid))}
+.mission-treino .mission-bar-fill{background:linear-gradient(90deg,#cc6000,var(--orange))}
+
+/* ── Consistência Mensal ── */
+.dash-monthly{padding:13px 18px 15px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(0,0,0,.15)}
+.dash-monthly-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.dash-monthly-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase}
+.dash-monthly-right{text-align:right}
+.dash-monthly-pct{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;color:var(--acid);filter:drop-shadow(0 0 8px rgba(212,255,0,.2))}
+.dash-monthly-pct span{font-size:13px;color:var(--acid2);margin-left:1px}
+.dash-monthly-sub{font-size:9px;color:var(--muted);font-family:'Space Mono',monospace;letter-spacing:.3px;margin-top:3px}
+/* Dot grid */
+.dash-dots-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.dash-dot{width:100%;aspect-ratio:1;border-radius:4px;transition:all .25s}
+.dash-dot.done{background:var(--acid);box-shadow:0 0 4px rgba(212,255,0,.3)}
+.dash-dot.done.gym{background:var(--gym);box-shadow:0 0 4px rgba(255,140,0,.3)}
+.dash-dot.done.cross{background:var(--cross);box-shadow:0 0 4px rgba(212,255,0,.3)}
+.dash-dot.done.run{background:var(--run);box-shadow:0 0 4px rgba(0,230,118,.3)}
+.dash-dot.done.beach{background:var(--beach);box-shadow:0 0 4px rgba(255,110,180,.3)}
+.dash-dot.done.volei{background:var(--volei);box-shadow:0 0 4px rgba(61,155,255,.3)}
+.dash-dot.done.shielded{background:var(--purple);box-shadow:0 0 4px rgba(180,127,255,.4)}
+.dash-dot.missed{background:var(--border2)}
+.dash-dot.today{background:rgba(212,255,0,.2);box-shadow:0 0 0 2px var(--acid),0 0 8px rgba(212,255,0,.2)}
+.dash-dot.future{background:transparent;border:1px solid var(--border)}
+/* Dot legend */
+.dash-dots-legend{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+.dash-dot-legend-item{display:flex;align-items:center;gap:4px;font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.3px}
+.dash-dot-legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ── Escudos ── */
+.dash-shields{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--border)}
+.dash-shields-left{display:flex;align-items:center;gap:12px}
+.dash-shields-icons{display:flex;gap:4px}
+.shield-icon{font-size:22px;line-height:1;transition:all .3s;filter:drop-shadow(0 0 4px rgba(180,127,255,.4))}
+.shield-icon.empty{filter:grayscale(1) brightness(.4);opacity:.5}
+.dash-shields-info{min-width:0}
+.dash-shields-title{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.8px;color:var(--text)}
+.dash-shields-sub{font-size:9px;color:var(--muted2);font-family:'Space Mono',monospace;letter-spacing:.2px;margin-top:2px;line-height:1.4}
+.dash-shields-btn{background:rgba(180,127,255,.12);border:1px solid rgba(180,127,255,.25);color:var(--purple);border-radius:9px;padding:7px 14px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.dash-shields-btn:hover{background:rgba(180,127,255,.28);border-color:rgba(180,127,255,.6);box-shadow:0 2px 12px rgba(180,127,255,.2)}
+.dash-shields-btn:active{transform:scale(.96)}
+.dash-shields-btn:disabled{opacity:.3;cursor:default;pointer-events:none}
+
+/* ── Identity message ── */
+.dash-identity{padding:11px 18px 13px;font-size:11.5px;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);font-style:italic;background:rgba(0,0,0,.1)}
+.dash-identity strong{color:var(--muted2);font-style:normal;font-weight:600}
+
+/* ── Dia completo banner ── */
+.dash-day-complete{background:linear-gradient(135deg,#0c1400,#0d1800);border:1px solid rgba(212,255,0,.25);border-radius:16px;padding:18px 18px 16px;margin-bottom:10px;text-align:center;animation:slideUp .4s cubic-bezier(.34,1.56,.64,1) both;position:relative;overflow:hidden}
+.dash-day-complete::before{content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(212,255,0,.12),transparent 70%);pointer-events:none}
+.dash-day-complete-icon{font-size:40px;display:block;margin-bottom:8px;animation:missionPop .6s cubic-bezier(.34,1.56,.64,1)}
+.dash-day-complete h3{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--acid);margin-bottom:5px;filter:drop-shadow(0 0 10px rgba(212,255,0,.3))}
+.dash-day-complete p{font-size:11px;color:var(--muted2);line-height:1.6}
+
+/* ── Animations ── */
+@keyframes missionPop{0%{transform:scale(.6);opacity:.5}60%{transform:scale(1.15)}80%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
+@keyframes streakPulse{0%,100%{filter:drop-shadow(0 0 14px rgba(212,255,0,.5))}50%{filter:drop-shadow(0 0 28px rgba(212,255,0,.85))}}
+@keyframes checkIn{0%{transform:scale(0) rotate(-30deg);opacity:0}70%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0deg);opacity:1}}
 
 /* ══ CREATINA CARD ══ */
 .creatina-card{background:var(--card);border:1px solid rgba(180,127,255,.2);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:border-color .3s,box-shadow .3s}
@@ -744,6 +951,9 @@ select option{background:var(--card2)}
       </div>
     </div>
 
+    <!-- ── DASHBOARD — MISS&#213;ES & STREAK (renderizado por JS) ── -->
+    <div id="dashCard"></div>
+
     <!-- ── WATER CARD (renderizado por JS) ── -->
     <div id="waterGoalCard" style="display:none"></div>
 
@@ -853,6 +1063,18 @@ select option{background:var(--card2)}
     <div style="height:12px"></div>
   </div>
 
+  <!-- ═══ PARCERIAS ═══ -->
+  <div id="v-partner" class="view">
+    <div class="partner-hero">
+      <div class="partner-hero-title">🤝 Benefícios</div>
+      <div class="partner-hero-sub">Explore conteúdos de parceiros e ganhe escudos extras para proteger sua sequência. Engajamento real — sem atalhos.</div>
+      <div class="partner-shield-status" id="partnerShieldStatus"></div>
+    </div>
+    <div id="partnerList"></div>
+    <div id="partnerFooter"></div>
+    <div style="height:12px"></div>
+  </div>
+
 </div>
 
 <!-- ══════ NAV ══════ -->
@@ -861,9 +1083,20 @@ select option{background:var(--card2)}
   <button class="nav-btn" id="nb-act" onclick="switchView('act')"><span class="icon icon-dumbbell"></span>Treinos<div class="nav-dot"></div></button>
   <button class="nav-btn" id="nb-stats" onclick="switchView('stats')"><span class="icon icon-chart-bar"></span>Stats<div class="nav-dot"></div></button>
   <button class="nav-btn" id="nb-evo" onclick="switchView('evo')"><span class="icon icon-chart-line"></span>Evolução<div class="nav-dot"></div></button>
+  <button class="nav-btn" id="nb-partner" onclick="switchView('partner');renderPartners()"><span class="icon icon-star"></span>Benefícios<div class="nav-dot"></div></button>
 </nav>
 
 <div class="toast" id="toast"></div>
+<canvas id="confettiCanvas"></canvas>
+<div class="celebrate-overlay" id="celebrateOverlay" onclick="closeCelebrate()">
+  <div class="celebrate-box" onclick="event.stopPropagation()">
+    <span class="celebrate-fire" id="celebrateFire">⚡</span>
+    <div class="celebrate-title" id="celebrateTitle">DIA COMPLETO!</div>
+    <div class="celebrate-streak" id="celebrateStreak">SEQUÊNCIA · 0 DIAS</div>
+    <div class="celebrate-msg" id="celebrateMsg">Todas as missões do dia foram cumpridas.</div>
+    <button class="celebrate-close" onclick="closeCelebrate()">CONTINUAR 💪</button>
+  </div>
+</div>
 
 <!-- ══════════════════ SHEETS ══════════════════ -->
 <div class="sheet-overlay" id="sheetAddMeal" onclick="bgClose(event,'sheetAddMeal')"><div class="sheet">
@@ -1073,6 +1306,13 @@ select option{background:var(--card2)}
       </div>
       <button class="toggle-switch" id="settingsCreatinaToggle" onclick="Settings.toggleCreatina();updateSettingsToggles()"></button>
     </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:13px;font-weight:500">Notificações Inteligentes</div>
+        <div style="font-size:10px;color:var(--muted2);margin-top:1px">Lembretes de água, treino e missões pendentes</div>
+      </div>
+      <button class="toggle-switch" id="settingsNotifToggle" onclick="Notif.toggleSetting();updateSettingsToggles()"></button>
+    </div>
     <div style="padding-top:10px">
       <button class="btn btn-ghost" style="font-size:12px" onclick="closeSheet('sheetBackup');openSheet('sheetManageActs')">⚙️ Gerenciar Esportes Ativos</button>
     </div>
@@ -1137,6 +1377,12 @@ if(db.settings.showDietTab===undefined) db.settings.showDietTab=true;
 if(db.settings.showCreatina===undefined) db.settings.showCreatina=true;
 if(!db.creatina) db.creatina={streak:0,lastDate:'',startDate:''};
 if(!db.insights) db.insights={lastShown:0,dismissed:[]};
+// ── MISSOES / STREAK GERAL ── migration guard
+if(!db.dailyStreak) db.dailyStreak={count:0,lastDate:'',shields:0,lastShieldEarned:'',lastShieldUsed:'',totalDays:0,history:[]};
+if(!db.dailyStreak.history) db.dailyStreak.history=[];
+if(!db.missions) db.missions={lastDate:'',water:false,creatina:false,dieta:false,treino:false};
+if(db.settings&&db.settings.notifications===undefined) db.settings.notifications=false;
+if(!db.partnerRewards) db.partnerRewards={};
 
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){}}
 function todayStr(){return new Date().toLocaleDateString('pt-BR');}
@@ -1160,6 +1406,11 @@ const DB = {
     if(db.settings.showCreatina===undefined) db.settings.showCreatina=true;
     if(!db.creatina) db.creatina={streak:0,lastDate:'',startDate:''};
     if(!db.insights) db.insights={lastShown:0,dismissed:[]};
+    if(!db.dailyStreak) db.dailyStreak={count:0,lastDate:'',shields:0,lastShieldEarned:'',lastShieldUsed:'',totalDays:0,history:[]};
+    if(!db.dailyStreak.history) db.dailyStreak.history=[];
+    if(!db.missions) db.missions={lastDate:'',water:false,creatina:false,dieta:false,treino:false};
+    if(db.settings.notifications===undefined) db.settings.notifications=false;
+    if(!db.partnerRewards) db.partnerRewards={};
   },
   /** Alias kept for backward compat; delegated to initWater() */
   initWater(){ initWater(); },
@@ -1231,6 +1482,10 @@ const Settings = {
     renderCreatina();
     toast(current ? '💊 Creatina desativada' : '💊 Creatina ativada');
   },
+  /** Toggle notifications (delegates to Notif module) */
+  toggleNotifications(){
+    Notif.toggleSetting();
+  },
 };
 
 function updateSettingsToggles(){
@@ -1238,6 +1493,8 @@ function updateSettingsToggles(){
   if(dt)dt.classList.toggle('on',db.settings?.showDietTab!==false);
   const ct=document.getElementById('settingsCreatinaToggle');
   if(ct)ct.classList.toggle('on',db.settings?.showCreatina!==false);
+  const nt=document.getElementById('settingsNotifToggle');
+  if(nt)nt.classList.toggle('on',db.settings?.notifications===true&&Notification.permission==='granted');
 }
 
 
@@ -1312,6 +1569,7 @@ function logWater(ml){
   db.water.entries.push(entry);
   save();
   renderWater();
+  renderDashboard();
   // Pulse animation on clicked button
   const prevTotal=getWaterTotal()-ml;
   const newTotal=getWaterTotal();
@@ -1329,6 +1587,7 @@ function removeWaterEntry(id){
   db.water.entries=db.water.entries.filter(e=>e.id!==id);
   save();
   renderWater();
+  renderDashboard();
 }
 
 /** Update the daily goal */
@@ -1420,14 +1679,8 @@ function renderWater(){
     +'<div class="wc-log">'+entriesHtml+'</div>';
 }
 
-/** Quick-add with pulse animation on button */
-function logWaterQuick(btn,ml){
-  logWater(ml);
-  btn.classList.remove('pulse');
-  void btn.offsetWidth; // reflow to restart animation
-  btn.classList.add('pulse');
-  setTimeout(()=>btn.classList.remove('pulse'),400);
-}
+/** Quick-add — delegates to Confetti module for burst animation */
+// logWaterQuick is defined in the MICRO-INTERACTIONS module above
 
 
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -1639,12 +1892,14 @@ function initApp(){
   // ── Core modules (always run) ──
   DB.initSettings();   // ensure settings block exists
   DB.initWater();      // ensure water block exists, migrate legacy
+  initMissions();      // ensure missions block exists, reset if new day
 
   // ── Daily routines ──
   dailyReset();
 
   // ── Render modules ──
   Nav.render();        // build nav dynamically based on settings
+  renderDashboard();   // missoes + streak geral (sempre primeiro)
   Diet.render();       // render diet view (or hide it if disabled)
   Acts.render();       // render activity slider
   Stats.render(currentPeriod);
@@ -1653,6 +1908,8 @@ function initApp(){
 
   // ── Global setup ──
   insertFooters();
+  Notif.init();        // agenda notificações se já autorizadas
+  // Partners tab renders on demand (switchView triggers it)
   scheduleMidnightReset();
 }
 
@@ -1673,7 +1930,7 @@ function devFooterHTML(){
   return'<div class="dev-footer">Desenvolvido por Felipe Benevenuto<br><a href="https://wa.me/5532984351435?text='+wa+'" target="_blank"><span class="icon icon-whatsapp" style="color:#25d366"></span> Falar com o Desenvolvedor</a></div>';
 }
 function insertFooters(){
-  ['dietFooter','actFooter','statsFooter','evoFooter'].forEach(id=>{
+  ['dietFooter','actFooter','statsFooter','evoFooter','partnerFooter'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.innerHTML=devFooterHTML();
   });
 }
@@ -1700,6 +1957,516 @@ function setupKcalPreviews(){
 }
 
 // ╔══════════════════════════════════════════════════════════════════╗
+// ║  MODULE: MISSIONS — Dashboard de Missões e Streak Geral         ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+// ── Marcos de streak ────────────────────────────────────────────────
+const STREAK_MARCOS = [3,7,15,30,50,100,150,200,250,300,365,400,500,600,700,730,1000];
+
+function getNextMarco(count) {
+  return STREAK_MARCOS.find(m => m > count) || (Math.ceil((count+1)/50)*50);
+}
+
+function getLastMarco(count) {
+  const passed = STREAK_MARCOS.filter(m => m <= count);
+  return passed.length ? passed[passed.length-1] : 0;
+}
+
+function getStreakMsg(count) {
+  if (count === 0)  return 'Comece hoje. O primeiro dia é o mais importante.';
+  if (count === 1)  return 'Começou! O primeiro passo foi dado. 💪';
+  if (count === 2)  return 'Dois dias seguidos. A consistência está nascendo.';
+  if (count === 3)  return '3 dias! Primeiro marco alcançado. Você está criando um hábito real.';
+  if (count === 7)  return '1 semana completa! Você provou que consegue. Agora mantenha.';
+  if (count === 15) return 'Quinze dias! Metade caminho para um mês. Quase lá.';
+  if (count === 30) return 'UM MÊS! Isso é disciplina de verdade. Poucos chegam aqui.';
+  if (count === 50) return '50 dias de consistência pura. Você é diferente da maioria.';
+  if (count === 100) return '100 DIAS! Você faz parte de menos de 1% das pessoas que chegam aqui.';
+  if (count >= 365) return count + ' dias. Isso não é mais hábito — é quem você é.';
+  if (count >= 200) return count + ' dias. Você redefiniu o que significa ser consistente.';
+  if (count >= 100) return count + ' dias. Cada dia é mais valioso que o anterior.';
+  if (count >= 50)  return count + ' dias seguidos. Sua disciplina é real e visível.';
+  if (count >= 30)  return count + ' dias. Você tem algo que a maioria nunca vai ter: consistência.';
+  if (count >= 15)  return count + ' dias no caminho. Você está construindo algo sólido.';
+  if (count >= 7)   return count + ' dias. Cada manhã você escolheu não parar.';
+  return count + ' dias. Continue.';
+}
+
+function getMarcoMsg(count) {
+  const msgs = {
+    3:   '🎯 3 DIAS — O hábito está começando.',
+    7:   '🔥 1 SEMANA — Você provou que consegue.',
+    15:  '⚡ 15 DIAS — Mais da metade do caminho para um mês.',
+    30:  '🏆 UM MÊS — Disciplina de verdade. Raridade.',
+    50:  '💎 50 DIAS — Você está acima da média.',
+    100: '👑 100 DIAS — Elite. Menos de 1% chegam aqui.',
+    150: '🔱 150 DIAS — Você não para.',
+    200: '🌟 200 DIAS — Consistência virou identidade.',
+    365: '🎖️ 1 ANO — Um ano inteiro. Extraordinário.',
+  };
+  return msgs[count] || (count >= 100 ? '🏅 ' + count + ' DIAS — Lendário.' : null);
+}
+
+// ── DB: Missões ──────────────────────────────────────────────────────
+function initMissions() {
+  if (!db.missions) db.missions = {lastDate:'',water:false,creatina:false,dieta:false,treino:false};
+  if (!db.dailyStreak) db.dailyStreak = {count:0,lastDate:'',shields:0,lastShieldEarned:'',lastShieldUsed:'',totalDays:0,history:[]};
+  if (!db.dailyStreak.history) db.dailyStreak.history = [];
+  // Reset missões se mudou o dia
+  const today = todayStr();
+  if (db.missions.lastDate !== today) {
+    db.missions = {lastDate:today, water:false, creatina:false, dieta:false, treino:false};
+    save();
+  }
+}
+
+// ── Cálculo de status de cada missão ────────────────────────────────
+function getMissionStatus() {
+  const today = todayStr();
+  // Água
+  const waterDone = getWaterPct() >= 100;
+  // Creatina
+  const creatinaDone = db.creatina?.lastDate === today;
+  // Dieta: pelo menos 1 refeição com todos itens obrigatórios marcados
+  const showDiet = db.settings?.showDietTab !== false;
+  let dietaDone = false;
+  if (showDiet && db.meals.length > 0) {
+    const total = db.meals.reduce((a,m) => a + m.items.filter(i=>!i.optional).length, 0);
+    const done  = db.meals.reduce((a,m) => a + m.items.filter(i=>!i.optional&&i.done).length, 0);
+    dietaDone = total > 0 && done === total;
+  } else if (!showDiet) {
+    dietaDone = true; // missão não se aplica, marca como ok
+  }
+  // Treino: qualquer sessão hoje
+  const treinoDone = db.sessions.some(s => s.dateStr === today || s.date === today);
+  return { water: waterDone, creatina: creatinaDone, dieta: dietaDone, treino: treinoDone };
+}
+
+// ── Verifica e atualiza streak geral ────────────────────────────────
+function checkDailyStreak() {
+  const status = getMissionStatus();
+  const today = todayStr();
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  const yStr = yesterday.toLocaleDateString('pt-BR');
+  const ds = db.dailyStreak;
+
+  // Determina se o dia foi concluído (critério: água + treino obrigatórios;
+  // creatina e dieta contribuem mas não bloqueiam caso não ativas)
+  const showCreatina = db.settings?.showCreatina !== false;
+  const showDiet = db.settings?.showDietTab !== false;
+
+  const required = [status.water, status.treino];
+  const optional = [];
+  if (showCreatina) optional.push(status.creatina);
+  if (showDiet && db.meals.length > 0) optional.push(status.dieta);
+
+  const dayComplete = required.every(Boolean);
+
+  if (dayComplete && ds.lastDate !== today) {
+    // Dia consecutivo?
+    if (ds.lastDate === yStr) {
+      ds.count++;
+    } else if (ds.lastDate === '') {
+      ds.count = 1;
+    } else {
+      // Quebrou — verifica escudo
+      if (ds.shields > 0 && ds.lastShieldUsed !== yStr) {
+        ds.shields--;
+        ds.lastShieldUsed = yStr;
+        ds.count++;
+        toast('🛡️ Escudo usado! Sequência protegida.', 3500);
+      } else {
+        ds.count = 1; // reinicia
+      }
+    }
+    ds.lastDate = today;
+    ds.totalDays = (ds.totalDays || 0) + 1;
+    // Record in history (keep last 90 days)
+    if (!ds.history) ds.history = [];
+    const shieldUsedToday = ds.lastShieldUsed === today;
+    ds.history.push({ date: today, done: true, shielded: shieldUsedToday });
+    if (ds.history.length > 90) ds.history = ds.history.slice(-90);
+
+    // Ganho de escudo: a cada 7 dias consecutivos
+    if (ds.count > 0 && ds.count % 7 === 0 && ds.shields < 3 && ds.lastShieldEarned !== today) {
+      ds.shields = Math.min(3, (ds.shields || 0) + 1);
+      ds.lastShieldEarned = today;
+      setTimeout(() => toast('🛡️ +1 Escudo ganho! ' + ds.shields + '/3 disponíveis', 4000), 800);
+    }
+
+    // Marco alcançado?
+    const marco = getMarcoMsg(ds.count);
+    if (marco) {
+      setTimeout(() => toast(marco, 5000), 1200);
+    }
+
+    save();
+  }
+
+  return { status, dayComplete };
+}
+
+// ── Render Dashboard ─────────────────────────────────────────────────
+
+// ── Consistency: returns {doneDays, totalDays, pct} for current month ──
+function getMonthlyConsistency() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const today = now.getDate();
+  const ds = db.dailyStreak;
+  const history = ds.history || [];
+
+  // Count done days this month from history
+  const doneDays = history.filter(h => {
+    // Parse BR date dd/mm/yyyy
+    const parts = h.date.split('/');
+    if (parts.length !== 3) return false;
+    const d = parseInt(parts[0]);
+    const m = parseInt(parts[1]) - 1;
+    const y = parseInt(parts[2]);
+    return y === year && m === month && h.done;
+  }).length;
+
+  return {
+    doneDays,
+    totalDays: today,
+    pct: today > 0 ? Math.round(doneDays / today * 100) : 0,
+  };
+}
+
+// ── Identity message based on streak ────────────────────────────────
+function getIdentityMsg(count, pct) {
+  if (count >= 100) return 'Você não é alguém que <strong>tenta</strong> criar hábitos. Você é alguém que <strong>tem</strong> hábitos.';
+  if (count >= 50)  return 'Com ' + count + ' dias consecutivos, consistência já é parte da sua <strong>identidade</strong>.';
+  if (count >= 30)  return 'Um mês inteiro. A maioria das pessoas <strong>nunca chega aqui</strong>. Você chegou.';
+  if (count >= 14)  return 'Duas semanas sem parar. Seu cérebro já está <strong>associando isso ao que você é</strong>.';
+  if (count >= 7)   return 'Uma semana. Você provou que <strong>consegue</strong>. Agora prove que <strong>mantém</strong>.';
+  if (count >= 3)   return 'O hábito está começando a se formar. <strong>Não quebre agora</strong>.';
+  if (pct >= 80)    return 'Sua consistência mensal de ' + pct + '% <strong>fala por você</strong>.';
+  return 'Cada dia é uma escolha. <strong>Hoje você escolheu certo</strong>.';
+}
+
+// ── Build 30-day dot grid HTML ───────────────────────────────────────
+function buildDotGrid() {
+  const ds = db.dailyStreak;
+  const history = ds.history || [];
+  const histMap = {};
+  history.forEach(h => { histMap[h.date] = h; });
+
+  const dots = [];
+  const todayDate = new Date();
+  todayDate.setHours(0,0,0,0);
+
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(todayDate);
+    d.setDate(todayDate.getDate() - i);
+    const ds2 = d.toLocaleDateString('pt-BR');
+    const isToday = i === 0;
+    const isFuture = false; // never future since we go backwards
+    const h = histMap[ds2];
+
+    let cls = 'dash-dot';
+    let title = ds2;
+
+    if (isToday) {
+      // Today: check current status
+      const status = getMissionStatus();
+      const dayDone = status.water && status.treino;
+      cls += dayDone ? ' done' : ' today';
+      title = 'Hoje';
+    } else if (h && h.done) {
+      cls += h.shielded ? ' done shielded' : ' done';
+      // Try to color by most recent sport type that day
+      const sessions = db.sessions.filter(s => s.dateStr === ds2 || s.date === ds2);
+      if (sessions.length > 0 && !h.shielded) {
+        cls += ' ' + sessions[0].type;
+      }
+    } else {
+      cls += ' missed';
+    }
+
+    dots.push('<div class="' + cls + '" title="' + title + '"></div>');
+  }
+  return dots.join('');
+}
+
+// ── Use shield manually ──────────────────────────────────────────────
+function useShieldManually() {
+  const ds = db.dailyStreak;
+  if (!ds || ds.shields <= 0) {
+    toast('⚠️ Nenhum escudo disponível');
+    return;
+  }
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yStr = yesterday.toLocaleDateString('pt-BR');
+
+  if (ds.lastShieldUsed === yStr) {
+    toast('⚠️ Escudo já usado ontem. Não é possível usar em dias consecutivos.');
+    return;
+  }
+  if (ds.lastDate === yStr) {
+    toast('ℹ️ Ontem já foi registrado como completo.');
+    return;
+  }
+
+  if (!confirm('Usar 1 escudo para proteger ontem (' + yStr + ')?\n\nEscudos disponíveis: ' + ds.shields + '/3\n\nIsso mantém sua sequência mesmo que ontem tenha sido perdido.')) return;
+
+  ds.shields--;
+  ds.lastShieldUsed = yStr;
+  // Fix sequence: restore count if it was broken
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  const t2Str = twoDaysAgo.toLocaleDateString('pt-BR');
+  if (ds.lastDate === t2Str || ds.lastDate === '') {
+    ds.count = (ds.count || 0) + 1;
+    ds.lastDate = yStr;
+  }
+  // Add to history
+  if (!ds.history) ds.history = [];
+  const alreadyInHistory = ds.history.some(h => h.date === yStr);
+  if (!alreadyInHistory) {
+    ds.history.push({ date: yStr, done: true, shielded: true });
+    ds.history.sort((a, b) => {
+      const pa = a.date.split('/'); const pb = b.date.split('/');
+      return new Date(pa[2]+'-'+pa[1]+'-'+pa[0]) - new Date(pb[2]+'-'+pb[1]+'-'+pb[0]);
+    });
+  }
+
+  save();
+  renderDashboard();
+  toast('🛡️ Escudo usado! Ontem foi protegido. Sequência mantida.', 4000);
+}
+
+function renderDashboard() {
+  initMissions();
+  const prevCount = db.dailyStreak?.count || 0;
+  const { status, dayComplete } = checkDailyStreak();
+  const ds = db.dailyStreak;
+  const count = ds.count || 0;
+  const next = getNextMarco(count);
+  const last = getLastMarco(count);
+  const pct = next > last ? Math.round((count - last) / (next - last) * 100) : 100;
+  const msg = getStreakMsg(count);
+  const marco = getMarcoMsg(count);
+
+  // Shields HTML
+  let shieldsHtml = '';
+  if (ds.shields > 0) {
+    shieldsHtml = '<div class="dash-streak-marco">🛡️ ' + ds.shields + ' escudo' + (ds.shields > 1 ? 's' : '') + ' disponível' + (ds.shields > 1 ? 'is' : '') + '</div>';
+  }
+
+  // Missions
+  const showDiet = db.settings?.showDietTab !== false;
+  const showCreatina = db.settings?.showCreatina !== false;
+
+  const waterPct = getWaterPct();
+  const today = todayStr();
+
+  const missions = [
+    {
+      key: 'water',
+      icon: '💧',
+      name: 'Hidratação',
+      cls: 'mission-water',
+      done: status.water,
+      statusText: status.water
+        ? 'Meta atingida!'
+        : (waterPct + '% — faltam ' + fmtMl(Math.max(0, db.water.goal - getWaterTotal()))),
+      pct: waterPct,
+    },
+    {
+      key: 'treino',
+      icon: '🏋️',
+      name: 'Treino',
+      cls: 'mission-treino',
+      done: status.treino,
+      statusText: status.treino
+        ? 'Concluído hoje!'
+        : 'Nenhum treino ainda',
+      pct: status.treino ? 100 : 0,
+    },
+    showCreatina ? {
+      key: 'creatina',
+      icon: '💊',
+      name: 'Creatina',
+      cls: 'mission-creatina',
+      done: status.creatina,
+      statusText: status.creatina ? 'Tomada hoje!' : 'Ainda não registrada',
+      pct: status.creatina ? 100 : 0,
+    } : null,
+    showDiet && db.meals.length > 0 ? {
+      key: 'dieta',
+      icon: '🥗',
+      name: 'Dieta',
+      cls: 'mission-dieta',
+      done: status.dieta,
+      statusText: (() => {
+        const t = db.meals.reduce((a,m)=>a+m.items.filter(i=>!i.optional).length,0);
+        const d = db.meals.reduce((a,m)=>a+m.items.filter(i=>!i.optional&&i.done).length,0);
+        return status.dieta ? '100% concluída!' : d + '/' + t + ' itens feitos';
+      })(),
+      pct: (() => {
+        const t = db.meals.reduce((a,m)=>a+m.items.filter(i=>!i.optional).length,0);
+        const d = db.meals.reduce((a,m)=>a+m.items.filter(i=>!i.optional&&i.done).length,0);
+        return t > 0 ? Math.round(d/t*100) : 0;
+      })(),
+    } : null,
+  ].filter(Boolean);
+
+  const missionsDoneCount = missions.filter(m => m.done).length;
+  const missionsPct = missions.length > 0 ? Math.round(missionsDoneCount / missions.length * 100) : 0;
+
+  const missionsHtml = missions.map(m =>
+    '<div class="mission-card ' + m.cls + (m.done ? ' done' : '') + '">'
+    + '<div class="mission-check">✓</div>'
+    + '<span class="mission-icon">' + m.icon + '</span>'
+    + '<div class="mission-name">' + m.name + '</div>'
+    + '<div class="mission-status">' + m.statusText + '</div>'
+    + '<div class="mission-bar"><div class="mission-bar-fill" style="width:' + Math.min(100, m.pct) + '%"></div></div>'
+    + '</div>'
+  ).join('');
+
+  const fireIcon = count >= 100 ? '👑' : count >= 30 ? '🔥' : count >= 7 ? '⚡' : '💪';
+
+  const container = document.getElementById('dashCard');
+  if (!container) return;
+
+  // Build day-complete section (shown inside card when all missions done)
+  const allMissionsDone = missions.every(m => m.done);
+  const streakMsg = count >= 365
+    ? 'Dia ' + count + ' — um ano inteiro de consistência. Lendário.'
+    : count >= 100
+    ? 'Dia ' + count + ' da sua sequência lendária. Imparável.'
+    : count >= 30
+    ? 'Sequência de ' + count + ' dias mantida. Isso é raro.'
+    : 'Sequência de ' + count + ' dias garantida. Continue amanhã!';
+
+  const dayCompleteBanner = allMissionsDone
+    ? '<div class="dash-day-complete show">'
+      + '<span class="dash-day-complete-icon">&#9889;</span>'
+      + '<h3>DIA CONCLU&#205;DO!</h3>'
+      + '<p>Todas as missões concluídas.<br><strong style="color:var(--acid)">' + streakMsg + '</strong></p>'
+      + '</div>'
+    : '';
+
+  // ── Module 3: consistency + shields + dots ────────────────────────
+  const monthly = getMonthlyConsistency();
+  const identityMsg = getIdentityMsg(count, monthly.pct);
+  const dotGrid = buildDotGrid();
+
+  // Shields visual icons
+  const MAX_SHIELDS = 3;
+  let shieldIconsHtml = '';
+  for (let i = 0; i < MAX_SHIELDS; i++) {
+    shieldIconsHtml += '<span class="shield-icon' + (i >= ds.shields ? ' empty' : '') + '">🛡️</span>';
+  }
+  const shieldsAvailable = ds.shields || 0;
+  const canUseShield = shieldsAvailable > 0;
+  const shieldSubText = shieldsAvailable === 0
+    ? 'Ganhe 1 a cada 7 dias consecutivos'
+    : shieldsAvailable === 3
+    ? 'Estoque cheio — use antes de ganhar mais'
+    : 'Ganhe o próximo em ' + (7 - (count % 7)) + ' dias';
+
+  // Marco badge if just hit one
+  const marcoBadge = marco
+    ? '<div class="dash-streak-marco">🏅 ' + marco.replace(/^[^\s]+\s/, '') + '</div>'
+    : '';
+
+  // Build dots legend
+  const dotLegend = '<div class="dash-dots-legend">'
+    + '<div class="dash-dot-legend-item"><div class="dash-dot-legend-dot" style="background:var(--acid)"></div>concluído</div>'
+    + '<div class="dash-dot-legend-item"><div class="dash-dot-legend-dot" style="background:var(--purple)"></div>escudo</div>'
+    + '<div class="dash-dot-legend-item"><div class="dash-dot-legend-dot" style="background:var(--border2)"></div>perdido</div>'
+    + '</div>';
+
+  container.innerHTML =
+    dayCompleteBanner
+    + '<div class="dash-card">'
+
+    // ── 1. STREAK HERO (maior destaque)
+    + '<div class="dash-streak">'
+    + '<div class="dash-streak-top">'
+    + '<div class="dash-streak-left">'
+    + '<div class="dash-streak-fire">' + fireIcon + '</div>'
+    + '<div class="dash-streak-nums">'
+    + '<div class="dash-streak-num">' + count + '</div>'
+    + '<div class="dash-streak-unit">dias seguidos</div>'
+    + '</div>'
+    + '</div>'
+    + '<div class="dash-streak-right">'
+    + '<div class="dash-streak-label">sequência atual</div>'
+    + marcoBadge
+    + '</div>'
+    + '</div>'
+    + '<div class="dash-streak-msg">' + msg + '</div>'
+    + '</div>'
+
+    // ── 2. MISSÕES DO DIA (primeiro após hero — foco de ação)
+    + '<div class="dash-missions-header">'
+    + '<span class="dash-missions-title">Missões do Dia</span>'
+    + '<span class="dash-missions-pct">' + missionsDoneCount + '/' + missions.length + ' · ' + missionsPct + '%</span>'
+    + '</div>'
+    + '<div class="dash-missions-grid">' + missionsHtml + '</div>'
+
+    // ── 3. PROGRESSO AO PRÓXIMO MARCO
+    + '<div class="dash-marco-bar">'
+    + '<div class="dash-marco-label">'
+    + '<span class="dash-marco-txt">próximo marco</span>'
+    + '<span class="dash-marco-next">🏁 ' + next + 'd — faltam ' + (next - count) + '</span>'
+    + '</div>'
+    + '<div class="dash-marco-track"><div class="dash-marco-fill" style="width:' + pct + '%"></div></div>'
+    + '</div>'
+
+    // ── 4. CONSISTÊNCIA MENSAL + DOT GRID
+    + '<div class="dash-monthly">'
+    + '<div class="dash-monthly-header">'
+    + '<span class="dash-monthly-title">Consistência do Mês</span>'
+    + '<div class="dash-monthly-right">'
+    + '<div class="dash-monthly-pct">' + monthly.pct + '<span>%</span></div>'
+    + '<div class="dash-monthly-sub">' + monthly.doneDays + '/' + monthly.totalDays + ' dias ativos</div>'
+    + '</div>'
+    + '</div>'
+    + '<div class="dash-dots-grid">' + dotGrid + '</div>'
+    + dotLegend
+    + '</div>'
+
+    // ── 5. ESCUDOS
+    + '<div class="dash-shields">'
+    + '<div class="dash-shields-left">'
+    + '<div class="dash-shields-icons">' + shieldIconsHtml + '</div>'
+    + '<div class="dash-shields-info">'
+    + '<div class="dash-shields-title">Escudos</div>'
+    + '<div class="dash-shields-sub">' + shieldSubText + '</div>'
+    + '</div>'
+    + '</div>'
+    + '<button class="dash-shields-btn" onclick="useShieldManually()"'
+    + (canUseShield ? '' : ' disabled') + '>'
+    + (canUseShield ? '🛡️ Usar' : 'Nenhum') + '</button>'
+    + '</div>'
+
+    // ── 6. MENSAGEM DE IDENTIDADE (fecho, peso emocional)
+    + '<div class="dash-identity">' + identityMsg + '</div>'
+
+    + '</div>';
+
+  // Mensagem de pressão contextual + celebração
+  setTimeout(() => {
+    renderPressureInDashboard();
+    Notif.renderBanner();
+    if (dayComplete && count > prevCount) {
+      maybeCelebrate(dayComplete, count, prevCount);
+    }
+  }, 0);
+
+  // Atualiza o streak pill no header
+  const sn = document.getElementById('streakNum');
+  if (sn) sn.textContent = count;
+}
+
+// ╔══════════════════════════════════════════════════════════════════╗
 // ║  MODULE: CREATINA — Streak & Daily Tracking                     ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //  CREATINA MODULE
@@ -1714,7 +2481,7 @@ function markCreatina(){
   else db.creatina.streak=1;
   db.creatina.lastDate=today;
   if(!db.creatina.startDate)db.creatina.startDate=today;
-  save();renderCreatina();
+  save();renderCreatina();renderDashboard();
   toast('💊 Creatina registrada! '+db.creatina.streak+' dias 🔥',3000);
 }
 function renderCreatina(){
@@ -1866,7 +2633,7 @@ function qlSave(){
     dur:qlDur,intensity:qlIntensity,kcal,kcalAdjusted:adjusted,
     exercises:detail,detail,date,dateStr:fmtDate(date)};
   db.sessions.push(s);db.sessions.sort((a,b)=>b.ts-a.ts);
-  save();closeSheet('sheetQuickLog');renderActCards();renderStats(currentPeriod);
+  save();closeSheet('sheetQuickLog');renderActCards();renderStats(currentPeriod);renderDashboard();
   toast('✅ +'+kcal+(adjusted?' kcal (ajustado)':' kcal registradas!'));
 }
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
@@ -1939,6 +2706,7 @@ function logActivity(type){
   closeSheet(ACT_SHEETS[type]);
   renderActCards();
   renderStats(currentPeriod);
+  renderDashboard();
   toast('✅ +'+s.kcal+' kcal registradas!');
 }
 
@@ -1989,7 +2757,7 @@ function deleteSession(id,e){
   if(e)e.stopPropagation();
   if(!confirm('Excluir esta sessão?'))return;
   db.sessions=db.sessions.filter(s=>s.id!==id);
-  save();renderActCards();renderStats(currentPeriod);toast('Sessão removida');
+  save();renderActCards();renderStats(currentPeriod);renderDashboard();toast('Sessão removida');
 }
 
 // ── Workout: Activity Slider (Swipe) ────────────────────────────────
@@ -2282,7 +3050,9 @@ let editMealIdx=-1;
 
 function renderDiet(){
   const showDiet = db.settings?.showDietTab !== false;
-  document.getElementById('streakNum').textContent=db.streak;
+
+  // Dashboard (missoes + streak geral) - sempre primeiro
+  renderDashboard();
 
   // Water: always visible
   const wc=document.getElementById('waterGoalCard');
@@ -2365,12 +3135,12 @@ function renderDiet(){
 
 function keepCardState(mi){requestAnimationFrame(()=>{if(openCards.has(mi)){const b=document.getElementById('mb'+mi),c=document.getElementById('chev'+mi);if(b){b.classList.add('open');if(c)c.classList.add('open');}}});}
 function toggleMeal(mi){const b=document.getElementById('mb'+mi),c=document.getElementById('chev'+mi);b.classList.toggle('open');if(c)c.classList.toggle('open');if(b.classList.contains('open'))openCards.add(mi);else openCards.delete(mi);}
-function toggleItem(mi,ii){db.meals[mi].items[ii].done=!db.meals[mi].items[ii].done;checkStreak();save();updateMealCardVisuals(mi);updateMealMacrosDisplay(mi);updateDietProgress();updateDayMacros();}
+function toggleItem(mi,ii){db.meals[mi].items[ii].done=!db.meals[mi].items[ii].done;checkStreak();save();updateMealCardVisuals(mi);updateMealMacrosDisplay(mi);updateDietProgress();updateDayMacros();renderDashboard();}
 function markAllMeal(mi){
   const req=db.meals[mi].items.filter(i=>!i.optional);
   const allDone=req.length>0&&req.every(i=>i.done);
   db.meals[mi].items.forEach(i=>{if(!i.optional)i.done=!allDone;});
-  checkStreak();save();updateMealCardVisuals(mi);updateMealMacrosDisplay(mi);updateDietProgress();updateDayMacros();
+  checkStreak();save();updateMealCardVisuals(mi);updateMealMacrosDisplay(mi);updateDietProgress();updateDayMacros();renderDashboard();
 }
 function updateMealCardVisuals(mi){
   const meal=db.meals[mi];
@@ -2394,7 +3164,7 @@ function updateDietProgress(){
   const rp=document.getElementById('ringPct');if(rp)rp.textContent=pct+'%';
   const bf=document.getElementById('barFill');if(bf)bf.style.width=pct+'%';
   const ds=document.getElementById('daySub');if(ds)ds.textContent=done+' de '+total+' itens obrigatórios';
-  document.getElementById('streakNum').textContent=db.streak;
+  document.getElementById('streakNum').textContent=db.dailyStreak?.count||db.streak||0;
 }
 function removeItem(mi,ii,e){e.stopPropagation();if(!confirm('Remover este item?'))return;db.meals[mi].items.splice(ii,1);save();renderDiet();keepCardState(mi);}
 function quickAddItem(mi){const t=prompt('Novo item:');if(t&&t.trim()){db.meals[mi].items.push({text:t.trim(),done:false,optional:false});save();renderDiet();keepCardState(mi);}}
@@ -2573,8 +3343,10 @@ function exportPDF(){
 function switchView(v){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('on'));
-  document.getElementById('v-'+v).classList.add('active');
-  document.getElementById('nb-'+v).classList.add('on');
+  const vEl = document.getElementById('v-'+v);
+  const nEl = document.getElementById('nb-'+v);
+  if(vEl) vEl.classList.add('active');
+  if(nEl) nEl.classList.add('on');
 }
 function switchAppTab(name,btn){
   document.querySelectorAll('.app-tab-panel').forEach(el=>el.classList.remove('on'));
@@ -2611,7 +3383,7 @@ function saveManageActs(){
   const btns=document.querySelectorAll('#manageSportsList .toggle-switch');
   const newActs=[];btns.forEach(b=>{if(b.classList.contains('on'))newActs.push(b.dataset.act);});
   if(newActs.length===0){toast('⚠️ Selecione pelo menos 1 esporte');return;}
-  db.activities=newActs;save();closeSheet('sheetManageActs');renderActCards();toast('✅ Esportes atualizados!');
+  db.activities=newActs;save();closeSheet('sheetManageActs');renderActCards();renderDashboard();toast('✅ Esportes atualizados!');
 }
 
 // ── App: Edit Session ───────────────────────────────────────────────
@@ -2674,6 +3446,641 @@ function restoreBackup(){
 
 // ── App: Midnight Reset ─────────────────────────────────────────────
 //  MIDNIGHT RESET
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  MODULE: PRESSURE — Mensagens contextuais por horário           ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+// ── Pressão positiva: retorna objeto {level, icon, title, msg} ──────
+function getPressureMessage() {
+  const h = new Date().getHours();
+  const status = getMissionStatus();
+  const ds = db.dailyStreak || {};
+  const streak = ds.count || 0;
+  const allDone = status.water && status.treino &&
+    (db.settings?.showCreatina === false || status.creatina) &&
+    (db.settings?.showDietTab === false || !db.meals.length || status.dieta);
+
+  if (allDone) {
+    return {
+      level: 'ok', icon: '🎯',
+      title: 'Dia concluído!',
+      msg: streak >= 30
+        ? streak + ' dias de consistência. Você faz parte de um grupo raro.'
+        : 'Todas as missões do dia cumpridas. Sequência garantida.'
+    };
+  }
+
+  // Pendentes
+  const pending = [];
+  if (!status.water) pending.push('água (' + getWaterPct() + '% da meta)');
+  if (!status.treino) pending.push('treino');
+  if (db.settings?.showCreatina !== false && !status.creatina) pending.push('creatina');
+  if (db.settings?.showDietTab !== false && db.meals.length > 0 && !status.dieta) pending.push('dieta');
+
+  const pendStr = pending.slice(0, 2).join(' e ');
+
+  // Manhã (6–11): leve
+  if (h >= 6 && h < 12) {
+    return {
+      level: 'leve', icon: '🌅',
+      title: 'Bom dia! Comece bem.',
+      msg: streak > 0
+        ? 'Sequência de ' + streak + ' dias em jogo. Comece pelas missões do dia.'
+        : 'Cada dia começa com uma escolha. Faça a certa.'
+    };
+  }
+  // Tarde (12–17): reforço
+  if (h >= 12 && h < 18) {
+    return {
+      level: 'alerta', icon: '⚡',
+      title: pending.length === 1 ? 'Quase lá!' : 'Missões pendentes',
+      msg: 'Ainda falta: ' + pendStr + '. Você tem tempo — use agora.'
+    };
+  }
+  // Noite (18–21): urgência moderada
+  if (h >= 18 && h < 22) {
+    return {
+      level: streak > 0 ? 'urgente' : 'alerta', icon: '🔥',
+      title: streak > 0
+        ? 'Sua sequência de ' + streak + 'd está em risco!'
+        : 'Ainda dá tempo hoje',
+      msg: 'Falta: ' + pendStr + '. Não deixe o dia passar sem agir.'
+    };
+  }
+  // Madrugada (22–5): último alerta
+  if (h >= 22 || h < 6) {
+    return {
+      level: 'urgente', icon: '🚨',
+      title: streak > 0 ? ('⚠️ ' + streak + ' dias em jogo — últimos minutos!') : 'Última chance hoje',
+      msg: 'Pendente: ' + pendStr + '. Meia-noite zera tudo.'
+    };
+  }
+
+  return null;
+}
+
+// ── Injeta mensagem de pressão no dashboard ─────────────────────────
+function renderPressureInDashboard() {
+  // Called from inside renderDashboard — appends to dashCard
+  const dashCard = document.querySelector('#dashCard .dash-card');
+  if (!dashCard) return;
+  const old = dashCard.querySelector('.dash-pressure');
+  if (old) old.remove();
+
+  const msg = getPressureMessage();
+  if (!msg) return;
+
+  // Don't show 'ok' message at morning (redundant noise)
+  const h = new Date().getHours();
+  if (msg.level === 'ok' && h < 10) return;
+
+  const div = document.createElement('div');
+  div.className = 'dash-pressure ' + (msg.level === 'urgente' ? 'urgente' : msg.level === 'alerta' ? 'alerta' : 'ok');
+  div.innerHTML = '<div class="dash-pressure-icon">' + msg.icon + '</div>'
+    + '<div class="dash-pressure-msg"><strong>' + msg.title + '</strong>' + msg.msg + '</div>';
+  dashCard.appendChild(div);
+}
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  MODULE: NOTIF — Push Notifications inteligentes                ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+const Notif = {
+  // Timers ativos
+  _timers: [],
+
+  /** Verifica suporte e permissão */
+  isSupported() { return 'Notification' in window; },
+  isGranted()   { return this.isSupported() && Notification.permission === 'granted'; },
+  isEnabled()   { return db.settings?.notifications === true && this.isGranted(); },
+
+  /** Solicita permissão e ativa */
+  async requestAndEnable() {
+    if (!this.isSupported()) {
+      toast('⚠️ Seu navegador não suporta notificações');
+      return;
+    }
+    if (Notification.permission === 'denied') {
+      toast('🔕 Notificações bloqueadas. Habilite nas configurações do navegador.');
+      return;
+    }
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      Settings.set('notifications', true);
+      updateSettingsToggles();
+      this.schedule();
+      updateSettingsToggles();
+      toast('🔔 Notificações ativadas! Você receberá lembretes ao longo do dia.', 4000);
+      renderDashboard(); // remove banner se estava visível
+    } else {
+      toast('🔕 Permissão negada');
+    }
+  },
+
+  /** Toggle nas configurações */
+  toggleSetting() {
+    if (!db.settings?.notifications) {
+      this.requestAndEnable();
+    } else {
+      Settings.set('notifications', false);
+      this.clearAll();
+      updateSettingsToggles();
+      toast('🔕 Notificações desativadas');
+      renderDashboard();
+    }
+    // Always update toggles after any state change
+    setTimeout(updateSettingsToggles, 200);
+  },
+
+  /** Dispara uma notificação nativa */
+  send(title, body, tag) {
+    if (!this.isGranted()) return;
+    try {
+      new Notification(title, {
+        body,
+        icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>',
+        tag: tag || 'ct-notif',
+        silent: false,
+      });
+    } catch(e) { console.warn('Notif error:', e); }
+  },
+
+  /** Cancela todos os timers agendados */
+  clearAll() {
+    this._timers.forEach(t => clearTimeout(t));
+    this._timers = [];
+  },
+
+  /** Calcula ms até próxima hora HH:MM hoje */
+  msUntil(h, m = 0) {
+    const now = new Date();
+    const target = new Date(now);
+    target.setHours(h, m, 0, 0);
+    let ms = target - now;
+    if (ms < 0) ms += 86400000; // amanhã
+    return ms;
+  },
+
+  /** Constrói e envia notificação contextual */
+  buildAndSend(tag) {
+    if (!this.isEnabled()) return;
+    const status = getMissionStatus();
+    const ds = db.dailyStreak || {};
+    const streak = ds.count || 0;
+    const shields = ds.shields || 0;
+
+    const allDone = status.water && status.treino &&
+      (db.settings?.showCreatina === false || status.creatina) &&
+      (db.settings?.showDietTab === false || !db.meals.length || status.dieta);
+
+    if (allDone) return; // dia completo, não incomoda
+
+    const pending = [];
+    if (!status.water) pending.push('💧 água (' + getWaterPct() + '%)');
+    if (!status.treino) pending.push('🏋️ treino');
+    if (db.settings?.showCreatina !== false && !status.creatina) pending.push('💊 creatina');
+    if (db.settings?.showDietTab !== false && db.meals.length > 0 && !status.dieta) pending.push('🥗 dieta');
+
+    if (!pending.length) return;
+
+    const pendStr = pending.slice(0, 2).join(', ');
+
+    const configs = {
+      manha: {
+        title: streak > 0 ? '⚡ Controle Total — Dia ' + streak + ' em andamento' : '⚡ Controle Total — Bom dia!',
+        body: 'Inicie suas missões: ' + pendStr,
+      },
+      tarde: {
+        title: '🔥 Missões pendentes',
+        body: streak > 0
+          ? 'Sua sequência de ' + streak + 'd depende de: ' + pendStr
+          : 'Ainda dá tempo! Pendente: ' + pendStr,
+      },
+      noite: {
+        title: streak > 0 ? ('🚨 ' + streak + ' dias em risco!') : '⚠️ Últimas horas do dia',
+        body: 'Não deixe a sequência quebrar. Falta: ' + pendStr +
+          (shields > 0 ? ' · ' + shields + ' escudo(s) disponível(is)' : ''),
+      },
+      final: {
+        title: streak > 0 ? ('💀 Sequência de ' + streak + 'd termina em breve!') : '🕚 Últimos minutos',
+        body: 'Pendente: ' + pendStr + '. Meia-noite zera o dia.',
+      },
+    };
+
+    const cfg = configs[tag] || configs.tarde;
+    this.send(cfg.title, cfg.body, 'ct-' + tag);
+  },
+
+  /** Agenda todas as notificações do dia */
+  schedule() {
+    this.clearAll();
+    if (!this.isEnabled()) return;
+
+    const slots = [
+      { tag: 'manha', h: 8,  m: 0  },
+      { tag: 'tarde', h: 14, m: 0  },
+      { tag: 'noite', h: 20, m: 0  },
+      { tag: 'final', h: 22, m: 30 },
+    ];
+
+    slots.forEach(({ tag, h, m }) => {
+      const ms = this.msUntil(h, m);
+      const t = setTimeout(() => {
+        this.buildAndSend(tag);
+        // Re-agenda para amanhã
+        const t2 = setTimeout(() => this.buildAndSend(tag), 86400000);
+        this._timers.push(t2);
+      }, ms);
+      this._timers.push(t);
+    });
+
+    console.log('[CT Notif] Agendadas ' + slots.length + ' notificações.');
+  },
+
+  /** Banner de convite para ativar (mostrado no dashboard se não ativado) */
+  renderBanner() {
+    const area = document.getElementById('dashCard');
+    if (!area) return;
+    const old = area.querySelector('.notif-banner');
+    if (old) old.remove();
+
+    // Só mostra se: suporte existe, não concedida ainda, usuário não dispensou
+    if (!this.isSupported()) return;
+    if (this.isGranted() && db.settings?.notifications) return;
+    if (db.settings?.notifBannerDismissed) return;
+    // Só mostra após 2+ dias de streak (usuário engajado)
+    if ((db.dailyStreak?.count || 0) < 2) return;
+
+    const banner = document.createElement('div');
+    banner.className = 'notif-banner';
+    const granted = Notification.permission === 'granted';
+    const btnCls = 'notif-banner-btn' + (granted ? ' granted' : '');
+    const btnLbl = granted ? 'Ativar' : 'Permitir';
+    banner.innerHTML =
+      '<div class="notif-banner-icon">🔔</div>'
+      + '<div class="notif-banner-body">'
+      + '<div class="notif-banner-title">Ativar lembretes inteligentes?</div>'
+      + '<div class="notif-banner-sub">Receba alertas de \u00e1gua, treino e miss\u00f5es pendentes no momento certo.</div>'
+      + '</div>'
+      + '<button class="' + btnCls + '" onclick="Notif.requestAndEnable();this.closest(&quot;.notif-banner&quot;).remove()">'
+      + btnLbl + '</button>';
+
+    // Dismiss X
+    const dismiss = document.createElement('button');
+    dismiss.style.cssText = 'background:none;border:none;color:var(--muted);cursor:pointer;padding:0 0 0 8px;font-size:18px;flex-shrink:0;opacity:.5';
+    dismiss.textContent = '×';
+    dismiss.onclick = () => { Settings.set('notifBannerDismissed', true); banner.remove(); };
+    banner.appendChild(dismiss);
+
+    // Insert before dashCard's first child
+    area.insertBefore(banner, area.firstChild);
+  },
+
+  /** Init completo: agenda se já ativo, mostra banner se não */
+  init() {
+    if (this.isEnabled()) {
+      this.schedule();
+    }
+    // Banner renderizado pelo renderDashboard
+  },
+};
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  MODULE: MICRO-INTERACTIONS — Confetti, Celebrate & Feedback    ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+// ── Confetti engine (lightweight canvas-based) ────────────────────────
+const Confetti = {
+  particles: [],
+  animId: null,
+  colors: ['#d4ff00','#aacc00','#00e676','#3d9bff','#b47fff','#ff8c00','#ffffff'],
+
+  launch(count = 80) {
+    const canvas = document.getElementById('confettiCanvas');
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.classList.add('active');
+    this.particles = [];
+    for (let i = 0; i < count; i++) {
+      this.particles.push({
+        x: Math.random() * canvas.width,
+        y: -10 - Math.random() * 60,
+        w: 6 + Math.random() * 8,
+        h: 3 + Math.random() * 4,
+        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+        vx: (Math.random() - 0.5) * 3,
+        vy: 2 + Math.random() * 4,
+        rot: Math.random() * 360,
+        rotV: (Math.random() - 0.5) * 8,
+        life: 1,
+      });
+    }
+    cancelAnimationFrame(this.animId);
+    this._draw();
+    setTimeout(() => { canvas.classList.remove('active'); this.particles = []; }, 3200);
+  },
+
+  _draw() {
+    const canvas = document.getElementById('confettiCanvas');
+    if (!canvas || !this.particles.length) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.particles = this.particles.filter(p => p.life > 0.01);
+    this.particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.rotV; p.vy += 0.08;
+      if (p.y > canvas.height) p.life = 0;
+      p.life -= 0.005;
+      ctx.save();
+      ctx.globalAlpha = p.life;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    if (this.particles.length) this.animId = requestAnimationFrame(() => this._draw());
+  },
+};
+
+// ── Celebrate overlay ─────────────────────────────────────────────────
+let _lastCelebratedDate = '';
+
+function showCelebrate(count) {
+  const today = todayStr();
+  if (_lastCelebratedDate === today) return; // only once per day
+  _lastCelebratedDate = today;
+
+  const fire = count >= 100 ? '👑' : count >= 30 ? '🔥' : count >= 7 ? '⚡' : '🎯';
+  const title = count >= 100 ? 'LENDÁRIO!' : count >= 30 ? 'INCRÍVEL!' : 'DIA COMPLETO!';
+  const streakTxt = 'SEQUÊNCIA · ' + count + ' DIA' + (count !== 1 ? 'S' : '');
+  const msg = count >= 100
+    ? 'Você é consistente há ' + count + ' dias. Isso coloca você no top 1% das pessoas.'
+    : count >= 30
+    ? 'Um mês completo de disciplina. A maioria das pessoas nunca chega aqui.'
+    : count >= 7
+    ? 'Uma semana sem falhar. Você provou que consegue. Agora mantenha.'
+    : 'Todas as missões do dia cumpridas. Sua sequência está garantida.';
+
+  document.getElementById('celebrateFire').textContent = fire;
+  document.getElementById('celebrateTitle').textContent = title;
+  document.getElementById('celebrateStreak').textContent = streakTxt;
+  document.getElementById('celebrateMsg').textContent = msg;
+
+  const overlay = document.getElementById('celebrateOverlay');
+  if (overlay) overlay.classList.add('show');
+  Confetti.launch(count >= 30 ? 120 : 80);
+}
+
+function closeCelebrate() {
+  const overlay = document.getElementById('celebrateOverlay');
+  if (overlay) overlay.classList.remove('show');
+}
+
+// ── Mission card pulse when completed ────────────────────────────────
+function pulseCard(cardEl) {
+  if (!cardEl) return;
+  cardEl.classList.remove('just-done');
+  void cardEl.offsetWidth;
+  cardEl.classList.add('just-done');
+  setTimeout(() => cardEl.classList.remove('just-done'), 700);
+}
+
+// ── Special marco toast ───────────────────────────────────────────────
+function marcoToast(msg, dur = 5000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast marco show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), dur);
+}
+
+// ── Hook into checkDailyStreak to trigger celebration ─────────────────
+// Called from renderDashboard after checkDailyStreak
+function maybeCelebrate(dayComplete, count, prevCount) {
+  if (!dayComplete) return;
+  const isMarco = [3,7,15,30,50,100,150,200,365].includes(count)
+    || (count >= 100 && count % 50 === 0);
+  if (isMarco) {
+    const m = getMarcoMsg(count);
+    if (m) setTimeout(() => marcoToast(m, 6000), 400);
+  }
+  // Show celebration overlay (throttled to once/day)
+  setTimeout(() => showCelebrate(count), isMarco ? 800 : 300);
+}
+
+// ── Water burst animation ─────────────────────────────────────────────
+function logWaterQuick(btn, ml) {
+  logWater(ml);
+  btn.classList.remove('burst');
+  void btn.offsetWidth;
+  btn.classList.add('burst');
+  setTimeout(() => btn.classList.remove('burst'), 500);
+}
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  MODULE: PARTNERS — Benefícios & Escudos via Engajamento        ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+const PARTNERS = [
+  {
+    id: 'nutri',
+    emoji: '👨‍⚕️',
+    name: 'Nutrição Esportiva',
+    cat: 'Saúde & Performance',
+    desc: 'Descubra como ajustar sua alimentação para maximizar resultados nos treinos. Proteínas, timing de refeições e hidratação fazem toda a diferença.',
+    content: 'A nutrição esportiva vai além de comer bem. O timing de proteínas (20-40g nas 2h pós-treino) acelera a recuperação muscular. Carboidratos antes do treino fornecem energia imediata, enquanto gorduras boas sustentam hormônios anabólicos. A hidratação afeta diretamente a força: apenas 2% de desidratação reduz a performance em até 10%. Estudos mostram que atletas que seguem um plano nutricional individualizado obtêm 23% mais resultados do que os que treinam sem orientação alimentar.',
+    readTime: 30,
+    shieldCooldownDays: 7,
+    reward: '🛡️ +1 Escudo',
+  },
+  {
+    id: 'farm',
+    emoji: '💊',
+    name: 'Farmácia do Esportista',
+    cat: 'Suplementação',
+    desc: 'Entenda quais suplementos realmente funcionam, quais são mito e como usá-los com segurança para potencializar seus resultados.',
+    content: 'Entre os suplementos com mais evidências científicas estão: Creatina monoidratada (3-5g/dia) — aumenta força e massa muscular em ~8% em 4 semanas. Cafeína (3-6mg/kg) — melhora resistência e foco em até 12%. Whey protein — facilita atingir a meta proteica diária. Beta-alanina reduz fadiga muscular em esforços de 1-4 minutos. Vitamina D3 (2000UI/dia) — essencial para imunidade e testosterona. Evite: termogênicos com efedrina, pré-treinos com doses excessivas, e qualquer produto sem registro na ANVISA.',
+    readTime: 35,
+    shieldCooldownDays: 7,
+    reward: '🛡️ +1 Escudo',
+  },
+  {
+    id: 'clinica',
+    emoji: '🏥',
+    name: 'Clínica de Recuperação',
+    cat: 'Recuperação & Bem-estar',
+    desc: 'O descanso é onde os músculos crescem. Aprenda técnicas de recuperação que fazem diferença real nos seus resultados.',
+    content: 'A recuperação é onde a adaptação acontece — não durante o treino. Estratégias baseadas em evidências: Sono de 7-9h — GH é liberado principalmente nas primeiras horas de sono profundo. Gelo (crioterapia) nas primeiras 24h reduz inflamação aguda. Massagem 48h pós-treino intenso melhora circulação e reduz DOMS em 30%. Alimentação pós-treino: 0,3g/kg de proteína + carboidratos. Foam roll diário de 10min melhora mobilidade e reduz risco de lesões. Sobretreinar sem recuperação adequada causa queda de 15-20% na performance em 2 semanas.',
+    readTime: 30,
+    shieldCooldownDays: 7,
+    reward: '🛡️ +1 Escudo',
+  },
+  {
+    id: 'mental',
+    emoji: '🧠',
+    name: 'Performance Mental',
+    cat: 'Mindset & Consistência',
+    desc: 'A disciplina é um músculo. Saiba como o cérebro forma hábitos e use isso a seu favor para nunca mais depender de motivação.',
+    content: 'A ciência dos hábitos mostra que motivação é falha como estratégia de longo prazo — disciplina é construída diferente. Hábitos se formam por repetição no mesmo contexto (mesmo horário, mesmo gatilho). O efeito de identidade é poderoso: quem diz "sou alguém que treina" mantém o hábito 3x mais que quem diz "estou tentando treinar". Streaks funcionam psicologicamente porque ativam o viés da perda — perder 1 dia parece pior que nunca ter começado. Estudos de James Clear (Atomic Habits) mostram que 1% de melhoria diária resulta em 37x de melhoria em 1 ano.',
+    readTime: 35,
+    shieldCooldownDays: 7,
+    reward: '🛡️ +1 Escudo',
+  },
+];
+
+// ── Reading timer state ───────────────────────────────────────────────
+const _partnerTimers = {}; // { partnerId: { elapsed, interval, started } }
+
+function renderPartners() {
+  const list = document.getElementById('partnerList');
+  if (!list) return;
+
+  // Update shield status header
+  const shieldStatus = document.getElementById('partnerShieldStatus');
+  if (shieldStatus) {
+    const shields = db.dailyStreak?.shields || 0;
+    const MAX = 3;
+    let icons = '';
+    for (let i = 0; i < MAX; i++) {
+      icons += '<span style="font-size:18px;' + (i >= shields ? 'opacity:.25;filter:grayscale(1)' : '') + '">🛡️</span>';
+    }
+    shieldStatus.innerHTML =
+      '<div class="partner-shield-icon">' + icons + '</div>'
+      + '<div class="partner-shield-info">'
+      + '<div class="partner-shield-title">' + shields + '/' + MAX + ' Escudos disponíveis</div>'
+      + '<div class="partner-shield-sub">Ganhe lendo conteúdos dos parceiros · 1x por semana cada</div>'
+      + '</div>';
+  }
+
+  list.innerHTML = PARTNERS.map(p => buildPartnerCard(p)).join('');
+}
+
+function buildPartnerCard(p) {
+  const now = Date.now();
+  const lastEarned = db.partnerRewards?.[p.id] || 0;
+  const cooldownMs = p.shieldCooldownDays * 86400000;
+  const onCooldown = (now - lastEarned) < cooldownMs;
+  const earned = lastEarned > 0;
+  const daysLeft = onCooldown
+    ? Math.ceil((cooldownMs - (now - lastEarned)) / 86400000)
+    : 0;
+
+  const badgeTxt = onCooldown
+    ? ('disponível em ' + daysLeft + 'd')
+    : earned ? '✓ disponível' : '🛡️ ganhar escudo';
+  const badgeCls = onCooldown ? 'cooldown' : earned ? 'available' : 'available';
+
+  const shields = db.dailyStreak?.shields || 0;
+  const canEarn = !onCooldown && shields < 3;
+
+  const timer = _partnerTimers[p.id];
+  const elapsed = timer?.elapsed || 0;
+  const pct = Math.min(100, Math.round(elapsed / p.readTime * 100));
+  const isReading = timer?.started && elapsed < p.readTime;
+  const readDone = elapsed >= p.readTime;
+
+  const btnLabel = onCooldown
+    ? ('⏳ Disponível em ' + daysLeft + ' dia' + (daysLeft > 1 ? 's' : ''))
+    : readDone
+    ? (canEarn ? '🛡️ Resgatar Escudo' : '✓ Lido — estoque cheio')
+    : isReading
+    ? ('Lendo... ' + elapsed + 's/' + p.readTime + 's')
+    : 'Ler e ganhar escudo';
+
+  const btnClass = 'partner-earn-btn'
+    + (onCooldown ? ' reading' : '')
+    + (readDone && canEarn ? ' done' : '')
+    + (isReading ? ' reading' : '');
+
+  const btnDisabled = onCooldown || (readDone && !canEarn) ? 'disabled' : '';
+  const btnAction = readDone && canEarn
+    ? "earnPartnerShield('" + p.id + "')"
+    : !readDone && !onCooldown
+    ? "startPartnerRead('" + p.id + "')"
+    : '';
+
+  return '<div class="partner-card' + (earned && !onCooldown ? ' earned' : '') + '" id="pcard-' + p.id + '">'
+    + '<div class="partner-card-header">'
+    + '<div class="partner-emoji">' + p.emoji + '</div>'
+    + '<div class="partner-info">'
+    + '<div class="partner-name">' + p.name + '</div>'
+    + '<div class="partner-cat">' + p.cat + '</div>'
+    + '</div>'
+    + '<span class="partner-badge ' + badgeCls + '">' + badgeTxt + '</span>'
+    + '</div>'
+    + '<div class="partner-desc">' + p.desc + '</div>'
+    + '<div class="partner-engage">'
+    + '<div class="partner-engage-title">📖 Leia para ganhar:</div>'
+    + '<div class="partner-engage-content">' + p.content + '</div>'
+    + '<div class="partner-timer-wrap">'
+    + '<div class="partner-timer-label">'
+    + '<span>Tempo de leitura</span>'
+    + '<span>' + elapsed + 's / ' + p.readTime + 's</span>'
+    + '</div>'
+    + '<div class="partner-timer-track"><div class="partner-timer-fill" id="ptimer-' + p.id + '" style="width:' + pct + '%"></div></div>'
+    + '</div>'
+    + '<button class="' + btnClass + '" ' + btnDisabled + (btnAction ? ' onclick="' + btnAction + '"' : '') + '>'
+    + btnLabel
+    + '</button>'
+    + '</div>'
+    + '</div>';
+}
+
+function startPartnerRead(id) {
+  if (_partnerTimers[id]?.started) return; // already going
+  const p = PARTNERS.find(x => x.id === id);
+  if (!p) return;
+
+  _partnerTimers[id] = { elapsed: 0, started: true };
+
+  const interval = setInterval(() => {
+    const t = _partnerTimers[id];
+    if (!t) { clearInterval(interval); return; }
+    t.elapsed++;
+
+    // Update timer bar
+    const fill = document.getElementById('ptimer-' + id);
+    if (fill) {
+      const pct = Math.min(100, Math.round(t.elapsed / p.readTime * 100));
+      fill.style.width = pct + '%';
+    }
+
+    // Update button label
+    const card = document.getElementById('pcard-' + id);
+    if (card) {
+      const btn = card.querySelector('.partner-earn-btn');
+      if (btn && t.elapsed < p.readTime) {
+        btn.textContent = 'Lendo... ' + t.elapsed + 's/' + p.readTime + 's';
+      }
+    }
+
+    if (t.elapsed >= p.readTime) {
+      clearInterval(interval);
+      t.started = false;
+      toast('✅ Leitura concluída! Resgate seu escudo.', 3000);
+      renderPartners(); // re-render to show claim button
+    }
+  }, 1000);
+
+  _partnerTimers[id].interval = interval;
+  toast('📖 Leitura iniciada — mantenha o app aberto por ' + p.readTime + 's');
+  renderPartners();
+}
+
+function earnPartnerShield(id) {
+  const ds = db.dailyStreak;
+  if (!ds) return;
+  if ((ds.shields || 0) >= 3) { toast('⚠️ Estoque de escudos cheio (3/3)'); return; }
+
+  db.partnerRewards[id] = Date.now();
+  ds.shields = Math.min(3, (ds.shields || 0) + 1);
+  save();
+  renderPartners();
+  renderDashboard();
+  toast('🛡️ +1 Escudo resgatado! Total: ' + ds.shields + '/3', 4000);
+}
+
 function scheduleMidnightReset(){
   const now=new Date();
   const next=new Date(now);
@@ -2682,8 +4089,10 @@ function scheduleMidnightReset(){
   const ms=next.getTime()-now.getTime();
   setTimeout(()=>{
     dailyReset();
+    initMissions(); // reset missions for new day
+    Notif.schedule(); // re-agenda notificações para o novo dia
     // Water: no reset needed — getWaterToday() filters by date dynamically
-    Diet.render();Stats.render(currentPeriod);
+    Diet.render();Stats.render(currentPeriod);renderDashboard();
     toast('🌅 Novo dia! Dieta resetada.');
     scheduleMidnightReset();
   },ms);
