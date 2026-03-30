@@ -2667,7 +2667,13 @@ window.addEventListener('load', () => {
   setupKcalPreviews();
 
   // ── Decisão: usuário existente ou novo ──
-  const isReturningUser = !!(db.activities && db.activities.length > 0);
+  // Não usa db.activities pois ele tem valor padrão mesmo sem localStorage.
+  // Usa a presença real do dado no localStorage para decidir.
+  const hasStoredData = !!(localStorage.getItem('ct_v1') ||
+                           localStorage.getItem('wod_diet_v5') ||
+                           localStorage.getItem('wod_diet_v4') ||
+                           localStorage.getItem('wod_diet_v3'));
+  const isReturningUser = hasStoredData;
 
   // ── Calcula quanto tempo falta para completar SPLASH_VISIBLE_MS
   // desde que a página começou a carregar ──
