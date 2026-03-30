@@ -1232,6 +1232,79 @@ select option{background:var(--card2)}
   animation:splashSpin .7s linear infinite;
 }
 @keyframes splashSpin{to{transform:rotate(360deg);}}
+
+/* ══════════════════════════════════════════════════
+   ONBOARDING INTRO — animações de entrada suaves
+   ══════════════════════════════════════════════════ */
+
+/* Step 1 entra com fade+slide vindos de baixo */
+#onboarding.intro-visible .ob-step:first-child {
+  animation: obStep1Enter .6s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes obStep1Enter {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Botão do step 1 entra com delay — dá tempo do user ver a tela */
+#onboarding.intro-visible #obNext {
+  animation: obNextAppear .5s ease both;
+  animation-delay: .9s;
+}
+@keyframes obNextAppear {
+  from { opacity:0; transform:translateY(12px) scale(.96); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* Dots de progresso entram com delay também */
+#onboarding.intro-visible .ob-progress {
+  animation: obDotsAppear .4s ease both;
+  animation-delay: .7s;
+}
+@keyframes obDotsAppear {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+
+/* Nos steps 2 e 3 (depois do step 1) — sem animação de delay */
+#onboarding:not(.intro-visible) #obNext {
+  opacity:1 !important;
+  animation:none !important;
+}
+#onboarding:not(.intro-visible) .ob-progress {
+  opacity:1 !important;
+  animation:none !important;
+}
+
+/* ══════════════════════════════════════════════════
+   WELCOME SCREEN — tela de boas-vindas independente
+   ══════════════════════════════════════════════════ */
+#welcomeScreen {
+  position:fixed;inset:0;z-index:9998;
+  background:var(--dark);
+  display:flex;flex-direction:column;
+  align-items:stretch;overflow:hidden;
+}
+#welcomeScreen.hidden { display:none !important; }
+
+/* Conteúdo entra com fade+slide vindos de baixo */
+#welcomeScreen .ob-step {
+  animation: welcomeEnter .55s cubic-bezier(.22,1,.36,1) both;
+  animation-delay:.1s;
+}
+@keyframes welcomeEnter {
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Botão aparece com delay — garante que user vê a tela */
+#welcomeNextBtn {
+  transition: opacity .4s ease, transform .4s ease;
+}
+#welcomeNextBtn.visible {
+  opacity:1 !important;
+  pointer-events:auto !important;
+}
 </style>
 </head>
 <body>
@@ -1247,21 +1320,17 @@ select option{background:var(--card2)}
   <div class="splash-spinner"></div>
 </div>
 
-<!-- ══════════════ ONBOARDING ══════════════ -->
-<div id="onboarding">
+<!-- ══════════════ WELCOME SCREEN (tela de boas-vindas) ══════════════ -->
+<!-- Tela independente, exibida após o splash para usuários novos.    -->
+<!-- Não faz parte do slider do onboarding.                           -->
+<div id="welcomeScreen" class="hidden">
 
-  <!-- Progress dots -->
-  <div class="ob-progress">
-    <div class="ob-dot on" id="obDot0"></div>
-    <div class="ob-dot" id="obDot1"></div>
-    <div class="ob-dot" id="obDot2"></div>
+  <div class="ob-progress" style="visibility:hidden">
+    <div class="ob-dot on"></div><div class="ob-dot"></div>
   </div>
 
-  <!-- Steps container -->
-  <div class="ob-steps" id="obSteps">
-
-    <!-- STEP 1: Boas-vindas -->
-    <div class="ob-step">
+  <div class="ob-steps" style="transform:none;width:100%">
+    <div class="ob-step" style="width:100%">
       <div class="ob-logo" style="margin-bottom:8px"><span class="ob-logo-icon">⚡</span>CONTROLE <em>TOTAL</em></div>
       <div class="ob-sub" style="margin-bottom:32px">Performance · Dieta · Evolução</div>
       <div style="font-size:64px;margin-bottom:20px">🏆</div>
@@ -1293,6 +1362,27 @@ select option{background:var(--card2)}
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="ob-nav">
+    <button class="ob-nav-next" id="welcomeNextBtn" onclick="_welcomeNext()" style="opacity:0;pointer-events:none">
+      Começar <span style="font-size:18px">›</span>
+    </button>
+  </div>
+
+</div>
+
+<!-- ══════════════ ONBOARDING ══════════════ -->
+<div id="onboarding">
+
+  <!-- Progress dots (2 steps: esportes + perfil) -->
+  <div class="ob-progress">
+    <div class="ob-dot on" id="obDot0"></div>
+    <div class="ob-dot" id="obDot1"></div>
+  </div>
+
+  <!-- Steps container -->
+  <div class="ob-steps" id="obSteps">
 
     <!-- STEP 2: Esportes -->
     <div class="ob-step">
@@ -2485,9 +2575,9 @@ function finishOnboarding(){
 // ══════════════════════════════════════════════════
 
 // Tempo que o splash fica 100% visível antes de começar o fade
-const SPLASH_VISIBLE_MS = 1800;
+const SPLASH_VISIBLE_MS = 2200; // tempo que o splash fica visível antes do fade
 // Duração do fade-out do splash
-const SPLASH_FADE_MS    = 400;
+const SPLASH_FADE_MS    = 500; // duração do fade-out
 
 // ── Timestamp global do início da página (antes do load) ──
 // Capturado o mais cedo possível para medir o tempo real
@@ -2509,7 +2599,29 @@ function _hideSplash(callback) {
 }
 
 function _showOnboarding() {
+  // Exibe a welcome screen independente (não o slider do onboarding)
+  const ws = document.getElementById('welcomeScreen');
+  if (!ws) { _showOnboardingDirect(); return; }
+  ws.classList.remove('hidden');
+  // Libera o botão após 1.8s — garante que o user vê a tela completa
+  setTimeout(() => {
+    const btn = document.getElementById('welcomeNextBtn');
+    if (btn) btn.classList.add('visible');
+  }, 1800);
+}
+
+function _showOnboardingDirect() {
+  // Fallback: vai direto para o onboarding (steps de configuração)
   const ob = document.getElementById('onboarding');
+  if (ob) ob.classList.remove('hidden');
+  obGoTo(0);
+}
+
+function _welcomeNext() {
+  // Transição: welcome → onboarding (steps de configuração)
+  const ws = document.getElementById('welcomeScreen');
+  const ob = document.getElementById('onboarding');
+  if (ws) ws.classList.add('hidden');
   if (ob) ob.classList.remove('hidden');
   obGoTo(0);
 }
@@ -2527,11 +2639,11 @@ function _showApp() {
 // ── Lock imediato: garante que nada aparece por baixo do splash ──
 // Roda assim que o script é parseado (antes do window.load)
 (function _lockUIBeforeBoot() {
-  // Mantém onboarding oculto — o splash cobre tudo
-  const ob = document.getElementById('onboarding');
-  if (ob) ob.classList.add('hidden');
-  // Garante que header/wrap/nav estão ocultos (já têm display:none no HTML,
-  // mas reforçamos via JS para segurança)
+  // Mantém tudo oculto — o splash cobre tudo até o boot decidir o fluxo
+  ['onboarding','welcomeScreen'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
   ['mainHdr','mainWrap','mainNav'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
@@ -5966,10 +6078,15 @@ function showWeightTooltip(dotEl, kg, date) {
 // ╚══════════════════════════════════════════════════════════════════╝
 
 let obCurrentStep = 0;
-const OB_TOTAL = 3;
+const OB_TOTAL = 2;
 
 function obGoTo(step) {
   obCurrentStep = Math.max(0, Math.min(OB_TOTAL - 1, step));
+  // Remove classe intro-visible ao sair do step 0 (anims de entrada só no step 1)
+  if (obCurrentStep > 0) {
+    const ob = document.getElementById('onboarding');
+    if (ob) ob.classList.remove('intro-visible');
+  }
   // Move slider
   const slider = document.getElementById('obSteps');
   if (slider) slider.style.transform = 'translateX(-' + (obCurrentStep * 33.333) + '%)';
