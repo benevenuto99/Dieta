@@ -1185,9 +1185,67 @@ select option{background:var(--card2)}
 .day-macro.m-carb{background:rgba(255,140,0,.1);color:var(--orange)}
 .day-macro.m-fat{background:rgba(180,127,255,.1);color:var(--purple)}
 
+
+/* ══════════════════════════════════════════════════
+   APP SPLASH — tela de boot isolada, z-index máximo
+   Visível via CSS puro, sem depender de JS.
+   ══════════════════════════════════════════════════ */
+#appSplash{
+  position:fixed;inset:0;z-index:10000;
+  background:var(--dark);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:0;
+  pointer-events:all;
+  opacity:1;
+  transition:opacity .4s ease;
+  /* will-change para GPU acelerar o fade */
+  will-change:opacity;
+}
+#appSplash.fade-out{
+  opacity:0;
+  pointer-events:none;
+}
+#appSplash.hidden{
+  display:none !important;
+  pointer-events:none;
+}
+.splash-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:52px;letter-spacing:5px;
+  color:var(--text);
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:4px;
+}
+.splash-logo em{color:var(--acid);font-style:normal;}
+.splash-logo-icon{font-size:42px;}
+.splash-sub{
+  font-size:11px;color:var(--muted2);
+  letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:40px;
+}
+.splash-spinner{
+  width:32px;height:32px;
+  border:2px solid rgba(212,255,0,.15);
+  border-top-color:var(--acid);
+  border-radius:50%;
+  animation:splashSpin .7s linear infinite;
+}
+@keyframes splashSpin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
+<!-- timestamp capturado antes de qualquer renderização -->
+<script>window._appBootTs = Date.now();</script>
+
+<!-- ══════════════ APP SPLASH (boot screen isolada) ══════════════ -->
+<div id="appSplash">
+  <div class="splash-logo">
+    <span class="splash-logo-icon">⚡</span>CONTROLE <em>TOTAL</em>
+  </div>
+  <div class="splash-sub">Performance · Dieta · Evolução</div>
+  <div class="splash-spinner"></div>
+</div>
 
 <!-- ══════════════ ONBOARDING ══════════════ -->
 <div id="onboarding">
@@ -2410,38 +2468,107 @@ function finishOnboarding(){
   if(!db.settings)db.settings={};
   db.settings.showDietTab = dietCard ? dietCard.classList.contains('selected') : false;
   save();
-  document.getElementById('onboarding').classList.add('hidden');
-  document.getElementById('mainHdr').style.display='';
-  document.getElementById('mainWrap').style.display='';
-  document.getElementById('mainNav').style.display='';
-  initApp();
+  // Usa _showApp para garantir consistência com o fluxo do AppBoot
+  _showApp();
 }
 
 // ══════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════
-window.addEventListener('load',()=>{
-  obGoTo(0); // inicializa estado dos botões do onboarding
-  const now=new Date();
-  document.getElementById('inDate').valueAsDate=now;
-  document.getElementById('inTime').value=now.toTimeString().slice(0,5);
-  // Set today on all date fields that exist
-  ['qlDate','runDate','beachDate','voleiDate'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.valueAsDate=now;
+// ══════════════════════════════════════════════════
+//  APP BOOT — controle central de inicialização
+//  Sequência garantida:
+//    1. Splash visível imediatamente (CSS puro, sem JS)
+//    2. JS prepara tudo em background
+//    3. App fica oculto até splash terminar completamente
+//    4. Após SPLASH_VISIBLE_MS → fade-out splash → revela destino
+// ══════════════════════════════════════════════════
+
+// Tempo que o splash fica 100% visível antes de começar o fade
+const SPLASH_VISIBLE_MS = 1800;
+// Duração do fade-out do splash
+const SPLASH_FADE_MS    = 400;
+
+// ── Timestamp global do início da página (antes do load) ──
+// Capturado o mais cedo possível para medir o tempo real
+// _appBootTs capturado no topo do body (window._appBootTs)
+
+function _hideSplash(callback) {
+  const splash = document.getElementById('appSplash');
+  if (!splash || splash.classList.contains('hidden')) {
+    if (callback) callback();
+    return;
+  }
+  // Inicia fade-out
+  splash.classList.add('fade-out');
+  // Após o fade terminar: remove splash e chama callback
+  setTimeout(() => {
+    splash.classList.add('hidden');
+    if (callback) callback();
+  }, SPLASH_FADE_MS);
+}
+
+function _showOnboarding() {
+  const ob = document.getElementById('onboarding');
+  if (ob) ob.classList.remove('hidden');
+  obGoTo(0);
+}
+
+function _showApp() {
+  // Revela a interface principal
+  document.getElementById('mainHdr').style.display = '';
+  document.getElementById('mainWrap').style.display = '';
+  document.getElementById('mainNav').style.display = '';
+  document.getElementById('onboarding').classList.add('hidden');
+  selActs = new Set(db.activities);
+  initApp();
+}
+
+// ── Lock imediato: garante que nada aparece por baixo do splash ──
+// Roda assim que o script é parseado (antes do window.load)
+(function _lockUIBeforeBoot() {
+  // Mantém onboarding oculto — o splash cobre tudo
+  const ob = document.getElementById('onboarding');
+  if (ob) ob.classList.add('hidden');
+  // Garante que header/wrap/nav estão ocultos (já têm display:none no HTML,
+  // mas reforçamos via JS para segurança)
+  ['mainHdr','mainWrap','mainNav'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+})();
+
+window.addEventListener('load', () => {
+  // ── Preparação silenciosa enquanto splash está visível ──
+  const now = new Date();
+  const inDate = document.getElementById('inDate');
+  const inTime = document.getElementById('inTime');
+  if (inDate) inDate.valueAsDate = now;
+  if (inTime) inTime.value = now.toTimeString().slice(0, 5);
+  ['qlDate','runDate','beachDate','voleiDate'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.valueAsDate = now;
   });
   setupPDF('pdfIn1','rawTxt1','fn1');
   setupPDF('pdfIn2','rawTxt2','fn2');
   setupDrag('upZone1','pdfIn1');
   setupDrag('upZone2','pdfIn2');
   setupKcalPreviews();
-  if(db.activities&&db.activities.length>0){
-    document.getElementById('onboarding').classList.add('hidden');
-    document.getElementById('mainHdr').style.display='';
-    document.getElementById('mainWrap').style.display='';
-    document.getElementById('mainNav').style.display='';
-    selActs=new Set(db.activities);
-    initApp();
-  }
+
+  // ── Decisão: usuário existente ou novo ──
+  const isReturningUser = !!(db.activities && db.activities.length > 0);
+
+  // ── Calcula quanto tempo falta para completar SPLASH_VISIBLE_MS
+  // desde que a página começou a carregar ──
+  const elapsed  = Date.now() - (window._appBootTs || Date.now());
+  const waitLeft = Math.max(0, SPLASH_VISIBLE_MS - elapsed);
+
+  setTimeout(() => {
+    if (isReturningUser) {
+      _hideSplash(_showApp);        // splash → fade → app
+    } else {
+      _hideSplash(_showOnboarding); // splash → fade → onboarding
+    }
+  }, waitLeft);
 });
 
 function initApp(){
