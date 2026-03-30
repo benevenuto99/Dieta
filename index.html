@@ -1314,6 +1314,16 @@ select option{background:var(--card2)}
   <div id="v-diet" class="view active">
     <!-- Atalhos rápidos (renderizado por JS) -->
     <div id="quickShortcuts"></div>
+
+    <!-- ── HOME TABS: Hoje / Resumo ── -->
+    <div class="home-tabs">
+      <button class="home-tab on" onclick="switchHomeTab('hoje',this)">Hoje</button>
+      <button class="home-tab" onclick="switchHomeTab('resumo',this)">Resumo</button>
+    </div>
+
+    <!-- Painel Hoje (conteúdo principal da home) -->
+    <div class="home-panel on" id="home-panel-hoje">
+
     <div class="day-banner" id="dayBanner" style="display:none">
       <div class="ring-wrap">
         <svg width="64" height="64" viewBox="0 0 64 64">
@@ -1374,6 +1384,14 @@ select option{background:var(--card2)}
     </div>
     <div id="dietFooter"></div>
     <div style="height:12px"></div>
+    </div><!-- /home-panel-hoje -->
+
+    <!-- Painel Resumo -->
+    <div class="home-panel" id="home-panel-resumo">
+      <div id="homeStatsPanel"></div>
+      <div style="height:12px"></div>
+    </div><!-- /home-panel-resumo -->
+
   </div>
 
   <!-- ═══ TREINOS ═══ -->
@@ -1910,6 +1928,7 @@ if(!db.dailyStreak.history) db.dailyStreak.history=[];
 if(!db.missions) db.missions={lastDate:'',water:false,creatina:false,dieta:false,treino:false};
 if(db.settings&&db.settings.notifications===undefined) db.settings.notifications=false;
 if(!db.partnerRewards) db.partnerRewards={};
+if(!db.profile) db.profile={name:'',weight:0};
 
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){}}
 function todayStr(){return new Date().toLocaleDateString('pt-BR');}
@@ -2918,7 +2937,7 @@ function renderDashboard() {
   if (!container) return;
 
   // Build day-complete section (shown inside card when all missions done)
-  const allMissionsDone = missions.every(m => m.done);
+  const allMissionsDone = [...primaryMissions, ...secondaryMissions].every(m => m.done);
   const streakMsg = count >= 365
     ? 'Dia ' + count + ' — um ano inteiro de consistência. Lendário.'
     : count >= 100
@@ -3261,29 +3280,12 @@ function latestWeight(){
 // ══════════════════════════════════════════════════
 const ACT_SHEETS={gym:'sheetLogGym',cross:'sheetLogCross',run:'sheetLogRun',beach:'sheetLogBeach',volei:'sheetLogVolei'};
 function logActivity(type){
+  // Academia (gym) e CrossFit (cross) são salvos via qlSave() do sheetQuickLog.
+  // Esta função trata apenas esportes com sheets próprios: run, beach, volei.
+  if(type==='gym'||type==='cross'){ openLogSheet(type); return; }
   const bw=db.profile?.weight||latestWeight()||70;
   let s={id:Date.now(),type,ts:Date.now(),source:'manual'};
-  if(type==='gym'){
-    if(!latestWeight()){toast('⚠️ Registre seu peso primeiro na aba Evolução');return;}
-    const dur=+document.getElementById('gymDur').value||60;
-    const intensity=document.getElementById('gymIntensity').value;
-    const title=document.getElementById('gymTitle').value.trim()||'Treino Academia';
-    const exercises=document.getElementById('gymExercises').value.trim();
-    const date=document.getElementById('gymDate').value;
-    const kcal=calcKcal('gym',{dur,intensity},bw);
-    s={...s,title,dur,intensity,exercises,kcal,date:date||todayISO(),dateStr:fmtDate(date||todayISO())};
-    document.getElementById('gymTitle').value='';document.getElementById('gymExercises').value='';
-  }else if(type==='cross'){
-    const dur=+document.getElementById('crossDur').value||60;
-    const crossType=document.getElementById('crossType').value;
-    const intensity=document.getElementById('crossIntensity').value;
-    const title=document.getElementById('crossTitle').value.trim()||'WOD';
-    const detail=document.getElementById('crossDetail').value.trim();
-    const date=document.getElementById('crossDate').value;
-    const kcal=calcKcal('cross',{dur,intensity},bw);
-    s={...s,title,dur,crossType,intensity,detail,kcal,date:date||todayISO(),dateStr:fmtDate(date||todayISO())};
-    document.getElementById('crossTitle').value='';document.getElementById('crossDetail').value='';
-  }else if(type==='run'){
+  if(type==='run'){
     const dist=+document.getElementById('runDist').value||0;
     const dur=+document.getElementById('runDur').value||0;
     const pace=document.getElementById('runPace').value.trim();
@@ -4085,6 +4087,16 @@ function switchView(v){
   const nEl = document.getElementById('nb-'+v);
   if(vEl) vEl.classList.add('active');
   if(nEl) nEl.classList.add('on');
+  // Sync swipe slider if it has been initialised
+  if(typeof VIEW_ORDER !== 'undefined' && typeof _applySliderTransform === 'function'){
+    const idx = VIEW_ORDER.indexOf(v);
+    if(idx >= 0 && idx !== _currentViewIdx){
+      _currentViewIdx = idx;
+      _applySliderTransform(idx);
+    }
+  }
+  if(v === 'perfil') setTimeout(renderPerfil, 50);
+  if(v === 'stats') renderStats(currentPeriod);
 }
 function switchAppTab(name,btn){
   document.querySelectorAll('.app-tab-panel').forEach(el=>el.classList.remove('on'));
@@ -4170,6 +4182,12 @@ function restoreBackup(){
     // Ensure required blocks exist after restore
     if(!parsed.water)parsed.water={goal:3000,entries:[]};
     if(!parsed.settings)parsed.settings={showDietTab:true};
+    if(!parsed.profile)parsed.profile={name:'',weight:0};
+    if(!parsed.dailyStreak)parsed.dailyStreak={count:0,lastDate:'',shields:0,lastShieldEarned:'',lastShieldUsed:'',totalDays:0,history:[],bestStreak:0};
+    if(!parsed.partnerRewards)parsed.partnerRewards={};
+    if(!parsed.missions)parsed.missions={lastDate:'',water:false,creatina:false,dieta:false,treino:false};
+    if(!parsed.creatina)parsed.creatina={streak:0,lastDate:'',startDate:''};
+    if(!parsed.insights)parsed.insights={lastShown:0,dismissed:[]};
     db=parsed;save();location.reload();
   }catch(e){res.textContent='❌ Código inválido ou corrompido';res.style.color='var(--red)';}
 }
@@ -4889,18 +4907,7 @@ function swipeToView(idx) {
   if (viewName === 'partner') renderPartners();
 }
 
-// Override switchView to also move the slider
-const _origSwitchView = switchView;
-function switchView(v) {
-  _origSwitchView(v);
-  const idx = VIEW_ORDER.indexOf(v);
-  if (idx >= 0 && idx !== _currentViewIdx) {
-    _currentViewIdx = idx;
-    _applySliderTransform(idx);
-  }
-  if (v === 'perfil') setTimeout(renderPerfil, 50);
-  if (v === 'stats') renderStats(currentPeriod);
-}
+// switchView is defined earlier and already includes slider sync + perfil/stats hooks
 
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  MODULE: SHORTCUTS — Atalhos inteligentes na aba inicial        ║
@@ -5041,6 +5048,7 @@ function promptAutoBackupRestore() {
   if (!db.dailyStreak) db.dailyStreak = { count:0, lastDate:'', shields:0, lastShieldEarned:'', lastShieldUsed:'', totalDays:0, history:[] };
   if (!db.missions) db.missions = { lastDate:'', water:false, creatina:false, dieta:false, treino:false };
   if (!db.partnerRewards) db.partnerRewards = {};
+  if (!db.profile) db.profile = {name:'', weight:0};
   save();
   location.reload();
 }
@@ -5419,6 +5427,12 @@ function restoreBackup2() {
     if (!confirm('Restaurar backup? Os dados atuais serão substituídos.')) return;
     if (!parsed.water) parsed.water = { goal:3000, entries:[] };
     if (!parsed.settings) parsed.settings = { showDietTab:true };
+    if (!parsed.profile) parsed.profile = {name:'', weight:0};
+    if (!parsed.dailyStreak) parsed.dailyStreak = {count:0,lastDate:'',shields:0,lastShieldEarned:'',lastShieldUsed:'',totalDays:0,history:[],bestStreak:0};
+    if (!parsed.partnerRewards) parsed.partnerRewards = {};
+    if (!parsed.missions) parsed.missions = {lastDate:'',water:false,creatina:false,dieta:false,treino:false};
+    if (!parsed.creatina) parsed.creatina = {streak:0,lastDate:'',startDate:''};
+    if (!parsed.insights) parsed.insights = {lastShown:0,dismissed:[]};
     db = parsed; save(); location.reload();
   } catch(e) { if(res) { res.textContent='❌ Código inválido ou corrompido'; res.style.color='var(--red)'; } }
 }
